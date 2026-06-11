@@ -1,0 +1,254 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/ui';
+import { formatMonthYear, useTranslations } from '../i18n/ui';
+
+interface Props {
+  project: CollectionEntry<'projects'>['data'];
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const t = useTranslations(lang);
+const { title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
+const { createdAt, updatedAt } = project;
+---
+
+<article class="card" data-category={project.category}>
+  {
+    thumbnail && (
+      <a href={live ?? github} class="thumb" aria-hidden="true" tabindex="-1">
+        <img src={thumbnail} alt="" loading="lazy" />
+      </a>
+    )
+  }
+
+  <header class="head">
+    {favicon && <img class="favicon" src={favicon} alt="" loading="lazy" width="20" height="20" />}
+    <h3 class="title">{title}</h3>
+    {
+      ai && (
+        <span class="badge-ai mono" title={t('badge.ai.title')}>
+          <span class="dot" />
+          {ai.agent ?? t('badge.ai')}
+        </span>
+      )
+    }
+  </header>
+
+  <p class="subtitle">{subtitle[lang]}</p>
+
+  {
+    tech.length > 0 && (
+      <ul class="tech">
+        {tech.map((tag) => (
+          <li class="mono">{tag}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    (createdAt || updatedAt) && (
+      <dl class="dates mono">
+        {createdAt && (
+          <div class="date">
+            <dt>{t('meta.started')}</dt>
+            <dd>
+              <time datetime={createdAt}>{formatMonthYear(createdAt, lang)}</time>
+            </dd>
+          </div>
+        )}
+        {updatedAt && (
+          <div class="date">
+            <dt>{t('meta.updated')}</dt>
+            <dd>
+              <time datetime={updatedAt}>{formatMonthYear(updatedAt, lang)}</time>
+            </dd>
+          </div>
+        )}
+      </dl>
+    )
+  }
+
+  <footer class="links mono">
+    <a href={github} class="link" target="_blank" rel="noopener">
+      <span class="arrow">↗</span>{t('link.github')}
+    </a>
+    {
+      live && (
+        <a href={live} class="link" target="_blank" rel="noopener">
+          <span class="arrow">↗</span>
+          {t('link.live')}
+        </a>
+      )
+    }
+    {
+      npm && (
+        <a href={npm} class="link" target="_blank" rel="noopener">
+          <span class="arrow">↗</span>
+          {t('link.npm')}
+        </a>
+      )
+    }
+    {
+      stars > 0 && (
+        <span class="stars" title={`${stars}`}>
+          ★ {stars}
+        </span>
+      )
+    }
+  </footer>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow-card);
+    transition:
+      border-color var(--transition),
+      transform var(--transition),
+      background var(--transition);
+  }
+  .card:hover {
+    border-color: var(--cat, var(--accent-dim));
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+  .card[data-category='jeux'] {
+    --cat: var(--cat-jeux);
+  }
+  .card[data-category='outils'] {
+    --cat: var(--cat-outils);
+  }
+  .card[data-category='delires'] {
+    --cat: var(--cat-delires);
+  }
+
+  .thumb {
+    display: block;
+    margin: -1rem -1rem 0.2rem;
+    border-bottom: 1px solid var(--line);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: var(--bg-elevated);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .favicon {
+    border-radius: 4px;
+    flex: none;
+  }
+  .title {
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-right: auto;
+  }
+
+  .badge-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    background: var(--accent-glow);
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-ai .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  .tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tech li {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.05rem 0.4rem;
+  }
+
+  .dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+    margin: 0.2rem 0 0;
+    font-size: 0.68rem;
+    color: var(--text-faint);
+  }
+  .date {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .date dt {
+    color: var(--text-faint);
+    opacity: 0.75;
+  }
+  .date dd {
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+    font-size: 0.82rem;
+  }
+  .link {
+    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    transition: color var(--transition);
+  }
+  .link:hover {
+    color: var(--cat, var(--accent));
+  }
+  .arrow {
+    color: var(--cat, var(--accent));
+  }
+  .stars {
+    margin-left: auto;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+  }
+</style>

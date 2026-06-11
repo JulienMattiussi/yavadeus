@@ -1,0 +1,48 @@
+/*
+ * Theme tokens - all colors, fonts and spacing live here.
+ * Never hardcode a color in a component: always use var(--token).
+ * Aesthetic: dark / dev, terminal vibe, neon green accent.
+ */
+
+:root {
+  /* Background layers (darkest to lightest) */
+  --bg: #0b0f10;
+  --bg-elevated: #11171a;
+  --bg-card: #131b1f;
+  --bg-card-hover: #18232a;
+
+  /* Borders / lines */
+  --line: #1f2c33;
+  --line-strong: #2c3e47;
+
+  /* Text */
+  --text: #d7e0e3;
+  --text-dim: #8aa0a8;
+  --text-faint: #5a6e76;
+
+  /* Accents */
+  --accent: #00ff9c;
+  --accent-dim: #00c47a;
+  --accent-glow: rgba(0, 255, 156, 0.18);
+  --accent-2: #36c5ff;
+
+  /* Category hues (used as per-rubric accents) */
+  --cat-jeux: #ff5d9e;
+  --cat-outils: #36c5ff;
+  --cat-delires: #ffb454;
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  --font-sans:
+    'Inter', system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+
+  /* Layout */
+  --maxw: 1100px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --gap: 1.25rem;
+
+  /* Effects */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.02), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --transition: 160ms ease;
+}

@@ -1,0 +1,197 @@
+---
+import { getCollection } from 'astro:content';
+import { CATEGORIES, type Category } from '../data/projects';
+import type { Lang, UIKey } from '../i18n/ui';
+import { otherLangPath, useTranslations } from '../i18n/ui';
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const all = await getCollection('projects');
+const projects = all
+  .map((e) => e.data)
+  .sort(
+    (a, b) => Number(b.featured) - Number(a.featured) || b.order - a.order || b.stars - a.stars,
+  );
+
+const byCategory = (cat: Category) => projects.filter((p) => p.category === cat);
+---
+
+<Layout lang={lang}>
+  <header class="hero wrap">
+    <nav class="topbar">
+      <span class="prompt mono">~/projects</span>
+      <a class="lang mono" href={otherLangPath(lang)} hreflang={lang === 'fr' ? 'en' : 'fr'}>
+        {t('lang.switch')}
+      </a>
+    </nav>
+    <h1 class="logo mono">
+      <span class="sigil">$</span>
+      {t('site.title')}<span class="caret">_</span>
+    </h1>
+    <p class="tagline">{t('site.tagline')}</p>
+    <p class="intro">{t('site.intro')}</p>
+  </header>
+
+  <main class="wrap">
+    {
+      CATEGORIES.map((cat) => {
+        const items = byCategory(cat);
+        if (items.length === 0) return null;
+        return (
+          <section class="category" data-category={cat} aria-labelledby={`cat-${cat}`}>
+            <div class="cat-head">
+              <h2 id={`cat-${cat}`} class="cat-title mono">
+                <span class="hash">#</span> {t(`cat.${cat}` as UIKey)}
+                <span class="cat-count">
+                  {items.length} {t('count.projects')}
+                </span>
+              </h2>
+              <p class="cat-desc">{t(`cat.${cat}.desc` as UIKey)}</p>
+            </div>
+            <div class="grid">
+              {items.map((project) => (
+                <ProjectCard project={project} lang={lang} />
+              ))}
+            </div>
+          </section>
+        );
+      })
+    }
+  </main>
+
+  <footer class="wrap site-footer mono">
+    <span>{t('footer.built')}</span>
+    <a href="https://github.com/JulienMattiussi" target="_blank" rel="noopener"
+      >github.com/JulienMattiussi</a
+    >
+  </footer>
+</Layout>
+
+<style>
+  .hero {
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    font-size: 0.85rem;
+  }
+  .prompt {
+    color: var(--text-faint);
+  }
+  .lang {
+    color: var(--text-dim);
+    border: 1px solid var(--line-strong);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    transition:
+      color var(--transition),
+      border-color var(--transition);
+  }
+  .lang:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
+  .logo {
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .sigil {
+    color: var(--accent);
+  }
+  .caret {
+    color: var(--accent);
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .caret {
+      animation: none;
+    }
+  }
+
+  .tagline {
+    font-size: 1.25rem;
+    color: var(--text);
+    margin: 0.6rem 0 0.2rem;
+  }
+  .intro {
+    color: var(--text-dim);
+    margin: 0;
+    max-width: 48ch;
+  }
+
+  .category {
+    margin: 3rem 0;
+  }
+  .cat-head {
+    margin-bottom: 1.1rem;
+  }
+  .cat-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+  .category[data-category='jeux'] .hash {
+    color: var(--cat-jeux);
+  }
+  .category[data-category='outils'] .hash {
+    color: var(--cat-outils);
+  }
+  .category[data-category='delires'] .hash {
+    color: var(--cat-delires);
+  }
+  .cat-count {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    font-weight: 400;
+  }
+  .cat-desc {
+    color: var(--text-dim);
+    margin: 0.35rem 0 0;
+    font-size: 0.95rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--gap);
+  }
+
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .site-footer a {
+    color: var(--text-dim);
+  }
+  .site-footer a:hover {
+    color: var(--accent);
+  }
+</style>

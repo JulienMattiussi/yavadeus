@@ -1,0 +1,48 @@
+
+> yavadeus-home-page@0.0.1 dev
+> astro dev --port 4321
+
+[vite] connected.
+21:55:30 [types] Generated 1ms
+[vite] connected.
+21:55:31 [content] Syncing content
+[sources] GitHub JulienMattiussi/calendar-solver -> 403; using curated values.
+[sources] GitHub JulienMattiussi/ptitjeux -> 403; using curated values.
+[sources] GitHub JulienMattiussi/deduplicateur -> 403; using curated values.
+[sources] GitHub JulienMattiussi/universal-picross -> 403; using curated values.
+[sources] GitHub JulienMattiussi/bingo-builder -> 403; using curated values.
+[sources] GitHub JulienMattiussi/lorrainjs -> 403; using curated values.
+[sources] GitHub JulienMattiussi/fast-emoji -> 403; using curated values.
+[sources] GitHub JulienMattiussi/veilleur -> 403; using curated values.
+[sources] GitHub JulienMattiussi/tripote-visor -> 403; using curated values.
+[sources] GitHub JulienMattiussi/balkanoche-prison-calculator -> 403; using curated values.
+[sources] GitHub JulienMattiussi/get-current-day -> 403; using curated values.
+[sources] GitHub JulienMattiussi/legoroscope -> 403; using curated values.
+[sources] GitHub JulienMattiussi/combien-mieux-que-un -> 403; using curated values.
+[sources] GitHub JulienMattiussi/are-you-vulcain -> 403; using curated values.
+21:55:31 [content] Synced content
+21:55:31 [vite] Re-optimizing dependencies because vite config has changed
+ astro  v6.4.6 ready in 3235 ms
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+21:55:31 watching for file changes...
+21:55:49 [200] / 121ms
+21:55:49 [200] /en/ 16ms
+21:56:47 [content] Syncing content
+21:56:47 [content] Content config changed
+21:56:47 [content] Clearing content store
+[sources] GitHub JulienMattiussi/bingo-builder -> 403; using curated values.
+[sources] GitHub JulienMattiussi/ptitjeux -> 403; using curated values.
+[sources] GitHub JulienMattiussi/deduplicateur -> 403; using curated values.
+[sources] GitHub JulienMattiussi/universal-picross -> 403; using curated values.
+[sources] GitHub JulienMattiussi/calendar-solver -> 403; using curated values.
+[sources] GitHub JulienMattiussi/fast-emoji -> 403; using curated values.
+[sources] GitHub JulienMattiussi/lorrainjs -> 403; using curated values.
+[sources] GitHub JulienMattiussi/veilleur -> 403; using curated values.
+[sources] GitHub JulienMattiussi/get-current-day -> 403; using curated values.
+[sources] GitHub JulienMattiussi/combien-mieux-que-un -> 403; using curated values.
+[sources] GitHub JulienMattiussi/balkanoche-prison-calculator -> 403; using curated values.
+[sources] GitHub JulienMattiussi/legoroscope -> 403; using curated values.
+[sources] GitHub JulienMattiussi/tripote-visor -> 403; using curated values.
+[sources] GitHub JulienMattiussi/are-you-vulcain -> 403; using curated values.
+21:56:48 [content] Synced content
