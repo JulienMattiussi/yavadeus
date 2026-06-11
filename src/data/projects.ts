@@ -10,7 +10,11 @@
  *  - subtitle:  bilingual { fr, en }; defaults to the GitHub description (both langs)
  *  - live:      defaults to the GitHub "homepage" field
  *  - npm:       npm package name -> adds an npm link (no default)
- *  - favicon:   true => derive from the live origin; or pass an explicit URL
+ *  - download:  release-page URL; defaults to auto-detected latest release that
+ *               ships binary assets. set false to opt out of that detection.
+ *  - favicon:   automatic by default (live-site favicon, else a program/app icon
+ *               committed in the repo). Pass an explicit URL to override, or
+ *               false to show no icon.
  *  - thumbnail: "/thumbnails/<id>.png" (put the image in public/thumbnails/) or a URL
  *  - tech:      main technologies; defaults to the repo's top GitHub languages
  *  - ai:        agent name (e.g. "Claude Code") or true if an AI agent helped.
@@ -32,6 +36,9 @@ export interface CuratedProject {
   subtitle?: LocalizedText;
   live?: string;
   npm?: string;
+  /** Download link (release page). Omit to auto-detect a release with binary
+   * assets; set false to opt out of that detection. */
+  download?: string | false;
   favicon?: boolean | string;
   thumbnail?: string;
   /** Main technologies. Defaults to the repo's top GitHub languages. */

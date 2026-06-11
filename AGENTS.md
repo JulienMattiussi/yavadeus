@@ -65,10 +65,12 @@ public/
 | `subtitle`  | `subtitle {fr,en}`            | GitHub description (same text for both langs) |
 | `live`      | `live`                        | GitHub `homepage` field                       |
 | `npm`       | `npm` (pkg name)              | -                                             |
-| `favicon`   | URL string                    | `true` => `<live-origin>/favicon.ico`         |
+| `download`  | `download` (URL)              | latest release page when it ships assets      |
+| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon   |
 | `tech`      | `tech: string[]`              | top 3 GitHub languages                        |
 | `ai`        | agent name / `true` / `false` | presence of `AGENTS.md`/`CLAUDE.md` in repo   |
 | `stars`     | -                             | GitHub stargazers                             |
+| dates       | -                             | first-commit date + `pushed_at`               |
 | `thumbnail` | `thumbnail`                   | - (drop an image in `public/thumbnails/`)     |
 
 **Curated value always wins; fetched data only fills gaps.** Network failures
@@ -109,7 +111,7 @@ To refresh the site with up-to-date GitHub/npm data, just rebuild (`make build`)
 
 ```bash
 make install      # npm install
-make dev          # Astro dev server, foreground (http://localhost:4321)
+make dev          # Astro dev server, foreground (http://localhost:2107)
 make start        # Astro dev server, background (.dev.log + .pid)
 make stop         # stop the background dev server
 make build        # static build (fetches GitHub/npm metadata)

@@ -2,7 +2,7 @@
 
 default: help
 
-PORT := 4321
+PORT := 2107
 
 help: ## Display available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk -F ':.*?## ' '{printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
@@ -12,16 +12,16 @@ help: ## Display available commands
 install: ## Install all dependencies
 	npm install
 
-dev: ## Start Astro dev server in foreground (http://localhost:4321)
+dev: ## Start Astro dev server in foreground (http://localhost:2107)
 	npm run dev
 
 start: ## Start Astro dev server in background
-	@if lsof -ti:$(PORT) > /dev/null 2>&1; then echo "Port $(PORT) already in use - run 'make stop' first."; exit 1; fi
+	@if lsof -ti:$(PORT) -sTCP:LISTEN > /dev/null 2>&1; then echo "Port $(PORT) already in use - run 'make stop' first."; exit 1; fi
 	npm run dev > .dev.log 2>&1 & echo $$! > .pid
 	@echo "Dev server started -> http://localhost:$(PORT) (PID $$(cat .pid)) - logs in .dev.log"
 
 stop: ## Stop the background dev server
-	@if lsof -ti:$(PORT) > /dev/null 2>&1; then lsof -ti:$(PORT) | xargs kill && rm -f .pid && echo "Dev server stopped."; else rm -f .pid && echo "No server running."; fi
+	@if lsof -ti:$(PORT) -sTCP:LISTEN > /dev/null 2>&1; then lsof -ti:$(PORT) -sTCP:LISTEN | xargs kill && rm -f .pid && echo "Dev server stopped."; else rm -f .pid && echo "No server running."; fi
 
 build: ## Build the static site (fetches GitHub/npm metadata)
 	npm run build

@@ -15,6 +15,7 @@ const projects = defineCollection({
     github: z.string().url(),
     live: z.string().url().optional(),
     npm: z.string().url().optional(),
+    download: z.object({ url: z.string().url(), tag: z.string() }).optional(),
     favicon: z.string().optional(),
     thumbnail: z.string().optional(),
     tech: z.array(z.string()).default([]),

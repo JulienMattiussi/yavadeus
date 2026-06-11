@@ -31,6 +31,10 @@
   --cat-outils: #36c5ff;
   --cat-delires: #ffb454;
 
+  /* Timeline rail + year nodes (thickened + glow so it reads over the grid) */
+  --timeline: var(--accent);
+  --timeline-glow: var(--accent-glow);
+
   /* Typography */
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
   --font-sans:

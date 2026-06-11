@@ -13,7 +13,7 @@ agent was used).
 
 ```sh
 make install   # install dependencies
-make dev       # dev server on http://localhost:4321
+make dev       # dev server on http://localhost:2107
 make build     # static build into ./dist (fetches GitHub/npm metadata)
 ```
 

@@ -11,10 +11,21 @@ interface Props {
 const { project, lang } = Astro.props;
 const t = useTranslations(lang);
 const { title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
-const { createdAt, updatedAt } = project;
+const { createdAt, updatedAt, download } = project;
+
+// Client-side search/sort metadata (used by the toolbar script in HomePage).
+const searchText = [title, subtitle[lang], ...tech].join(' ').toLowerCase();
+const createdTs = createdAt ? Date.parse(createdAt) : 0;
+const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
 ---
 
-<article class="card" data-category={project.category}>
+<article
+  class="card"
+  data-category={project.category}
+  data-search={searchText}
+  data-created={createdTs}
+  data-updated={updatedTs}
+>
   {
     thumbnail && (
       <a href={live ?? github} class="thumb" aria-hidden="true" tabindex="-1">
@@ -24,13 +35,25 @@ const { createdAt, updatedAt } = project;
   }
 
   <header class="head">
-    {favicon && <img class="favicon" src={favicon} alt="" loading="lazy" width="20" height="20" />}
+    {
+      favicon && (
+        <img
+          class="favicon"
+          src={favicon}
+          alt=""
+          loading="lazy"
+          width="20"
+          height="20"
+          onerror="this.remove()"
+        />
+      )
+    }
     <h3 class="title">{title}</h3>
     {
       ai && (
         <span class="badge-ai mono" title={t('badge.ai.title')}>
           <span class="dot" />
-          {ai.agent ?? t('badge.ai')}
+          {t('badge.ai')}
         </span>
       )
     }
@@ -88,6 +111,15 @@ const { createdAt, updatedAt } = project;
         <a href={npm} class="link" target="_blank" rel="noopener">
           <span class="arrow">↗</span>
           {t('link.npm')}
+        </a>
+      )
+    }
+    {
+      download && (
+        <a href={download.url} class="link" target="_blank" rel="noopener">
+          <span class="arrow">⬇</span>
+          {t('link.download')}
+          {download.tag && <span class="tag">{download.tag}</span>}
         </a>
       )
     }
@@ -165,21 +197,18 @@ const { createdAt, updatedAt } = project;
   .badge-ai {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    color: var(--accent);
-    border: 1px solid var(--accent-dim);
-    background: var(--accent-glow);
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
+    gap: 0.3rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+    color: var(--text-faint);
+    padding: 0.05rem 0.3rem;
     white-space: nowrap;
   }
   .badge-ai .dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
+    background: var(--accent-dim);
   }
 
   .subtitle {
@@ -227,24 +256,45 @@ const { createdAt, updatedAt } = project;
 
   .links {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.9rem;
+    gap: 0.5rem;
     margin-top: auto;
-    padding-top: 0.4rem;
+    padding-top: 0.7rem;
     font-size: 0.82rem;
   }
   .link {
-    color: var(--text-dim);
+    color: var(--text);
     display: inline-flex;
     align-items: center;
-    gap: 0.15rem;
-    transition: color var(--transition);
+    gap: 0.3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.6rem;
+    transition:
+      color var(--transition),
+      background var(--transition),
+      border-color var(--transition);
   }
   .link:hover {
-    color: var(--cat, var(--accent));
+    color: var(--bg);
+    background: var(--cat, var(--accent));
+    border-color: var(--cat, var(--accent));
   }
   .arrow {
     color: var(--cat, var(--accent));
+    transition: color var(--transition);
+  }
+  .link:hover .arrow {
+    color: inherit;
+  }
+  .tag {
+    color: var(--text-faint);
+    font-size: 0.72rem;
+    margin-left: 0.1rem;
+  }
+  .link:hover .tag {
+    color: inherit;
   }
   .stars {
     margin-left: auto;

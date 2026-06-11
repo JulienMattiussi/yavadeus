@@ -6,9 +6,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev --port 4321",
+    "dev": "astro dev --port 2107",
     "build": "astro build",
-    "preview": "astro preview --port 4321",
+    "preview": "astro preview --port 2107",
     "astro": "astro",
     "typecheck": "astro check",
     "format": "prettier --write . --plugin=prettier-plugin-astro",

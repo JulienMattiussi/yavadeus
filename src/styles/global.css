@@ -66,3 +66,66 @@ h3 {
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
+
+/*
+ * Layout primitives shared by server-rendered markup AND the timeline DOM that
+ * HomePage builds in JS. These must be global: Astro's scoped styles only match
+ * elements present at build time, so dynamically created nodes (.year-group,
+ * .grid, ...) would otherwise be unstyled.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--gap);
+}
+
+/* Timeline view: a vertical rail with a node per year. */
+#view-timeline {
+  margin-top: 1.5rem;
+}
+.year-group {
+  position: relative;
+  padding-left: 2.25rem;
+  padding-bottom: 3rem;
+  border-left: 2px solid var(--timeline);
+}
+.year-group:last-child {
+  padding-bottom: 1rem;
+}
+.year-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.4rem;
+  line-height: 1;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.year-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--timeline);
+  border: 3px solid var(--bg);
+  box-shadow:
+    0 0 0 1px var(--timeline),
+    0 0 12px var(--timeline-glow);
+  transform: translateX(-50%);
+}
+.year-num {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.year-count {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}

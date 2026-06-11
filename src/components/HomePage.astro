@@ -40,30 +40,62 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   </header>
 
   <main class="wrap">
-    {
-      CATEGORIES.map((cat) => {
-        const items = byCategory(cat);
-        if (items.length === 0) return null;
-        return (
-          <section class="category" data-category={cat} aria-labelledby={`cat-${cat}`}>
-            <div class="cat-head">
-              <h2 id={`cat-${cat}`} class="cat-title mono">
-                <span class="hash">#</span> {t(`cat.${cat}` as UIKey)}
-                <span class="cat-count">
-                  {items.length} {t('count.projects')}
-                </span>
-              </h2>
-              <p class="cat-desc">{t(`cat.${cat}.desc` as UIKey)}</p>
-            </div>
-            <div class="grid">
-              {items.map((project) => (
-                <ProjectCard project={project} lang={lang} />
-              ))}
-            </div>
-          </section>
-        );
-      })
-    }
+    <div class="toolbar" data-toolbar>
+      <label class="search-box">
+        <span class="search-prompt mono" aria-hidden="true">/</span>
+        <input
+          id="project-search"
+          type="search"
+          class="mono"
+          placeholder={t('search.placeholder')}
+          autocomplete="off"
+          aria-label={t('search.placeholder')}
+        />
+      </label>
+      <div class="sort" role="group" aria-label={t('view.label')}>
+        <span class="sort-label mono">{t('view.label')}</span>
+        <button type="button" class="sort-btn mono" data-view="categories" aria-pressed="true">
+          {t('view.categories')}
+        </button>
+        <button type="button" class="sort-btn mono" data-view="created" aria-pressed="false">
+          {t('sort.created')}
+        </button>
+        <button type="button" class="sort-btn mono" data-view="updated" aria-pressed="false">
+          {t('sort.updated')}
+        </button>
+      </div>
+    </div>
+
+    <div id="view-categories">
+      {
+        CATEGORIES.map((cat) => {
+          const items = byCategory(cat);
+          if (items.length === 0) return null;
+          return (
+            <section class="category" data-category={cat} aria-labelledby={`cat-${cat}`}>
+              <div class="cat-head">
+                <h2 id={`cat-${cat}`} class="cat-title mono">
+                  <span class="hash">#</span> {t(`cat.${cat}` as UIKey)}
+                  <span class="cat-count">
+                    {items.length} {t('count.projects')}
+                  </span>
+                </h2>
+                <p class="cat-desc">{t(`cat.${cat}.desc` as UIKey)}</p>
+              </div>
+              <div class="grid" data-grid={cat}>
+                {items.map((project) => (
+                  <ProjectCard project={project} lang={lang} />
+                ))}
+              </div>
+            </section>
+          );
+        })
+      }
+    </div>
+
+    <div id="view-timeline" data-unknown-year={t('year.unknown')} hidden></div>
+
+    <p id="search-empty" class="empty mono" hidden>{t('search.empty')}</p>
   </main>
 
   <footer class="wrap site-footer mono">
@@ -73,6 +105,127 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     >
   </footer>
 </Layout>
+
+<script>
+  // Progressive enhancement: client-side search + view switching.
+  // Views: "categories" (server-rendered rubrics, default) and two global
+  // timelines grouped by year ("created" / "updated"). Without JS, the
+  // categories view stays visible and search/timeline are simply unavailable.
+  const search = document.getElementById('project-search') as HTMLInputElement | null;
+  const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-view]'));
+  const categoriesView = document.getElementById('view-categories');
+  const timelineView = document.getElementById('view-timeline');
+  const empty = document.getElementById('search-empty');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.card'));
+  const unknownYear = timelineView?.dataset.unknownYear ?? '?';
+
+  // Remember each card's home grid and original order, to restore categories.
+  cards.forEach((card, i) => {
+    card.dataset.order = String(i);
+  });
+
+  type View = 'categories' | 'created' | 'updated';
+  let view: View = 'categories';
+
+  const normalize = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+
+  const matches = (card: HTMLElement, query: string) =>
+    query === '' || normalize(card.dataset.search ?? '').includes(query);
+
+  function yearOf(card: HTMLElement, key: View): number {
+    const ts = Number(card.dataset[key] ?? 0);
+    return ts > 0 ? new Date(ts).getFullYear() : 0;
+  }
+
+  function renderCategories(query: string) {
+    if (!categoriesView) return;
+    // Send every card back to its rubric grid, in original order.
+    for (const card of cards) {
+      const grid = categoriesView.querySelector<HTMLElement>(
+        `[data-grid="${card.dataset.category}"]`,
+      );
+      grid?.appendChild(card);
+    }
+    for (const grid of categoriesView.querySelectorAll<HTMLElement>('.grid')) {
+      Array.from(grid.children)
+        .sort(
+          (a, b) =>
+            Number((a as HTMLElement).dataset.order) - Number((b as HTMLElement).dataset.order),
+        )
+        .forEach((card) => grid.appendChild(card));
+    }
+    for (const section of categoriesView.querySelectorAll<HTMLElement>('.category')) {
+      const visible = Array.from(section.querySelectorAll<HTMLElement>('.card')).some((c) =>
+        matches(c, query),
+      );
+      section.querySelectorAll<HTMLElement>('.card').forEach((c) => {
+        c.hidden = !matches(c, query);
+      });
+      section.hidden = !visible;
+    }
+    categoriesView.hidden = false;
+    if (timelineView) timelineView.hidden = true;
+  }
+
+  function renderTimeline(key: View, query: string) {
+    if (!timelineView) return;
+    timelineView.textContent = '';
+    if (categoriesView) categoriesView.hidden = true;
+    timelineView.hidden = false;
+
+    const visibleCards = cards.filter((c) => matches(c, query));
+    const years = Array.from(new Set(visibleCards.map((c) => yearOf(c, key)))).sort(
+      (a, b) => b - a,
+    );
+
+    for (const year of years) {
+      const group = visibleCards
+        .filter((c) => yearOf(c, key) === year)
+        .sort((a, b) => Number(b.dataset[key] ?? 0) - Number(a.dataset[key] ?? 0));
+      if (group.length === 0) continue;
+
+      const section = document.createElement('section');
+      section.className = 'year-group';
+      const head = document.createElement('h2');
+      head.className = 'year-title mono';
+      head.innerHTML =
+        `<span class="year-num">${year === 0 ? unknownYear : year}</span>` +
+        `<span class="year-count">${group.length}</span>`;
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      for (const card of group) {
+        card.hidden = false;
+        grid.appendChild(card);
+      }
+      section.append(head, grid);
+      timelineView.appendChild(section);
+    }
+  }
+
+  function apply() {
+    const query = normalize(search?.value.trim() ?? '');
+    if (view === 'categories') renderCategories(query);
+    else renderTimeline(view, query);
+    if (empty) empty.hidden = cards.some((card) => matches(card, query));
+  }
+
+  search?.addEventListener('input', apply);
+  for (const button of viewButtons) {
+    button.addEventListener('click', () => {
+      view = (button.dataset.view as View) ?? 'categories';
+      for (const other of viewButtons) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+      apply();
+    });
+  }
+
+  apply();
+</script>
 
 <style>
   .hero {
@@ -137,6 +290,87 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     max-width: 48ch;
   }
 
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem 1.2rem;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 1rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 240px;
+  }
+  .search-prompt {
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  #project-search {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    padding: 0.2rem 0;
+  }
+  #project-search::placeholder {
+    color: var(--text-faint);
+  }
+  #project-search:focus {
+    outline: none;
+  }
+  .search-box:focus-within {
+    border-bottom: 1px solid var(--accent-dim);
+  }
+
+  .sort {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .sort-label {
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    margin-right: 0.1rem;
+  }
+  .sort-btn {
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    transition:
+      color var(--transition),
+      border-color var(--transition),
+      background var(--transition);
+  }
+  .sort-btn:hover {
+    color: var(--text);
+  }
+  .sort-btn[aria-pressed='true'] {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: var(--accent-glow);
+  }
+
+  .empty {
+    color: var(--text-dim);
+    text-align: center;
+    padding: 3rem 0;
+  }
+
   .category {
     margin: 3rem 0;
   }
@@ -168,12 +402,6 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     color: var(--text-dim);
     margin: 0.35rem 0 0;
     font-size: 0.95rem;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--gap);
   }
 
   .site-footer {
