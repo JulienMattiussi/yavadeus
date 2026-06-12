@@ -11,7 +11,7 @@ interface Props {
 const { project, lang } = Astro.props;
 const t = useTranslations(lang);
 const { title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
-const { createdAt, updatedAt, download } = project;
+const { createdAt, updatedAt, download, wip } = project;
 
 // Client-side search/sort metadata (used by the toolbar script in HomePage).
 const searchText = [title, subtitle[lang], ...tech].join(' ').toLowerCase();
@@ -49,6 +49,13 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
       )
     }
     <h3 class="title">{title}</h3>
+    {
+      wip && (
+        <span class="badge-wip mono" title={t('badge.wip.title')}>
+          {t('badge.wip')}
+        </span>
+      )
+    }
     {
       ai && (
         <span class="badge-ai mono" title={t('badge.ai.title')}>
@@ -95,29 +102,59 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   }
 
   <footer class="links mono">
-    <a href={github} class="link" target="_blank" rel="noopener">
-      <span class="arrow">↗</span>{t('link.github')}
+    <a
+      href={github}
+      class="link"
+      target="_blank"
+      rel="noopener"
+      aria-label={`${t('link.github')} - ${title} ${t('a11y.newtab')}`}
+    >
+      <span class="arrow" aria-hidden="true">↗</span>{t('link.github')}
     </a>
     {
       live && (
-        <a href={live} class="link" target="_blank" rel="noopener">
-          <span class="arrow">↗</span>
+        <a
+          href={live}
+          class="link"
+          target="_blank"
+          rel="noopener"
+          aria-label={`${t('link.live')} - ${title} ${t('a11y.newtab')}`}
+        >
+          <span class="arrow" aria-hidden="true">
+            ↗
+          </span>
           {t('link.live')}
         </a>
       )
     }
     {
       npm && (
-        <a href={npm} class="link" target="_blank" rel="noopener">
-          <span class="arrow">↗</span>
+        <a
+          href={npm}
+          class="link"
+          target="_blank"
+          rel="noopener"
+          aria-label={`${t('link.npm')} - ${title} ${t('a11y.newtab')}`}
+        >
+          <span class="arrow" aria-hidden="true">
+            ↗
+          </span>
           {t('link.npm')}
         </a>
       )
     }
     {
       download && (
-        <a href={download.url} class="link" target="_blank" rel="noopener">
-          <span class="arrow">⬇</span>
+        <a
+          href={download.url}
+          class="link"
+          target="_blank"
+          rel="noopener"
+          aria-label={`${t('link.download')} ${download.tag} - ${title} ${t('a11y.newtab')}`}
+        >
+          <span class="arrow" aria-hidden="true">
+            ⬇
+          </span>
           {t('link.download')}
           {download.tag && <span class="tag">{download.tag}</span>}
         </a>
@@ -125,8 +162,8 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     }
     {
       stars > 0 && (
-        <span class="stars" title={`${stars}`}>
-          ★ {stars}
+        <span class="stars" aria-label={`${stars} stars`}>
+          <span aria-hidden="true">★ {stars}</span>
         </span>
       )
     }
@@ -162,6 +199,9 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   .card[data-category='delires'] {
     --cat: var(--cat-delires);
   }
+  .card[data-category='marmelab'] {
+    --cat: var(--cat-marmelab);
+  }
 
   .thumb {
     display: block;
@@ -192,6 +232,17 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     font-size: 1.05rem;
     color: var(--text);
     margin-right: auto;
+  }
+
+  .badge-wip {
+    flex: none;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--wip);
+    border: 1px solid var(--wip);
+    border-radius: 999px;
+    padding: 0.05rem 0.4rem;
   }
 
   .badge-ai {

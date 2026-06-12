@@ -15,10 +15,10 @@
   --line: #1f2c33;
   --line-strong: #2c3e47;
 
-  /* Text */
+  /* Text (all meet WCAG AA >= 4.5:1 on --bg) */
   --text: #d7e0e3;
-  --text-dim: #8aa0a8;
-  --text-faint: #5a6e76;
+  --text-dim: #9fb2ba;
+  --text-faint: #8a9ca5;
 
   /* Accents */
   --accent: #00ff9c;
@@ -30,15 +30,23 @@
   --cat-jeux: #ff5d9e;
   --cat-outils: #36c5ff;
   --cat-delires: #ffb454;
+  --cat-marmelab: #b58cff;
 
   /* Timeline rail + year nodes (thickened + glow so it reads over the grid) */
   --timeline: var(--accent);
   --timeline-glow: var(--accent-glow);
 
+  /* Work-in-progress badge (amber) */
+  --wip: #ffc24b;
+
   /* Typography */
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
   --font-sans:
     'Inter', system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+
+  /* Sticky header offsets (recomputed at runtime in JS to match real heights) */
+  --topbar-h: 3rem;
+  --toolbar-h: 3.5rem;
 
   /* Layout */
   --maxw: 1100px;

@@ -19,7 +19,11 @@ body {
   -webkit-font-smoothing: antialiased;
   /* Subtle terminal-grid backdrop */
   background-image:
-    radial-gradient(circle at 50% 0%, rgba(0, 255, 156, 0.06), transparent 60%),
+    radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 60%
+    ),
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size:
@@ -67,6 +71,36 @@ h3 {
   border-radius: var(--radius-sm);
 }
 
+/* Skip link: hidden until focused, then pinned top-left over everything. */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 0.9rem;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  transform: translateY(-150%);
+  transition: transform var(--transition);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Respect reduced-motion: drop looping/gratuitous motion, keep purposeful
+   micro-interactions (toggle, hover colour) which are short and non-distracting. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-iteration-count: 1 !important;
+  }
+}
+
 /*
  * Layout primitives shared by server-rendered markup AND the timeline DOM that
  * HomePage builds in JS. These must be global: Astro's scoped styles only match
@@ -75,7 +109,8 @@ h3 {
  */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* min() keeps a single card from overflowing on very narrow screens. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: var(--gap);
 }
 
@@ -93,19 +128,25 @@ h3 {
   padding-bottom: 1rem;
 }
 .year-title {
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--toolbar-h));
+  z-index: 10;
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  margin: 0 0 1.4rem;
+  margin: 0 0 1.1rem;
+  padding: 0.5rem 0;
   line-height: 1;
   font-family: var(--font-mono);
   font-weight: 600;
+  background: var(--bg);
 }
+/* The node sits on the rail, which is 2.25rem left of the (sticky) title box. */
 .year-title::before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0.1rem;
+  left: -2.25rem;
+  top: 50%;
   width: 13px;
   height: 13px;
   border-radius: 50%;
@@ -114,7 +155,7 @@ h3 {
   box-shadow:
     0 0 0 1px var(--timeline),
     0 0 12px var(--timeline-glow);
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 .year-num {
   font-size: 1.9rem;

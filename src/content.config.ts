@@ -6,8 +6,7 @@ import { loadProjects } from './lib/projects-loader';
 const localized = z.object({ fr: z.string(), en: z.string() });
 
 const projects = defineCollection({
-  // Build-time loader: curated list enriched from GitHub & npm.
-  loader: async () => await loadProjects(),
+  loader: async () => loadProjects(),
   schema: z.object({
     title: z.string(),
     subtitle: localized,
@@ -20,6 +19,7 @@ const projects = defineCollection({
     thumbnail: z.string().optional(),
     tech: z.array(z.string()).default([]),
     ai: z.object({ agent: z.string().nullable() }).nullable().default(null),
+    wip: z.boolean().default(false),
     stars: z.number().default(0),
     createdAt: z.string().nullable().default(null),
     updatedAt: z.string().nullable().default(null),

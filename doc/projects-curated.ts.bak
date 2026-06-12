@@ -1,0 +1,169 @@
+/*
+ * Catalog rules (the "hybrid" half of the content model).
+ *
+ * The site AUTO-DISCOVERS every non-fork repo on GITHUB_USER's account. A repo
+ * only appears once you give it a category here, keyed by repo name. No entry
+ * (or no category) => the repo stays hidden. So onboarding a project = add one
+ * line below; everything else (description, live URL, tech, dates, stars, icon,
+ * release, AI detection) is enriched automatically at build time.
+ *
+ * Optional overrides per project:
+ *  - subtitle:  bilingual { fr, en }; defaults to the GitHub description (both langs)
+ *  - title:     defaults to the prettified repo name
+ *  - live:      defaults to the GitHub "homepage" field
+ *  - npm:       npm package name -> adds an npm link
+ *  - download:  release-page URL; defaults to an auto-detected release with assets
+ *  - favicon:   automatic (live favicon, else repo app icon); URL to override, false to hide
+ *  - tech:      defaults to the repo's top GitHub languages
+ *  - ai:        auto-detected from AGENTS.md/CLAUDE.md or a .claude dir; true/false to force
+ *  - thumbnail: "/thumbnails/<repo>.png" (put the image in public/thumbnails/) or a URL
+ *  - wip:       true to flag the project as work in progress (WIP badge)
+ *  - featured / order: presentation controls
+ */
+
+export const CATEGORIES = ['jeux', 'outils', 'delires', 'marmelab'] as const;
+export type Category = (typeof CATEGORIES)[number];
+
+export type LocalizedText = { fr: string; en: string };
+
+export interface ProjectOverride {
+  /** Required to show the project. Without it, the discovered repo stays hidden. */
+  category: Category;
+  title?: string;
+  subtitle?: LocalizedText;
+  live?: string;
+  npm?: string;
+  download?: string | false;
+  favicon?: boolean | string;
+  tech?: string[];
+  ai?: boolean | string;
+  thumbnail?: string;
+  /** Mark the project as work in progress (shows a WIP badge). */
+  wip?: boolean;
+  featured?: boolean;
+  order?: number;
+}
+
+/** GitHub account whose repos are auto-discovered. */
+export const GITHUB_USER = 'JulienMattiussi';
+/** npm maintainer handle (informational). */
+export const NPM_USER = 'yavadeus';
+
+/** Keyed by repo name. Add a repo here (with a category) to put it on the page. */
+export const projects: Record<string, ProjectOverride> = {
+  // ------------------------------------------------------------------ JEUX
+  'universal-picross': {
+    category: 'jeux',
+    featured: true,
+    subtitle: {
+      fr: 'Lecteur et solveur universel de jeux de picross.',
+      en: 'A universal player and solver for picross games.',
+    },
+  },
+  'calendar-solver': {
+    category: 'jeux',
+    subtitle: {
+      fr: 'Casse-tête : faire correspondre la date du jour avec les bonnes pièces.',
+      en: "A puzzle game matching today's date with the right pieces.",
+    },
+  },
+  ptitjeux: {
+    category: 'jeux',
+    subtitle: {
+      fr: 'Une collection de petits jeux de puzzle en ligne.',
+      en: 'A collection of small online puzzle games.',
+    },
+  },
+  'bingo-builder': {
+    category: 'jeux',
+    subtitle: {
+      fr: 'Générer et jouer à des bingos personnalisés entre amis.',
+      en: 'Generate and play custom bingo with friends.',
+    },
+  },
+
+  // ---------------------------------------------------------------- OUTILS
+  deduplicateur: {
+    category: 'outils',
+    featured: true,
+    subtitle: {
+      fr: 'Détecter et purger les fichiers en double.',
+      en: 'Detect and purge duplicate files.',
+    },
+  },
+  'fast-emoji': {
+    category: 'outils',
+    tech: ['JavaScript', 'GNOME Shell', 'Python'],
+    subtitle: {
+      fr: 'Raccourcis simples pour insérer des emojis partout.',
+      en: 'Simple shortcuts to insert emojis anywhere.',
+    },
+  },
+  lorrainjs: {
+    category: 'outils',
+    npm: 'lorrainjs',
+    subtitle: {
+      fr: 'Un logger pour les gens de Lorraine.',
+      en: 'A logger for Lorraine people.',
+    },
+  },
+  veilleur: {
+    category: 'outils',
+    subtitle: {
+      fr: 'Revue de veille tech automatisée pour le dev web.',
+      en: 'Automated tech-watch digest for web development.',
+    },
+  },
+
+  // --------------------------------------------------------------- DÉLIRES
+  legoroscope: {
+    category: 'delires',
+    featured: true,
+    tech: ['Next.js', 'TypeScript', 'Redis'],
+    subtitle: {
+      fr: 'Horoscope hebdomadaire du Gorafi : bot Discord et appli web.',
+      en: 'Weekly Gorafi horoscope: Discord bot and web app.',
+    },
+  },
+  'tripote-visor': {
+    category: 'delires',
+    subtitle: {
+      fr: 'Une plateforme de réservation fictive et improbable.',
+      en: 'A fictional, improbable booking platform.',
+    },
+  },
+  'combien-mieux-que-un': {
+    category: 'delires',
+    subtitle: {
+      fr: "Combien c'est mieux que 1 ?",
+      en: 'How much better than 1 is it?',
+    },
+  },
+  'balkanoche-prison-calculator': {
+    category: 'delires',
+    subtitle: {
+      fr: "Calculateur de peine sur l'échelle Balkanoche.",
+      en: 'Prison-time calculator on the Balkanoche scale.',
+    },
+  },
+  'are-you-vulcain': {
+    category: 'delires',
+    subtitle: {
+      fr: 'Êtes-vous un Vulcain ? Faites le test.',
+      en: 'Are you a Vulcan? Take the test.',
+    },
+  },
+
+  // -------------------------------------------------------------- MARMELAB
+  // (add Marmelab-themed repos here as we review them)
+
+  // CLI_INSERT_PROJECTS (do not remove) -- `make categorize` appends entries here
+};
+
+/**
+ * Repos explicitly set aside: not shown, and skipped by the categorize CLI so
+ * it never asks about them again. Use for throwaway/private repos.
+ */
+export const ignored: string[] = [
+  // CLI_INSERT_IGNORED (do not remove)
+];

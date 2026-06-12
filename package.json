@@ -11,6 +11,12 @@
     "preview": "astro preview --port 2107",
     "astro": "astro",
     "typecheck": "astro check",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "fetch": "tsx scripts/fetch.ts",
+    "categorize": "tsx scripts/categorize.ts",
+    "curate": "tsx scripts/curate.ts",
+    "reset:data": "tsx scripts/reset.ts",
     "format": "prettier --write . --plugin=prettier-plugin-astro",
     "format:check": "prettier --check . --plugin=prettier-plugin-astro"
   },
@@ -22,6 +28,8 @@
     "@types/node": "^22.10.2",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
-    "typescript": "^5.7.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
   }
 }

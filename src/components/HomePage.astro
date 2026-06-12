@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { GITHUB_USER } from '../config';
 import { CATEGORIES, type Category } from '../data/projects';
 import type { Lang, UIKey } from '../i18n/ui';
 import { otherLangPath, useTranslations } from '../i18n/ui';
@@ -12,6 +13,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const githubUrl = `https://github.com/${GITHUB_USER}`;
 
 const all = await getCollection('projects');
 const projects = all
@@ -24,22 +26,30 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
 ---
 
 <Layout lang={lang}>
-  <header class="hero wrap">
-    <nav class="topbar">
-      <span class="prompt mono">~/projects</span>
-      <a class="lang mono" href={otherLangPath(lang)} hreflang={lang === 'fr' ? 'en' : 'fr'}>
+  <div class="topbar-bar">
+    <nav class="topbar wrap" aria-label={t('a11y.nav')}>
+      <span class="prompt mono" aria-hidden="true">~/projects</span>
+      <a
+        class="lang mono"
+        href={otherLangPath(lang)}
+        hreflang={lang === 'fr' ? 'en' : 'fr'}
+        aria-label={t('lang.switch.aria')}
+      >
         {t('lang.switch')}
       </a>
     </nav>
+  </div>
+
+  <header class="hero wrap">
     <h1 class="logo mono">
-      <span class="sigil">$</span>
-      {t('site.title')}<span class="caret">_</span>
+      <span class="sigil" aria-hidden="true">$</span>
+      {t('site.title')}<span class="caret" aria-hidden="true">_</span>
     </h1>
     <p class="tagline">{t('site.tagline')}</p>
     <p class="intro">{t('site.intro')}</p>
   </header>
 
-  <main class="wrap">
+  <main id="content" class="wrap" tabindex="-1">
     <div class="toolbar" data-toolbar>
       <label class="search-box">
         <span class="search-prompt mono" aria-hidden="true">/</span>
@@ -82,11 +92,30 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
                 </h2>
                 <p class="cat-desc">{t(`cat.${cat}.desc` as UIKey)}</p>
               </div>
-              <div class="grid" data-grid={cat}>
-                {items.map((project) => (
-                  <ProjectCard project={project} lang={lang} />
-                ))}
-              </div>
+              {cat === 'delires' ? (
+                <div class="delires-gate">
+                  <input type="checkbox" id="openmind" class="openmind-toggle" />
+                  <div class="grid blurable" data-grid={cat}>
+                    {items.map((project) => (
+                      <ProjectCard project={project} lang={lang} />
+                    ))}
+                  </div>
+                  <label class="openmind-switch" for="openmind">
+                    <span class="toggle" aria-hidden="true">
+                      <span class="toggle-knob">
+                        <span class="openmind-emoji">🤪</span>
+                      </span>
+                    </span>
+                    <span class="toggle-text mono">{t('delires.gate')}</span>
+                  </label>
+                </div>
+              ) : (
+                <div class="grid" data-grid={cat}>
+                  {items.map((project) => (
+                    <ProjectCard project={project} lang={lang} />
+                  ))}
+                </div>
+              )}
             </section>
           );
         })
@@ -100,9 +129,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
 
   <footer class="wrap site-footer mono">
     <span>{t('footer.built')}</span>
-    <a href="https://github.com/JulienMattiussi" target="_blank" rel="noopener"
-      >github.com/JulienMattiussi</a
-    >
+    <a href={githubUrl} target="_blank" rel="noopener">github.com/{GITHUB_USER}</a>
   </footer>
 </Layout>
 
@@ -123,6 +150,43 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   cards.forEach((card, i) => {
     card.dataset.order = String(i);
   });
+
+  // Keep sticky offsets in sync with the real bar heights (they change when the
+  // toolbar wraps on narrow screens), so stacked sticky headers never overlap.
+  const topbar = document.querySelector<HTMLElement>('.topbar-bar');
+  const toolbar = document.querySelector<HTMLElement>('.toolbar');
+  function measureSticky() {
+    const root = document.documentElement.style;
+    if (topbar) root.setProperty('--topbar-h', `${topbar.offsetHeight}px`);
+    if (toolbar) root.setProperty('--toolbar-h', `${toolbar.offsetHeight}px`);
+  }
+  measureSticky();
+  window.addEventListener('resize', measureSticky);
+  if (document.fonts?.ready) document.fonts.ready.then(measureSticky);
+
+  // "Open-minded mode" gate on the délires rubric: blurred until enabled,
+  // remembered for the tab session. inert keeps blurred cards out of tab + SR.
+  const openmind = document.getElementById('openmind') as HTMLInputElement | null;
+  const blurable = document.querySelector<HTMLElement>('.blurable');
+  if (openmind && blurable) {
+    const KEY = 'yavadeus:openmind';
+    const syncOpenmind = () => {
+      blurable.inert = !openmind.checked;
+      try {
+        if (openmind.checked) sessionStorage.setItem(KEY, '1');
+        else sessionStorage.removeItem(KEY);
+      } catch {
+        /* sessionStorage unavailable: degrade to per-page state */
+      }
+    };
+    try {
+      if (sessionStorage.getItem(KEY) === '1') openmind.checked = true;
+    } catch {
+      /* ignore */
+    }
+    syncOpenmind();
+    openmind.addEventListener('change', syncOpenmind);
+  }
 
   type View = 'categories' | 'created' | 'updated';
   let view: View = 'categories';
@@ -228,19 +292,27 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
 </script>
 
 <style>
-  .hero {
-    padding-top: 4rem;
-    padding-bottom: 2.5rem;
+  .topbar-bar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
   }
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 2.5rem;
+    min-height: var(--topbar-h);
     font-size: 0.85rem;
   }
   .prompt {
     color: var(--text-faint);
+  }
+
+  .hero {
+    padding-top: 2.5rem;
+    padding-bottom: 2rem;
   }
   .lang {
     color: var(--text-dim);
@@ -291,6 +363,9 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   }
 
   .toolbar {
+    position: sticky;
+    top: var(--topbar-h);
+    z-index: 20;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -371,11 +446,130 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     padding: 3rem 0;
   }
 
+  /*
+   * "Open-minded mode": délires cards are blurred until a real toggle switch is
+   * flipped. The 🤪 emoji rides the knob, greyscale when off, colored when on.
+   * Pure CSS (sibling selectors) so it works without JS; JS adds inert + memory.
+   */
+  .blurable {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+    transition: filter 0.3s ease;
+  }
+  .openmind-toggle:checked ~ .blurable {
+    filter: none;
+    pointer-events: auto;
+    user-select: auto;
+  }
+  /* visually hidden but focusable */
+  .openmind-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+  .delires-gate {
+    position: relative;
+  }
+  .openmind-switch {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    transition: opacity 0.35s ease 0.45s;
+  }
+  .toggle {
+    position: relative;
+    flex: none;
+    width: 9rem;
+    height: 4.4rem;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--line-strong);
+    transition:
+      background var(--transition),
+      border-color var(--transition);
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 50%;
+    left: 0.4rem;
+    transform: translateY(-50%);
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.32s cubic-bezier(0.5, 1.7, 0.5, 1);
+  }
+  .openmind-emoji {
+    font-size: 2.3rem;
+    line-height: 1;
+    filter: grayscale(1) opacity(0.5);
+    transition: filter 0.32s ease;
+  }
+  .toggle-text {
+    font-weight: 600;
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    color: var(--text-dim);
+    transition: color var(--transition);
+  }
+  .openmind-switch:hover .toggle {
+    border-color: var(--cat-delires);
+  }
+  .openmind-toggle:focus-visible ~ .openmind-switch .toggle {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* On activation: knob slides right + emoji colorizes, then the switch
+     collapses away (no going back - the cards stay revealed). */
+  .openmind-toggle:checked ~ .openmind-switch .toggle {
+    background: color-mix(in srgb, var(--cat-delires) 22%, var(--bg));
+    border-color: var(--cat-delires);
+  }
+  .openmind-toggle:checked ~ .openmind-switch .toggle-knob {
+    left: calc(100% - 4rem);
+  }
+  .openmind-toggle:checked ~ .openmind-switch .openmind-emoji {
+    filter: none;
+  }
+  .openmind-toggle:checked ~ .openmind-switch .toggle-text {
+    color: var(--cat-delires);
+  }
+  /* Once on, the overlay fades away (after the slide plays) and never returns. */
+  .openmind-toggle:checked ~ .openmind-switch {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.35s ease 0.45s,
+      visibility 0s linear 0.8s;
+  }
+
   .category {
     margin: 3rem 0;
   }
   .cat-head {
+    position: sticky;
+    top: calc(var(--topbar-h) + var(--toolbar-h));
+    z-index: 10;
     margin-bottom: 1.1rem;
+    padding: 0.6rem 0 0.5rem;
+    background: var(--bg);
   }
   .cat-title {
     display: flex;
@@ -392,6 +586,9 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   }
   .category[data-category='delires'] .hash {
     color: var(--cat-delires);
+  }
+  .category[data-category='marmelab'] .hash {
+    color: var(--cat-marmelab);
   }
   .cat-count {
     font-size: 0.75rem;
@@ -421,5 +618,28 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   }
   .site-footer a:hover {
     color: var(--accent);
+  }
+
+  /* Mobile: stack the toolbar so search and view controls each get a full row. */
+  @media (max-width: 560px) {
+    .hero {
+      padding-top: 1.75rem;
+    }
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.7rem;
+    }
+    .sort {
+      flex-wrap: wrap;
+    }
+    .sort-btn {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    .category,
+    .year-group {
+      margin: 2rem 0;
+    }
   }
 </style>

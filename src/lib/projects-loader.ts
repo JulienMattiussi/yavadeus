@@ -1,29 +1,20 @@
 /*
- * Content Layer loader: turns the curated list (src/data/projects.ts) into a
- * fully enriched, schema-validated `projects` collection at build time.
+ * Content Layer loader (offline). Reads the snapshot written by `make fetch`
+ * (src/data/projects-cache.json) and merges it with the curated overrides
+ * (src/data/projects.ts). A repo shows only if it has a category AND is present
+ * in the cache. No network here - run `make fetch` to refresh the data.
  *
- * Curated value always wins over the fetched one; fetched data only fills gaps.
- * Network failures degrade gracefully (see src/lib/sources.ts).
+ * Curated override always wins; the cache only fills the gaps.
  */
 
 import {
-  GITHUB_USER,
-  projects as curated,
-  type CuratedProject,
+  projects as overrides,
+  type Category,
   type LocalizedText,
+  type ProjectOverride,
 } from '../data/projects';
-import {
-  fetchFavicon,
-  fetchFirstCommitDate,
-  fetchGitHubLanguages,
-  fetchGitHubRelease,
-  fetchGitHubRepo,
-  fetchHasAgentFile,
-  fetchNpmPackage,
-  fetchRepoIcon,
-  prettifyName,
-  type ReleaseInfo,
-} from './sources';
+import { readCache, type CachedRepo } from './cache';
+import { prettifyName, safeHttpUrl, type ReleaseInfo } from './sources';
 
 /** AI-usage marker. `agent` is the named tool when known, else null. */
 export type AiInfo = { agent: string | null } | null;
@@ -32,7 +23,7 @@ export interface ProjectEntry {
   id: string;
   title: string;
   subtitle: LocalizedText;
-  category: CuratedProject['category'];
+  category: Category;
   github: string;
   live?: string;
   npm?: string;
@@ -41,8 +32,9 @@ export interface ProjectEntry {
   thumbnail?: string;
   tech: string[];
   ai: AiInfo;
+  wip: boolean;
   stars: number;
-  /** ISO date of project start (first commit, else repo creation), or null. */
+  /** ISO date of project start (first commit), or null if unknown. */
   createdAt: string | null;
   /** ISO date of last activity (last push), or null if unknown. */
   updatedAt: string | null;
@@ -50,85 +42,58 @@ export interface ProjectEntry {
   order: number;
 }
 
-/** Resolve a curated repo ("name" or "owner/name") to a full "owner/name". */
-function fullRepo(repo: string): string {
-  return repo.includes('/') ? repo : `${GITHUB_USER}/${repo}`;
-}
-
-function repoName(repo: string): string {
-  return repo.split('/').pop() as string;
-}
-
-async function enrich(p: CuratedProject): Promise<ProjectEntry> {
-  const repo = fullRepo(p.repo);
-  const name = repoName(repo);
-
-  // Auto-detect AI usage from an AGENTS.md/CLAUDE.md only when not curated.
-  const needsAiDetection = p.ai === undefined;
-  // Auto-detect a downloadable release only when not curated/opted out.
-  const needsReleaseDetection = p.download === undefined;
-
-  const [gh, langs, npm, hasAgentFile, release, firstCommit] = await Promise.all([
-    fetchGitHubRepo(repo),
-    p.tech ? Promise.resolve([]) : fetchGitHubLanguages(repo),
-    p.npm ? fetchNpmPackage(p.npm) : Promise.resolve(null),
-    needsAiDetection ? fetchHasAgentFile(repo) : Promise.resolve(false),
-    needsReleaseDetection ? fetchGitHubRelease(repo) : Promise.resolve(null),
-    fetchFirstCommitDate(repo),
-  ]);
-
-  const ghDescription = gh?.description ?? '';
-  const subtitle: LocalizedText = p.subtitle ?? {
-    fr: ghDescription,
-    en: ghDescription,
-  };
-
-  const live = p.live ?? gh?.homepage ?? undefined;
-
-  // Icon resolution (automatic unless favicon === false):
-  //   explicit URL > live-site favicon > program/app icon committed in the repo.
-  let favicon: string | undefined;
-  if (typeof p.favicon === 'string') {
-    favicon = p.favicon;
-  } else if (p.favicon !== false) {
-    if (live) favicon = (await fetchFavicon(live)) ?? undefined;
-    if (!favicon) favicon = (await fetchRepoIcon(repo, gh?.defaultBranch ?? 'main')) ?? undefined;
-  }
-
-  // Resolve AI marker: explicit name > explicit true > auto-detected file > none.
-  // `ai: false` in the curated entry opts out of auto-detection.
+export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): ProjectEntry {
   let ai: AiInfo = null;
-  if (typeof p.ai === 'string') ai = { agent: p.ai };
-  else if (p.ai === true) ai = { agent: null };
-  else if (p.ai === undefined && hasAgentFile) ai = { agent: null };
+  if (typeof o.ai === 'string') ai = { agent: o.ai };
+  else if (o.ai === true) ai = { agent: null };
+  else if (o.ai === undefined && c.ai) ai = { agent: null };
 
-  // Resolve download: explicit URL > auto-detected release with assets > none.
   let download: ReleaseInfo | undefined;
-  if (typeof p.download === 'string') download = { url: p.download, tag: '' };
-  else if (release) download = release;
+  if (typeof o.download === 'string') download = { url: o.download, tag: '' };
+  else if (o.download !== false && c.release) download = c.release;
+  if (download && !safeHttpUrl(download.url)) download = undefined;
+
+  const favicon =
+    typeof o.favicon === 'string' ? o.favicon : o.favicon === false ? null : c.favicon;
 
   return {
     id: name,
-    title: p.title ?? prettifyName(name),
-    subtitle,
-    category: p.category,
-    github: gh?.htmlUrl ?? `https://github.com/${repo}`,
-    live,
-    npm: npm?.url ?? (p.npm ? `https://www.npmjs.com/package/${p.npm}` : undefined),
+    title: o.title ?? prettifyName(name),
+    subtitle: o.subtitle ?? { fr: c.description ?? '', en: c.description ?? '' },
+    category: o.category,
+    // URLs that originate from fetched data are scheme-checked (http/https only).
+    github: safeHttpUrl(c.htmlUrl) ?? `https://github.com/${name}`,
+    live: safeHttpUrl(o.live ?? c.homepage),
+    npm: o.npm ? `https://www.npmjs.com/package/${o.npm}` : undefined,
     download,
-    favicon,
-    thumbnail: p.thumbnail,
-    tech: p.tech ?? langs,
+    favicon: safeHttpUrl(favicon),
+    thumbnail: o.thumbnail,
+    tech: o.tech ?? c.languages,
     ai,
-    stars: gh?.stars ?? 0,
-    createdAt: firstCommit ?? gh?.createdAt ?? null,
-    updatedAt: gh?.pushedAt ?? null,
-    featured: p.featured ?? false,
-    order: p.order ?? 0,
+    wip: o.wip ?? false,
+    stars: c.stars,
+    createdAt: c.createdAt,
+    updatedAt: c.pushedAt,
+    featured: o.featured ?? false,
+    order: o.order ?? 0,
   };
 }
 
-export async function loadProjects(): Promise<ProjectEntry[]> {
-  const visible = curated.filter((p) => !p.hidden);
-  return Promise.all(visible.map(enrich));
+export function loadProjects(): ProjectEntry[] {
+  const cache = readCache();
+  const entries: ProjectEntry[] = [];
+
+  for (const [name, o] of Object.entries(overrides)) {
+    if (!o.category) continue;
+    const c = cache.repos[name];
+    if (!c) {
+      console.warn(
+        `[loader] "${name}" est catégorisé mais absent du cache - relance \`make fetch\`. Ignoré.`,
+      );
+      continue;
+    }
+    entries.push(buildEntry(name, o, c));
+  }
+
+  return entries;
 }

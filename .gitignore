@@ -12,9 +12,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# background dev server (make start)
+.dev.log
+.pid
+
 
 # environment variables
-.env
+# .env holds shared PUBLIC config (committed); secrets/overrides go in .env.local
+.env.local
+.env.*.local
 .env.production
 
 # macOS-specific files

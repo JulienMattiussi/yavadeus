@@ -1,10 +1,10 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+
+import { SITE_URL } from './src/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // Update this once the production domain is known (used for canonical URLs).
-  site: 'https://yavadeus.dev',
+  site: SITE_URL, // from .env (SITE_URL); used for canonical URLs
   i18n: {
     defaultLocale: 'fr',
     locales: ['fr', 'en'],
