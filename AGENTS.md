@@ -75,25 +75,29 @@ Three decoupled steps, only the first touches the network:
 3. **build** (`make build`) - `src/lib/projects-loader.ts` merges the cache with
    the curated overrides into the `projects` collection. Offline, no token.
 
+The cache is read at build/dev startup and **not watched**: after `make fetch`,
+rebuild or restart `make dev`/`make start` to see the new data (a running dev
+server keeps the previous snapshot).
+
 `src/data/projects.ts` exports `projects: Record<string, ProjectOverride>` (keyed
 by repo name) plus an `ignored: string[]`. A repo shows only if it has a category
 and is present in the cache. Per field, the **curated override wins; the cache
 fills the gap**:
 
-| Field       | Curated override              | From the cache (filled by `fetch`)            |
-| ----------- | ----------------------------- | --------------------------------------------- |
-| `title`     | `title`                       | prettified repo name                          |
-| `subtitle`  | `subtitle {fr,en}`            | GitHub description (same text for both langs) |
-| `live`      | `live`                        | GitHub `homepage` field                       |
-| `npm`       | `npm` (pkg name)              | - (link built from the name)                  |
-| `download`  | `download` (URL / `false`)    | latest release page when it ships assets      |
-| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon   |
-| `tech`      | `tech: string[]`              | top GitHub languages                          |
-| `ai`        | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo |
-| `stars`     | -                             | GitHub stargazers                             |
-| dates       | -                             | first-commit date + `pushed_at`               |
-| `wip`       | `wip: true`                   | - (curated, asked by `make curate`)           |
-| `thumbnail` | `thumbnail`                   | - (drop an image in `public/thumbnails/`)     |
+| Field       | Curated override              | From the cache (filled by `fetch`)                       |
+| ----------- | ----------------------------- | -------------------------------------------------------- |
+| `title`     | `title`                       | prettified repo name                                     |
+| `subtitle`  | `subtitle {fr,en}`            | GitHub description (same text for both langs)            |
+| `live`      | `live`                        | `homepage` field, else GitHub Pages URL                  |
+| `npm`       | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER |
+| `download`  | `download` (URL / `false`)    | latest release page when it ships assets                 |
+| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon              |
+| `tech`      | `tech: string[]`              | top GitHub languages                                     |
+| `ai`        | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo            |
+| `stars`     | -                             | GitHub stargazers                                        |
+| dates       | -                             | first-commit date + `pushed_at`                          |
+| `wip`       | `wip: true`                   | - (curated, asked by `make curate`)                      |
+| `thumbnail` | `thumbnail`                   | - (drop an image in `public/thumbnails/`)                |
 
 `GITHUB_USER` and `SITE_URL` come from `.env` (via `src/config.ts`); real env
 vars override them. Forks are never shown; `ignored` repos are skipped. The cache is committed, so

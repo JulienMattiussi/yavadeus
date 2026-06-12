@@ -19,7 +19,6 @@
  *  - ai:        auto-detected from AGENTS.md/CLAUDE.md or a .claude dir; true/false to force
  *  - thumbnail: "/thumbnails/<repo>.png" (put the image in public/thumbnails/) or a URL
  *  - wip:       true to flag the project as work in progress (WIP badge)
- *  - featured / order: presentation controls
  */
 
 export const CATEGORIES = ['jeux', 'outils', 'delires', 'marmelab'] as const;
@@ -41,12 +40,45 @@ export interface ProjectOverride {
   thumbnail?: string;
   /** Mark the project as work in progress (shows a WIP badge). */
   wip?: boolean;
-  featured?: boolean;
-  order?: number;
 }
 
 /** Keyed by repo name. Add a repo here (with a category) to put it on the page. */
 export const projects: Record<string, ProjectOverride> = {
+  deduplicateur: { category: 'outils' },
+  legoroscope: { category: 'outils' },
+  ptitjeux: { category: 'jeux', wip: true },
+  'universal-picross': { category: 'jeux', wip: true },
+  'marmelab-en-voyage': { category: 'marmelab' },
+  veilleur: { category: 'outils' },
+  'glaude.ai': { category: 'delires' },
+  'tripote-visor': { category: 'delires' },
+  'horloge-passe-partout': { category: 'delires' },
+  'fast-emoji': { category: 'outils' },
+  'calendar-solver': { category: 'jeux' },
+  'bingo-builder': { category: 'jeux', wip: true },
+  'cobol-playground': { category: 'marmelab' },
+  'photo-duel': { category: 'delires' },
+  'mai-rmelab-2025': { category: 'marmelab' },
+  grammarlai: { category: 'outils', wip: true },
+  'combien-mieux-que-un': { category: 'delires' },
+  'secret-project': { category: 'delires' },
+  'marme-ten': { category: 'marmelab' },
+  'juin-rmelab': { category: 'marmelab' },
+  'mai-rmelab': { category: 'marmelab' },
+  'are-you-vulcain': { category: 'delires' },
+  plokering: { category: 'outils' },
+  lostpass: { category: 'delires' },
+  'the-game': { category: 'jeux' },
+  'retro-admin': { category: 'marmelab' },
+  estcequonmetenprodaujourdhui: { category: 'delires' },
+  'balkanoche-prison-calculator': { category: 'delires' },
+  'traducteur-lorrain': { category: 'marmelab' },
+  lorrainjs: { category: 'marmelab' },
+  'jaune-attend': { category: 'delires' },
+  'logo-marmelab': { category: 'marmelab' },
+  boardgameslist: { category: 'outils', wip: true },
+  Marmemap: { category: 'marmelab' },
+  RedMonkDynamic: { category: 'outils', wip: true },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
@@ -55,5 +87,9 @@ export const projects: Record<string, ProjectOverride> = {
  * never asks about them again. Use for throwaway/private repos.
  */
 export const ignored: string[] = [
+  'marmelab-games',
+  'Fred',
+  'marmenews',
+  'vitecrats',
   // CLI_INSERT_IGNORED (do not remove)
 ];

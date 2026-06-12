@@ -3,7 +3,7 @@
  *
  * Reads the cache written by `make fetch` (offline), then runs each curation
  * step in sequence, sharing a single interactive prompt. Add new steps to the
- * `steps` array below as they are written (subtitles, featured, thumbnails...).
+ * `steps` array below as they are written (subtitles, thumbnails...).
  *
  * Run `make fetch` first so the repo list is up to date.
  */
@@ -24,7 +24,6 @@ const steps: Step[] = [
   { name: 'Nettoyage (repos supprimés)', run: prune },
   // Ajouter ici les futures étapes de curation, ex. :
   // { name: 'Sous-titres', run: subtitles },
-  // { name: 'Mise en avant', run: featured },
 ];
 
 const cache = readCache();

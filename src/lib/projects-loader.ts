@@ -38,8 +38,6 @@ export interface ProjectEntry {
   createdAt: string | null;
   /** ISO date of last activity (last push), or null if unknown. */
   updatedAt: string | null;
-  featured: boolean;
-  order: number;
 }
 
 export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): ProjectEntry {
@@ -64,7 +62,7 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
     // URLs that originate from fetched data are scheme-checked (http/https only).
     github: safeHttpUrl(c.htmlUrl) ?? `https://github.com/${name}`,
     live: safeHttpUrl(o.live ?? c.homepage),
-    npm: o.npm ? `https://www.npmjs.com/package/${o.npm}` : undefined,
+    npm: o.npm ? `https://www.npmjs.com/package/${o.npm}` : (c.npm ?? undefined),
     download,
     favicon: safeHttpUrl(favicon),
     thumbnail: o.thumbnail,
@@ -74,8 +72,6 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
     stars: c.stars,
     createdAt: c.createdAt,
     updatedAt: c.pushedAt,
-    featured: o.featured ?? false,
-    order: o.order ?? 0,
   };
 }
 

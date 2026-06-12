@@ -39,6 +39,9 @@
   /* Work-in-progress badge (amber) */
   --wip: #ffc24b;
 
+  /* GitHub stars (gold) */
+  --star: #f4c430;
+
   /* Typography */
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
   --font-sans:

@@ -17,6 +17,7 @@ function cached(over: Partial<CachedRepo> = {}): CachedRepo {
     release: null,
     ai: false,
     favicon: 'https://cached.dev/favicon.svg',
+    npm: null,
     ...over,
   };
 }
@@ -35,7 +36,6 @@ describe('buildEntry - cache fills the gaps', () => {
     expect(e.updatedAt).toBe('2026-05-01T00:00:00Z');
     expect(e.ai).toBeNull();
     expect(e.wip).toBe(false);
-    expect(e.featured).toBe(false);
   });
 });
 
@@ -48,7 +48,6 @@ describe('buildEntry - curated override wins', () => {
     tech: ['Next.js'],
     favicon: 'https://override.dev/i.png',
     npm: 'my-pkg',
-    featured: true,
     wip: true,
   };
   const e = buildEntry('r', o, cached());
@@ -58,11 +57,28 @@ describe('buildEntry - curated override wins', () => {
     expect(e.live).toBe('https://override.dev');
     expect(e.tech).toEqual(['Next.js']);
     expect(e.favicon).toBe('https://override.dev/i.png');
-    expect(e.featured).toBe(true);
     expect(e.wip).toBe(true);
   });
   it('builds the npm link from the package name', () => {
     expect(e.npm).toBe('https://www.npmjs.com/package/my-pkg');
+  });
+});
+
+describe('buildEntry - npm', () => {
+  it('uses the auto-detected npm link from the cache', () => {
+    const e = buildEntry('r', { category: 'outils' }, cached({ npm: 'https://npm/p' }));
+    expect(e.npm).toBe('https://npm/p');
+  });
+  it('an explicit npm override wins over the cache', () => {
+    const e = buildEntry(
+      'r',
+      { category: 'outils', npm: 'mine' },
+      cached({ npm: 'https://npm/p' }),
+    );
+    expect(e.npm).toBe('https://www.npmjs.com/package/mine');
+  });
+  it('no npm anywhere => undefined', () => {
+    expect(buildEntry('r', { category: 'outils' }, cached({ npm: null })).npm).toBeUndefined();
   });
 });
 

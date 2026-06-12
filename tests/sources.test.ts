@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   hasAgentMarker,
   normalizeUrl,
+  npmUrlIfOwned,
   oldestCommitDate,
   pickFaviconHref,
   pickRepoIconPath,
@@ -98,6 +99,20 @@ describe('hasAgentMarker', () => {
   });
 });
 
+describe('npmUrlIfOwned', () => {
+  it('links when the package is maintained by our user', () => {
+    const reg = { name: 'lorrainjs', maintainers: [{ name: 'someone' }, { name: 'yavadeus' }] };
+    expect(npmUrlIfOwned(reg, 'yavadeus')).toBe('https://www.npmjs.com/package/lorrainjs');
+  });
+  it('returns null when our user is not a maintainer (someone else owns the name)', () => {
+    expect(npmUrlIfOwned({ name: 'x', maintainers: [{ name: 'other' }] }, 'yavadeus')).toBeNull();
+  });
+  it('returns null for malformed payloads', () => {
+    expect(npmUrlIfOwned({ name: 'x' }, 'yavadeus')).toBeNull();
+    expect(npmUrlIfOwned(null, 'yavadeus')).toBeNull();
+  });
+});
+
 describe('pickFaviconHref', () => {
   const base = 'https://site.dev';
   it('prefers svg over raster over .ico', () => {
@@ -141,6 +156,20 @@ describe('pickRepoIconPath', () => {
         { type: 'blob', path: 'icons/256x256.png' },
       ]),
     ).toBe('icons/256x256.png');
+  });
+  it('picks a committed favicon.* (e.g. public/favicon.png) when there is no app icon', () => {
+    const tree = [
+      { type: 'blob', path: 'public/favicon.png' },
+      { type: 'blob', path: 'src/assets/banner.png' },
+    ];
+    expect(pickRepoIconPath(tree)).toBe('public/favicon.png');
+  });
+  it('prefers a real app icon over a favicon when both exist', () => {
+    const tree = [
+      { type: 'blob', path: 'public/favicon.png' },
+      { type: 'blob', path: 'src-tauri/icons/icon.png' },
+    ];
+    expect(pickRepoIconPath(tree)).toBe('src-tauri/icons/icon.png');
   });
   it('ignores unrelated images and non-arrays', () => {
     expect(pickRepoIconPath([{ type: 'blob', path: 'screenshots/demo.png' }])).toBeNull();

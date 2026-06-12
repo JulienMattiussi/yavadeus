@@ -6,7 +6,7 @@ deployed.
 
 The catalog is **auto-discovered + curated**: a `fetch` step snapshots every
 non-fork repo on the GitHub account (description, live URL, technologies, stars,
-dates, releases, favicon, AI-usage) into a committed cache; you give repos a
+dates, releases, favicon, npm, AI-usage) into a committed cache; you give repos a
 category; the site is then built **offline** from that cache.
 
 ## The three steps
@@ -71,7 +71,7 @@ A repo shows **only once it has a category**. Two ways to set it:
   'my-repo': {
     category: 'outils',              // required to show it
     subtitle: { fr: '…', en: '…' },  // optional (else the GitHub description)
-    // optional: title, live, npm, download, favicon, tech, ai, thumbnail, wip, featured, order
+    // optional: title, live, npm, download, favicon, tech, ai, thumbnail, wip
   }
   ```
 

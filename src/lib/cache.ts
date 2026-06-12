@@ -32,6 +32,8 @@ export interface CachedRepo {
   ai: boolean;
   /** Resolved favicon: site favicon (from homepage) or repo app icon, or null. */
   favicon: string | null;
+  /** npm package URL if the repo publishes one under our maintainer, else null. */
+  npm: string | null;
 }
 
 export interface ProjectsCache {

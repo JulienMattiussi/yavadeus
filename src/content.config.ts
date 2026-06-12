@@ -1,12 +1,37 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro:schema';
 import { CATEGORIES } from './data/projects';
+import { CACHE_PATH } from './lib/cache';
 import { loadProjects } from './lib/projects-loader';
 
 const localized = z.object({ fr: z.string(), en: z.string() });
 
 const projects = defineCollection({
-  loader: async () => loadProjects(),
+  // Object loader so dev can watch the cache: it isn't in Vite's module graph
+  // (read via fs), so a plain loader wouldn't reload when `make fetch` rewrites it.
+  loader: {
+    name: 'projects',
+    load: async ({ store, parseData, watcher, logger }) => {
+      async function populate() {
+        store.clear();
+        for (const entry of loadProjects()) {
+          const data = await parseData({
+            id: entry.id,
+            data: entry as unknown as Record<string, unknown>,
+          });
+          store.set({ id: entry.id, data });
+        }
+      }
+      await populate();
+      watcher?.add(CACHE_PATH);
+      watcher?.on('change', async (path) => {
+        if (path.endsWith('projects-cache.json')) {
+          logger.info('projects-cache.json changed - reloading projects');
+          await populate();
+        }
+      });
+    },
+  },
   schema: z.object({
     title: z.string(),
     subtitle: localized,
@@ -23,8 +48,6 @@ const projects = defineCollection({
     stars: z.number().default(0),
     createdAt: z.string().nullable().default(null),
     updatedAt: z.string().nullable().default(null),
-    featured: z.boolean().default(false),
-    order: z.number().default(0),
   }),
 });
 

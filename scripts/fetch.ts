@@ -11,14 +11,16 @@
 import { execSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 
-import { GITHUB_USER } from '../src/config';
+import { GITHUB_USER, NPM_USER } from '../src/config';
 import { CACHE_PATH, type CachedRepo, type ProjectsCache } from '../src/lib/cache';
 import {
   fetchFavicon,
   fetchFirstCommitDate,
   fetchGitHubLanguages,
+  fetchGitHubPagesUrl,
   fetchGitHubRelease,
   fetchHasAgentMarker,
+  fetchNpmLink,
   fetchRepoIcon,
   fetchUserRepos,
   type RepoSummary,
@@ -92,21 +94,26 @@ async function mapLimit<T, R>(
 
 async function enrich(r: RepoSummary): Promise<CachedRepo> {
   const full = `${GITHUB_USER}/${r.name}`;
-  const [languages, createdAt, release, ai] = await Promise.all([
+  // Live URL: the repo "homepage" field, else its GitHub Pages URL if any.
+  const homepage = r.homepage ?? (await fetchGitHubPagesUrl(full));
+
+  const [languages, createdAt, release, ai, npm] = await Promise.all([
     fetchGitHubLanguages(full),
     fetchFirstCommitDate(full),
     fetchGitHubRelease(full),
     fetchHasAgentMarker(full),
+    // A repo with a live site is an app, not a published package: skip npm.
+    homepage ? Promise.resolve(null) : fetchNpmLink(full, r.defaultBranch, NPM_USER),
   ]);
 
   // Favicon: prefer the live site's icon, else an app icon committed in the repo.
   let favicon: string | null = null;
-  if (r.homepage) favicon = await fetchFavicon(r.homepage);
+  if (homepage) favicon = await fetchFavicon(homepage);
   if (!favicon) favicon = await fetchRepoIcon(full, r.defaultBranch);
 
   return {
     description: r.description,
-    homepage: r.homepage,
+    homepage,
     htmlUrl: r.htmlUrl,
     stars: r.stars,
     defaultBranch: r.defaultBranch,
@@ -116,6 +123,7 @@ async function enrich(r: RepoSummary): Promise<CachedRepo> {
     release,
     ai,
     favicon,
+    npm,
   };
 }
 

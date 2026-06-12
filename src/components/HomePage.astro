@@ -18,9 +18,7 @@ const githubUrl = `https://github.com/${GITHUB_USER}`;
 const all = await getCollection('projects');
 const projects = all
   .map((e) => e.data)
-  .sort(
-    (a, b) => Number(b.featured) - Number(a.featured) || b.order - a.order || b.stars - a.stars,
-  );
+  .sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''));
 
 const byCategory = (cat: Category) => projects.filter((p) => p.category === cat);
 ---

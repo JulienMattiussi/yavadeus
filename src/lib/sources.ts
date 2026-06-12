@@ -81,6 +81,23 @@ export async function fetchUserRepos(user: string): Promise<RepoSummary[]> {
   return out;
 }
 
+/**
+ * The repo's GitHub Pages URL, if Pages is enabled. Used as a live URL fallback
+ * when the repo's "homepage" field is empty (a deployed Page often isn't mirrored
+ * into that field).
+ */
+export async function fetchGitHubPagesUrl(repo: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/pages`, { headers: ghHeaders() });
+    if (!res.ok) return null;
+    const d = await res.json();
+    return typeof d.html_url === 'string' ? d.html_url : null;
+  } catch (err) {
+    console.warn(`[sources] GitHub pages ${repo} fetch failed:`, (err as Error).message);
+    return null;
+  }
+}
+
 /** Tooling languages that are noise as "main technologies" tags. */
 const IGNORED_LANGUAGES = new Set(['Makefile', 'Dockerfile', 'Shell', 'Procfile', 'Batchfile']);
 
@@ -258,18 +275,20 @@ export function pickRepoIconPath(tree: unknown): string | null {
     if (!/\.(png|svg|ico)$/i.test(path)) continue;
     const base = (path.split('/').pop() ?? '').toLowerCase();
     const inIconsDir = /(^|\/)icons?\//i.test(path);
-    const isNamedIcon = /^(icon|app-?icon|logo)\.(png|svg|ico)$/.test(base);
+    const isNamedIcon = /^(icon|app-?icon|logo|favicon)\.(png|svg|ico)$/.test(base);
     if (!inIconsDir && !isNamedIcon) continue;
 
     const ext = base.split('.').pop() ?? '';
+    const stem = base.slice(0, -(ext.length + 1));
     let score: number;
-    if (base === 'icon.svg' || base === 'app-icon.svg') score = 1000;
-    else if (base === 'icon.png' || base === 'app-icon.png') score = 900;
+    if (stem === 'icon' || stem === 'app-icon' || stem === 'appicon') score = 900;
+    else if (stem === 'favicon' || stem === 'logo') score = 700;
     else {
       const m = base.match(/(\d+)x\d+/);
       score = m ? Number(m[1]) * (base.includes('@2x') ? 2 : 1) : 0;
     }
-    if (ext === 'ico') score -= 500;
+    if (ext === 'svg') score += 50; // prefer svg within the same name tier
+    if (ext === 'ico') score -= 500; // avoid .ico in an <img>
     candidates.push({ path, score });
   }
   candidates.sort((a, b) => b.score - a.score);
@@ -294,6 +313,39 @@ export async function fetchRepoIcon(repo: string, branch: string): Promise<strin
     return path ? `https://raw.githubusercontent.com/${repo}/${branch}/${path}` : null;
   } catch (err) {
     console.warn(`[sources] repo icon ${repo} fetch failed:`, (err as Error).message);
+    return null;
+  }
+}
+
+/** Pure: npm URL for a registry payload, but only if maintained by `npmUser`. */
+export function npmUrlIfOwned(registry: unknown, npmUser: string): string | null {
+  const r = registry as { name?: string; maintainers?: { name?: string }[] };
+  if (!r?.name || !Array.isArray(r.maintainers)) return null;
+  return r.maintainers.some((m) => m?.name === npmUser)
+    ? `https://www.npmjs.com/package/${r.name}`
+    : null;
+}
+
+/**
+ * npm link for a repo: read its package.json `name`, and link to npm only if a
+ * package by that name exists AND is maintained by `npmUser`. Avoids linking a
+ * same-named package owned by someone else.
+ */
+export async function fetchNpmLink(
+  repo: string,
+  branch: string,
+  npmUser: string,
+): Promise<string | null> {
+  try {
+    const pkg = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/package.json`);
+    if (!pkg.ok) return null;
+    const name = (await pkg.json()).name;
+    if (typeof name !== 'string' || !name) return null;
+    const npm = await fetch(`https://registry.npmjs.org/${name}`);
+    if (!npm.ok) return null;
+    return npmUrlIfOwned(await npm.json(), npmUser);
+  } catch (err) {
+    console.warn(`[sources] npm link ${repo} fetch failed:`, (err as Error).message);
     return null;
   }
 }

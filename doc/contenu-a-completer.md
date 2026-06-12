@@ -17,7 +17,7 @@ restant.
 | ------------------- | ------ | -------------------------------------------------------------------------- |
 | titre               | fetch  | nom du repo embelli (override `title` possible)                            |
 | lien GitHub         | fetch  | URL du repo                                                                |
-| lien live           | fetch  | champ `homepage` GitHub (override `live`)                                  |
+| lien live           | fetch  | `homepage` GitHub, sinon GitHub Pages (override `live`)                    |
 | technos             | fetch  | langages GitHub top 3 (override `tech`)                                    |
 | étoiles             | fetch  | GitHub                                                                     |
 | date de démarrage   | fetch  | 1er commit                                                                 |
@@ -25,14 +25,12 @@ restant.
 | favicon / icône     | fetch  | favicon du site live, sinon icône applicative du repo (override `favicon`) |
 | lien téléchargement | fetch  | dernière release avec binaires (override `download`)                       |
 | badge IA            | fetch  | présence `AGENTS.md`/`CLAUDE.md`/`.claude` (override `ai`)                 |
-| lien npm            | manuel | nom du package en override `npm` (le lien est ensuite dérivé)              |
+| lien npm            | fetch  | auto si `package.json` publié sur npm & maintenu par toi (override `npm`)  |
 | **catégorie**       | curate | `make curate`                                                              |
 | **WIP**             | curate | `make curate`                                                              |
 | ignoré              | curate | `make curate` (liste `ignored`)                                            |
 | **sous-titre**      | manuel | repli = description GitHub (monolingue) ; bilingue à écrire                |
 | **vignette**        | manuel | `public/thumbnails/<repo>.png`                                             |
-| **featured**        | manuel | mise en avant                                                              |
-| **order**           | manuel | ordre fin                                                                  |
 | textes du site      | manuel | i18n FR/EN (`src/i18n/ui.ts`)                                              |
 | config / assets     | manuel | `.env` (`GITHUB_USER`, `SITE_URL`), favicon "y", couleurs                  |
 
@@ -42,9 +40,6 @@ restant.
 
 - [ ] **Sous-titres bilingues** par projet (surtout l'EN ; le FR repli = desc GitHub). _Le plus gros poste._
 - [ ] **Vignettes** d'aperçu (`public/thumbnails/<repo>.png`) - rien pour l'instant.
-- [ ] **`npm`** : nom du package à lier, pour chaque projet publié.
-- [ ] **`featured`** : choix éditorial des projets à mettre en avant.
-- [ ] **`order`** : ordre fin (optionnel).
 - [ ] **`title`** : override seulement si le nom embelli ne convient pas.
 
 ## B. Overrides à auditer projet par projet (on commence par là)
@@ -76,27 +71,28 @@ par cas. Voir la matrice de suivi plus bas.
 Légende : `auto` = on garde l'enrichissement automatique (à vérifier) · `✏️` =
 override manuel posé · `✓` = fait/validé · `-` = sans objet · `TODO` = à faire.
 
-| Projet                       | Rubrique | Live | Tech | Favicon            | Téléch. | IA   | Sous-titre     | Vignette | Featured |
-| ---------------------------- | -------- | ---- | ---- | ------------------ | ------- | ---- | -------------- | -------- | -------- |
-| universal-picross            | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     | ✓        |
-| calendar-solver              | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| ptitjeux                     | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| bingo-builder                | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| deduplicateur                | outils   | auto | auto | auto (icône Tauri) | auto    | auto | fr+en          | TODO     | ✓        |
-| fast-emoji                   | outils   | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     | -        |
-| lorrainjs                    | outils   | auto | auto | auto               | -       | auto | fr+en (npm ✏️) | TODO     | -        |
-| veilleur                     | outils   | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| legoroscope                  | délires  | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     | ✓        |
-| tripote-visor                | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| combien-mieux-que-un         | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| balkanoche-prison-calculator | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
-| are-you-vulcain              | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     | -        |
+> Snapshot d'avant le reset (les 13 premiers projets). Depuis, le catalogue a été
+> re-curé (35 projets, aucun override : tout est auto). À refaire si besoin.
 
-> Les ~27 repos restants apparaîtront ici une fois catégorisés via `make curate`.
+| Projet                       | Rubrique | Live | Tech | Favicon            | Téléch. | IA   | Sous-titre     | Vignette |
+| ---------------------------- | -------- | ---- | ---- | ------------------ | ------- | ---- | -------------- | -------- |
+| universal-picross            | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| calendar-solver              | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| ptitjeux                     | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| bingo-builder                | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| deduplicateur                | outils   | auto | auto | auto (icône Tauri) | auto    | auto | fr+en          | TODO     |
+| fast-emoji                   | outils   | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     |
+| lorrainjs                    | outils   | auto | auto | auto               | -       | auto | fr+en (npm ✏️) | TODO     |
+| veilleur                     | outils   | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| legoroscope                  | délires  | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     |
+| tripote-visor                | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| combien-mieux-que-un         | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| balkanoche-prison-calculator | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
+| are-you-vulcain              | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
 
 ## Ordre de travail prévu
 
 1. **B** - audit des données auto-enrichies projet par projet (les plus abouties).
-2. **A** - sous-titres bilingues, puis vignettes, featured.
+2. **A** - sous-titres bilingues, puis vignettes.
 3. **C** - textes du site et config finale.
 4. Déploiement (en dernier).

@@ -163,7 +163,12 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     {
       stars > 0 && (
         <span class="stars" aria-label={`${stars} stars`}>
-          <span aria-hidden="true">★ {stars}</span>
+          <>
+            <span class="star-icon" aria-hidden="true">
+              ★
+            </span>
+            <span aria-hidden="true">{stars}</span>
+          </>
         </span>
       )
     }
@@ -234,26 +239,31 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     margin-right: auto;
   }
 
-  .badge-wip {
-    flex: none;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--wip);
-    border: 1px solid var(--wip);
-    border-radius: 999px;
-    padding: 0.05rem 0.4rem;
-  }
-
+  .badge-wip,
   .badge-ai {
+    flex: none;
+    box-sizing: border-box;
+    height: 1.35rem;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.3rem;
+    line-height: 1;
     font-size: 0.62rem;
-    letter-spacing: 0.02em;
-    color: var(--text-faint);
-    padding: 0.05rem 0.3rem;
+    padding: 0 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
     white-space: nowrap;
+  }
+  .badge-wip {
+    color: var(--wip);
+    border-color: var(--wip);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .badge-ai {
+    color: var(--text-faint);
+    letter-spacing: 0.02em;
   }
   .badge-ai .dot {
     width: 5px;
@@ -349,7 +359,13 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   }
   .stars {
     margin-left: auto;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
     color: var(--text-faint);
     font-size: 0.78rem;
+  }
+  .star-icon {
+    color: var(--star);
   }
 </style>
