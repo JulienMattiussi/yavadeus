@@ -42,6 +42,9 @@
   /* GitHub stars (gold) */
   --star: #f4c430;
 
+  /* Discord (blurple) */
+  --discord: #8b9bff;
+
   /* Typography */
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
   --font-sans:

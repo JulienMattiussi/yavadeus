@@ -63,7 +63,6 @@ export const projects: Record<string, ProjectOverride> = {
   'combien-mieux-que-un': { category: 'delires' },
   'secret-project': { category: 'delires' },
   'marme-ten': { category: 'marmelab' },
-  'juin-rmelab': { category: 'marmelab' },
   'mai-rmelab': { category: 'marmelab' },
   'are-you-vulcain': { category: 'delires' },
   plokering: { category: 'outils' },
@@ -91,5 +90,6 @@ export const ignored: string[] = [
   'Fred',
   'marmenews',
   'vitecrats',
+  'juin-rmelab',
   // CLI_INSERT_IGNORED (do not remove)
 ];

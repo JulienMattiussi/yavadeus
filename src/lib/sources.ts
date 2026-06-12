@@ -110,6 +110,84 @@ export function topLanguages(data: Record<string, number>, limit = 3): string[] 
     .slice(0, limit);
 }
 
+/*
+ * Frameworks worth surfacing as a "main technology". GitHub's language stats
+ * only see file extensions, so a React app reads as "JavaScript"/"TypeScript"
+ * and the framework is invisible: we recover it from package.json deps instead.
+ * `implies` suppresses a redundant base when a meta-framework is present
+ * (Next.js implies React, Nuxt implies Vue, ...). Order = display priority.
+ */
+const FRAMEWORKS: { dep: string; label: string; implies?: string[] }[] = [
+  { dep: 'next', label: 'Next.js', implies: ['React'] },
+  { dep: 'nuxt', label: 'Nuxt', implies: ['Vue'] },
+  { dep: 'gatsby', label: 'Gatsby', implies: ['React'] },
+  { dep: '@remix-run/react', label: 'Remix', implies: ['React'] },
+  { dep: 'expo', label: 'React Native', implies: ['React'] },
+  { dep: 'react-native', label: 'React Native', implies: ['React'] },
+  { dep: '@sveltejs/kit', label: 'SvelteKit', implies: ['Svelte'] },
+  { dep: 'react-admin', label: 'React-admin', implies: ['React'] },
+  { dep: '@angular/core', label: 'Angular' },
+  { dep: 'react', label: 'React' },
+  { dep: 'preact', label: 'Preact' },
+  { dep: 'vue', label: 'Vue' },
+  { dep: 'svelte', label: 'Svelte' },
+  { dep: 'solid-js', label: 'Solid' },
+  { dep: 'astro', label: 'Astro' },
+  { dep: 'phaser', label: 'Phaser' },
+  { dep: 'three', label: 'Three.js' },
+  { dep: 'pixi.js', label: 'PixiJS' },
+  { dep: '@nestjs/core', label: 'NestJS' },
+  { dep: 'express', label: 'Express' },
+  { dep: 'electron', label: 'Electron' },
+  { dep: '@tauri-apps/api', label: 'Tauri' },
+];
+
+/** Pure: frameworks declared in a package.json's (dev)dependencies, ranked. */
+export function detectFrameworks(pkg: unknown): string[] {
+  const p = pkg as {
+    dependencies?: Record<string, unknown>;
+    devDependencies?: Record<string, unknown>;
+  };
+  const deps = new Set([
+    ...Object.keys(p?.dependencies ?? {}),
+    ...Object.keys(p?.devDependencies ?? {}),
+  ]);
+  const labels: string[] = [];
+  const suppressed = new Set<string>();
+  for (const { dep, label, implies } of FRAMEWORKS) {
+    if (!deps.has(dep)) continue;
+    if (!labels.includes(label)) labels.push(label);
+    implies?.forEach((i) => suppressed.add(i));
+  }
+  return labels.filter((l) => !suppressed.has(l));
+}
+
+/** Pure: frameworks first, then languages, deduped (case-insensitive), capped. */
+export function mergeTech(frameworks: string[], languages: string[], limit = 3): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const t of [...frameworks, ...languages]) {
+    const key = t.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(t);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+/** Frameworks used by a repo, read from its package.json (best-effort). */
+export async function fetchRepoFrameworks(repo: string, branch: string): Promise<string[]> {
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/package.json`);
+    if (!res.ok) return [];
+    return detectFrameworks(await res.json());
+  } catch (err) {
+    console.warn(`[sources] frameworks ${repo} fetch failed:`, (err as Error).message);
+    return [];
+  }
+}
+
 /** Top languages of a repo (default for a project's "tech" tags). */
 export async function fetchGitHubLanguages(repo: string, limit = 3): Promise<string[]> {
   try {
@@ -148,6 +226,37 @@ export async function fetchHasAgentMarker(repo: string): Promise<boolean> {
     return hasAgentMarker(await res.json());
   } catch (err) {
     console.warn(`[sources] GitHub contents ${repo} fetch failed:`, (err as Error).message);
+    return false;
+  }
+}
+
+/**
+ * Pure: does README text describe a Discord *bot*? Requires "bot" and "discord"
+ * adjacent (either order, FR/EN) so a mere link to a Discord server doesn't
+ * count.
+ */
+export function mentionsDiscordBot(readme: string): boolean {
+  return /\bbot[\s-]+discord\b|\bdiscord[\s-]+bot\b/i.test(readme);
+}
+
+/**
+ * Whether the repo is a Discord bot, inferred from its README. Reads the README
+ * via the GitHub API, so it matches any filename and casing (README.md,
+ * readme.md, ...).
+ */
+export async function fetchIsDiscordBot(repo: string): Promise<boolean> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/readme`, {
+      headers: ghHeaders(),
+    });
+    if (!res.ok) return false;
+    const d = await res.json();
+    const text = Buffer.from(d.content ?? '', d.encoding === 'base64' ? 'base64' : 'utf8').toString(
+      'utf8',
+    );
+    return mentionsDiscordBot(text);
+  } catch (err) {
+    console.warn(`[sources] README ${repo} fetch failed:`, (err as Error).message);
     return false;
   }
 }
@@ -347,6 +456,59 @@ export async function fetchNpmLink(
   } catch (err) {
     console.warn(`[sources] npm link ${repo} fetch failed:`, (err as Error).message);
     return null;
+  }
+}
+
+/**
+ * Pure: place the original description on its own language side and the
+ * translation on the other. English source means the original is `en`; anything
+ * else (fr, and frequent misdetections like oc/ca on short French text) is
+ * treated as French.
+ */
+export function buildSubtitlePair(
+  desc: string,
+  sourceIso: string,
+  toEn: string,
+  toFr: string,
+): { fr: string; en: string } {
+  return sourceIso.startsWith('en') ? { fr: toFr, en: desc } : { fr: desc, en: toEn };
+}
+
+/**
+ * Pure: the previous translation to reuse when the description hasn't changed
+ * since the last fetch, so we skip the network call. A failed translation
+ * (cached as fr == en) is not reused, so a transient error self-heals next time.
+ * Returns null when a fresh translation is needed.
+ */
+export function reusableSubtitle(
+  prev: { description: string | null; subtitle: { fr: string; en: string } | null } | undefined,
+  description: string | null,
+): { fr: string; en: string } | null {
+  if (!description || !prev?.subtitle || prev.description !== description) return null;
+  return prev.subtitle.fr !== prev.subtitle.en ? prev.subtitle : null;
+}
+
+/**
+ * Translate a GitHub description into an {fr,en} pair (best-effort). Detects the
+ * source via the first call, then only does the second call when the source is
+ * English. The translation lib is imported dynamically so it stays out of the
+ * offline build graph. On any failure the same text is used for both languages.
+ */
+export async function fetchSubtitleTranslation(desc: string): Promise<{ fr: string; en: string }> {
+  const text = (desc ?? '').trim();
+  if (!text) return { fr: '', en: '' };
+  try {
+    const { default: translate } = await import('google-translate-api-x');
+    const toEn = await translate(text, { to: 'en' });
+    const src = String(toEn.from?.language?.iso ?? '');
+    if (src.startsWith('en')) {
+      const toFr = await translate(text, { to: 'fr' });
+      return buildSubtitlePair(text, src, String(toEn.text), String(toFr.text));
+    }
+    return buildSubtitlePair(text, src, String(toEn.text), '');
+  } catch (err) {
+    console.warn(`[sources] subtitle translation failed:`, (err as Error).message);
+    return { fr: text, en: text };
   }
 }
 

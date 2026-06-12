@@ -14,7 +14,7 @@ import {
   type ProjectOverride,
 } from '../data/projects';
 import { readCache, type CachedRepo } from './cache';
-import { prettifyName, safeHttpUrl, type ReleaseInfo } from './sources';
+import { mergeTech, prettifyName, safeHttpUrl, type ReleaseInfo } from './sources';
 
 /** AI-usage marker. `agent` is the named tool when known, else null. */
 export type AiInfo = { agent: string | null } | null;
@@ -33,6 +33,7 @@ export interface ProjectEntry {
   tech: string[];
   ai: AiInfo;
   wip: boolean;
+  discord: boolean;
   stars: number;
   /** ISO date of project start (first commit), or null if unknown. */
   createdAt: string | null;
@@ -57,7 +58,7 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
   return {
     id: name,
     title: o.title ?? prettifyName(name),
-    subtitle: o.subtitle ?? { fr: c.description ?? '', en: c.description ?? '' },
+    subtitle: o.subtitle ?? c.subtitle ?? { fr: c.description ?? '', en: c.description ?? '' },
     category: o.category,
     // URLs that originate from fetched data are scheme-checked (http/https only).
     github: safeHttpUrl(c.htmlUrl) ?? `https://github.com/${name}`,
@@ -66,9 +67,10 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
     download,
     favicon: safeHttpUrl(favicon),
     thumbnail: o.thumbnail,
-    tech: o.tech ?? c.languages,
+    tech: o.tech ?? mergeTech(c.frameworks, c.languages),
     ai,
     wip: o.wip ?? false,
+    discord: c.discord,
     stars: c.stars,
     createdAt: c.createdAt,
     updatedAt: c.pushedAt,

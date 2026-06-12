@@ -1,13 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildSubtitlePair,
+  detectFrameworks,
   hasAgentMarker,
+  mentionsDiscordBot,
+  mergeTech,
   normalizeUrl,
   npmUrlIfOwned,
   oldestCommitDate,
   pickFaviconHref,
   pickRepoIconPath,
   prettifyName,
+  reusableSubtitle,
   safeHttpUrl,
   topLanguages,
 } from '../src/lib/sources';
@@ -96,6 +101,95 @@ describe('hasAgentMarker', () => {
   });
   it('returns false for non-array input', () => {
     expect(hasAgentMarker(null)).toBe(false);
+  });
+});
+
+describe('mentionsDiscordBot', () => {
+  it('matches "bot Discord" / "Discord bot" in both orders and cases', () => {
+    expect(mentionsDiscordBot('Un bot Discord pour gérer le serveur.')).toBe(true);
+    expect(mentionsDiscordBot('A small Discord bot written in Node.')).toBe(true);
+    expect(mentionsDiscordBot('## DISCORD-BOT')).toBe(true);
+  });
+  it('ignores a bare reference to a Discord server', () => {
+    expect(mentionsDiscordBot('Join our Discord server: https://discord.gg/xyz')).toBe(false);
+    expect(mentionsDiscordBot('Built a chat bot for Slack.')).toBe(false);
+  });
+});
+
+describe('detectFrameworks', () => {
+  it('detects React from dependencies', () => {
+    expect(detectFrameworks({ dependencies: { react: '^18', 'react-dom': '^18' } })).toEqual([
+      'React',
+    ]);
+  });
+  it('reads devDependencies too', () => {
+    expect(detectFrameworks({ devDependencies: { astro: '^6' } })).toEqual(['Astro']);
+  });
+  it('a meta-framework suppresses its redundant base (Next.js implies React)', () => {
+    expect(detectFrameworks({ dependencies: { next: '^14', react: '^18' } })).toEqual(['Next.js']);
+  });
+  it('returns nothing for a plain package or non-object', () => {
+    expect(detectFrameworks({ dependencies: { lodash: '^4' } })).toEqual([]);
+    expect(detectFrameworks(null)).toEqual([]);
+  });
+});
+
+describe('mergeTech', () => {
+  it('puts frameworks first, then languages, capped', () => {
+    expect(mergeTech(['React'], ['TypeScript', 'CSS', 'JavaScript'])).toEqual([
+      'React',
+      'TypeScript',
+      'CSS',
+    ]);
+  });
+  it('dedupes case-insensitively (Vue language + Vue framework)', () => {
+    expect(mergeTech(['Vue'], ['Vue', 'HTML'])).toEqual(['Vue', 'HTML']);
+  });
+  it('falls back to languages when no framework', () => {
+    expect(mergeTech([], ['TypeScript', 'CSS'])).toEqual(['TypeScript', 'CSS']);
+  });
+});
+
+describe('buildSubtitlePair', () => {
+  it('English source: original stays en, fr is the translation', () => {
+    expect(buildSubtitlePair('A solver', 'en', 'A solver', 'Un solveur')).toEqual({
+      fr: 'Un solveur',
+      en: 'A solver',
+    });
+  });
+  it('French source: original stays fr, en is the translation', () => {
+    expect(buildSubtitlePair('Un solveur', 'fr', 'A solver', '')).toEqual({
+      fr: 'Un solveur',
+      en: 'A solver',
+    });
+  });
+  it('treats a misdetected French (oc/ca/und) as French', () => {
+    expect(buildSubtitlePair('Un solveur', 'oc', 'A solver', '')).toEqual({
+      fr: 'Un solveur',
+      en: 'A solver',
+    });
+  });
+});
+
+describe('reusableSubtitle', () => {
+  const subtitle = { fr: 'Un solveur', en: 'A solver' };
+  it('reuses the cached translation when the description is unchanged', () => {
+    expect(reusableSubtitle({ description: 'Un solveur', subtitle }, 'Un solveur')).toEqual(
+      subtitle,
+    );
+  });
+  it('retranslates when the description changed', () => {
+    expect(reusableSubtitle({ description: 'Ancien', subtitle }, 'Nouveau')).toBeNull();
+  });
+  it('does not reuse a failed translation (fr == en), so it self-heals', () => {
+    const failed = { fr: 'Un solveur', en: 'Un solveur' };
+    expect(
+      reusableSubtitle({ description: 'Un solveur', subtitle: failed }, 'Un solveur'),
+    ).toBeNull();
+  });
+  it('returns null with no previous entry or no description', () => {
+    expect(reusableSubtitle(undefined, 'x')).toBeNull();
+    expect(reusableSubtitle({ description: 'x', subtitle }, null)).toBeNull();
   });
 });
 

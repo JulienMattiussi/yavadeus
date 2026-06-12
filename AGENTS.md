@@ -84,20 +84,21 @@ by repo name) plus an `ignored: string[]`. A repo shows only if it has a categor
 and is present in the cache. Per field, the **curated override wins; the cache
 fills the gap**:
 
-| Field       | Curated override              | From the cache (filled by `fetch`)                       |
-| ----------- | ----------------------------- | -------------------------------------------------------- |
-| `title`     | `title`                       | prettified repo name                                     |
-| `subtitle`  | `subtitle {fr,en}`            | GitHub description (same text for both langs)            |
-| `live`      | `live`                        | `homepage` field, else GitHub Pages URL                  |
-| `npm`       | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER |
-| `download`  | `download` (URL / `false`)    | latest release page when it ships assets                 |
-| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon              |
-| `tech`      | `tech: string[]`              | top GitHub languages                                     |
-| `ai`        | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo            |
-| `stars`     | -                             | GitHub stargazers                                        |
-| dates       | -                             | first-commit date + `pushed_at`                          |
-| `wip`       | `wip: true`                   | - (curated, asked by `make curate`)                      |
-| `thumbnail` | `thumbnail`                   | - (drop an image in `public/thumbnails/`)                |
+| Field       | Curated override              | From the cache (filled by `fetch`)                          |
+| ----------- | ----------------------------- | ----------------------------------------------------------- |
+| `title`     | `title`                       | prettified repo name                                        |
+| `subtitle`  | `subtitle {fr,en}`            | GitHub description, auto-translated FR<->EN at fetch        |
+| `live`      | `live`                        | `homepage` field, else GitHub Pages URL                     |
+| `npm`       | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER    |
+| `download`  | `download` (URL / `false`)    | latest release page when it ships assets                    |
+| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon                 |
+| `tech`      | `tech: string[]`              | package.json frameworks (React, ...) + top GitHub languages |
+| `ai`        | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo               |
+| `discord`   | -                             | README mentions a "Discord bot" (shows a Discord icon)      |
+| `stars`     | -                             | GitHub stargazers                                           |
+| dates       | -                             | first-commit date + `pushed_at`                             |
+| `wip`       | `wip: true`                   | - (curated, asked by `make curate`)                         |
+| `thumbnail` | `thumbnail`                   | - (drop an image in `public/thumbnails/`)                   |
 
 `GITHUB_USER` and `SITE_URL` come from `.env` (via `src/config.ts`); real env
 vars override them. Forks are never shown; `ignored` repos are skipped. The cache is committed, so

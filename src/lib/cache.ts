@@ -16,6 +16,8 @@ import type { ReleaseInfo } from './sources';
 /** Repo-intrinsic data, independent of the curated overrides. */
 export interface CachedRepo {
   description: string | null;
+  /** Auto-translated subtitle (from the GitHub description), FR/EN, or null. */
+  subtitle: { fr: string; en: string } | null;
   homepage: string | null;
   htmlUrl: string;
   stars: number;
@@ -26,6 +28,8 @@ export interface CachedRepo {
   createdAt: string | null;
   /** Top GitHub languages. */
   languages: string[];
+  /** Frameworks detected in package.json (React, Astro, ...), not visible to GitHub. */
+  frameworks: string[];
   /** Latest release with binary assets, or null. */
   release: ReleaseInfo | null;
   /** Whether an AI-agent marker (AGENTS.md/CLAUDE.md/.claude) was found. */
@@ -34,6 +38,8 @@ export interface CachedRepo {
   favicon: string | null;
   /** npm package URL if the repo publishes one under our maintainer, else null. */
   npm: string | null;
+  /** Whether the README identifies this repo as a Discord bot. */
+  discord: boolean;
 }
 
 export interface ProjectsCache {

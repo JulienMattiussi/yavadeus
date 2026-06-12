@@ -45,6 +45,7 @@ const projects = defineCollection({
     tech: z.array(z.string()).default([]),
     ai: z.object({ agent: z.string().nullable() }).nullable().default(null),
     wip: z.boolean().default(false),
+    discord: z.boolean().default(false),
     stars: z.number().default(0),
     createdAt: z.string().nullable().default(null),
     updatedAt: z.string().nullable().default(null),

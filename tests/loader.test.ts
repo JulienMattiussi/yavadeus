@@ -7,6 +7,7 @@ import { buildEntry } from '../src/lib/projects-loader';
 function cached(over: Partial<CachedRepo> = {}): CachedRepo {
   return {
     description: 'Cached description',
+    subtitle: null,
     homepage: 'https://cached.dev',
     htmlUrl: 'https://github.com/user/repo',
     stars: 7,
@@ -14,10 +15,12 @@ function cached(over: Partial<CachedRepo> = {}): CachedRepo {
     pushedAt: '2026-05-01T00:00:00Z',
     createdAt: '2022-01-01T00:00:00Z',
     languages: ['TypeScript', 'CSS'],
+    frameworks: [],
     release: null,
     ai: false,
     favicon: 'https://cached.dev/favicon.svg',
     npm: null,
+    discord: false,
     ...over,
   };
 }
@@ -36,6 +39,22 @@ describe('buildEntry - cache fills the gaps', () => {
     expect(e.updatedAt).toBe('2026-05-01T00:00:00Z');
     expect(e.ai).toBeNull();
     expect(e.wip).toBe(false);
+  });
+  it('uses the cached auto-translated subtitle when present', () => {
+    const e = buildEntry(
+      'r',
+      { category: 'outils' },
+      cached({ subtitle: { fr: 'Bonjour', en: 'Hello' } }),
+    );
+    expect(e.subtitle).toEqual({ fr: 'Bonjour', en: 'Hello' });
+  });
+  it('a curated subtitle wins over the cached translation', () => {
+    const e = buildEntry(
+      'r',
+      { category: 'outils', subtitle: { fr: 'Manuel', en: 'Manual' } },
+      cached({ subtitle: { fr: 'Auto', en: 'Auto' } }),
+    );
+    expect(e.subtitle).toEqual({ fr: 'Manuel', en: 'Manual' });
   });
 });
 

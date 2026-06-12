@@ -9,7 +9,7 @@
  */
 
 import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 import { GITHUB_USER, NPM_USER } from '../src/config';
 import { CACHE_PATH, type CachedRepo, type ProjectsCache } from '../src/lib/cache';
@@ -20,9 +20,13 @@ import {
   fetchGitHubPagesUrl,
   fetchGitHubRelease,
   fetchHasAgentMarker,
+  fetchIsDiscordBot,
   fetchNpmLink,
+  fetchRepoFrameworks,
   fetchRepoIcon,
+  fetchSubtitleTranslation,
   fetchUserRepos,
+  reusableSubtitle,
   type RepoSummary,
 } from '../src/lib/sources';
 
@@ -92,19 +96,38 @@ async function mapLimit<T, R>(
   return out;
 }
 
-async function enrich(r: RepoSummary): Promise<CachedRepo> {
+/** The previous snapshot's repos, to reuse unchanged data. Empty on first run. */
+function readPreviousRepos(): Record<string, CachedRepo> {
+  try {
+    return (JSON.parse(readFileSync(CACHE_PATH, 'utf8')) as ProjectsCache).repos ?? {};
+  } catch {
+    return {};
+  }
+}
+
+let reusedTranslations = 0;
+
+async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<CachedRepo> {
   const full = `${GITHUB_USER}/${r.name}`;
   // Live URL: the repo "homepage" field, else its GitHub Pages URL if any.
   const homepage = r.homepage ?? (await fetchGitHubPagesUrl(full));
 
-  const [languages, createdAt, release, ai, npm] = await Promise.all([
-    fetchGitHubLanguages(full),
-    fetchFirstCommitDate(full),
-    fetchGitHubRelease(full),
-    fetchHasAgentMarker(full),
-    // A repo with a live site is an app, not a published package: skip npm.
-    homepage ? Promise.resolve(null) : fetchNpmLink(full, r.defaultBranch, NPM_USER),
-  ]);
+  // Reuse the cached translation when the description is unchanged (no API call).
+  const cachedSubtitle = reusableSubtitle(prev, r.description);
+  if (cachedSubtitle) reusedTranslations++;
+
+  const [languages, frameworks, createdAt, release, ai, npm, discord, translated] =
+    await Promise.all([
+      fetchGitHubLanguages(full),
+      fetchRepoFrameworks(full, r.defaultBranch),
+      fetchFirstCommitDate(full),
+      fetchGitHubRelease(full),
+      fetchHasAgentMarker(full),
+      // A repo with a live site is an app, not a published package: skip npm.
+      homepage ? Promise.resolve(null) : fetchNpmLink(full, r.defaultBranch, NPM_USER),
+      fetchIsDiscordBot(full),
+      cachedSubtitle ?? fetchSubtitleTranslation(r.description ?? ''),
+    ]);
 
   // Favicon: prefer the live site's icon, else an app icon committed in the repo.
   let favicon: string | null = null;
@@ -113,6 +136,7 @@ async function enrich(r: RepoSummary): Promise<CachedRepo> {
 
   return {
     description: r.description,
+    subtitle: r.description ? translated : null,
     homepage,
     htmlUrl: r.htmlUrl,
     stars: r.stars,
@@ -120,17 +144,25 @@ async function enrich(r: RepoSummary): Promise<CachedRepo> {
     pushedAt: r.pushedAt,
     createdAt,
     languages,
+    frameworks,
     release,
     ai,
     favicon,
     npm,
+    discord,
   };
 }
 
+const previousRepos = readPreviousRepos();
 const repos = (await fetchUserRepos(GITHUB_USER)).filter((r) => !r.fork);
 console.log(`Enrichissement de ${repos.length} repos non-fork...`);
 
-const enriched = await mapLimit(repos, 6, async (r) => [r.name, await enrich(r)] as const);
+const enriched = await mapLimit(
+  repos,
+  6,
+  async (r) => [r.name, await enrich(r, previousRepos[r.name])] as const,
+);
+console.log(`Traductions : ${reusedTranslations} réutilisées (description inchangée).`);
 const cache: ProjectsCache = {
   fetchedAt: new Date().toISOString(),
   repos: Object.fromEntries(enriched),
