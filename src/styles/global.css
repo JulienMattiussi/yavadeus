@@ -113,6 +113,12 @@ h3 {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: var(--gap);
 }
+/* Single column: widen the gap so each card reads as one block, not run-on. */
+@media (max-width: 560px) {
+  .grid {
+    gap: 2.25rem;
+  }
+}
 
 /* Timeline view: a vertical rail with a node per year. */
 #view-timeline {

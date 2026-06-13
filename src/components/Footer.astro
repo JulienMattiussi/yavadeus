@@ -26,6 +26,10 @@ const footerLinks = [
     : []),
   ...(BLOG_URL ? [{ rubric: 'Blog', href: BLOG_URL, win: 'Blog', path: ICON.rss }] : []),
 ];
+
+const builtParts = t('footer.built').split(' - ');
+const builtA = builtParts[0];
+const builtB = builtParts.slice(1).join(' - ');
 ---
 
 <footer class="wrap site-footer mono">
@@ -47,7 +51,11 @@ const footerLinks = [
       ))
     }
   </ul>
-  <span class="footer-built">{t('footer.built')}</span>
+  <span class="footer-built">
+    <span class="built-part">{builtA}</span>
+    <span class="built-sep"> - </span>
+    <span class="built-part">{builtB}</span>
+  </span>
 </footer>
 
 <style>
@@ -94,5 +102,23 @@ const footerLinks = [
   }
   .footer-built {
     color: var(--text-faint);
+  }
+
+  /* Narrow screens: drop the URLs (they wrap ugly), keep icon + rubric. */
+  @media (max-width: 560px) {
+    .footer-sep,
+    .footer-url {
+      display: none;
+    }
+    .footer-built {
+      width: 100%;
+      text-align: center;
+    }
+    .built-sep {
+      display: none;
+    }
+    .built-part {
+      display: block;
+    }
   }
 </style>

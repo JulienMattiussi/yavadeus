@@ -60,7 +60,10 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
         />
       </label>
       <div class="sort" role="group" aria-label={t('view.label')}>
-        <span class="sort-label mono">{t('view.label')}</span>
+        <span class="sort-label mono">
+          <span class="label-full">{t('view.label')}</span>
+          <span class="label-short">{t('view.label.short')}</span>
+        </span>
         <button type="button" class="sort-btn mono" data-view="categories" aria-pressed="true">
           {t('view.categories')}
         </button>
@@ -165,6 +168,28 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   window.addEventListener('resize', measureSticky);
   if (document.fonts?.ready) document.fonts.ready.then(measureSticky);
 
+  // Flag a category header as `stuck` once it reaches the sticky line, so its
+  // description can collapse on mobile.
+  const catHeads = Array.from(document.querySelectorAll<HTMLElement>('.cat-head'));
+  let stuckTicking = false;
+  function updateStuck() {
+    stuckTicking = false;
+    const line = (topbar?.offsetHeight ?? 0) + (toolbar?.offsetHeight ?? 0);
+    for (const h of catHeads)
+      h.classList.toggle('stuck', h.getBoundingClientRect().top <= line + 1);
+  }
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!stuckTicking) {
+        stuckTicking = true;
+        requestAnimationFrame(updateStuck);
+      }
+    },
+    { passive: true },
+  );
+  updateStuck();
+
   // "Open-minded mode" gate on the délires rubric: blurred until enabled,
   // remembered for the tab session. inert keeps blurred cards out of tab + SR.
   const openmind = document.getElementById('openmind') as HTMLInputElement | null;
@@ -225,7 +250,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
       const countEl = section.querySelector<HTMLElement>('.cat-count');
       if (countEl) {
         const total = Number(countEl.dataset.total ?? count);
-        const unit = (countEl.textContent ?? '').replace(/^[\d/]+\s*/, '');
+        const unit = (countEl.textContent ?? '').trim().replace(/^[\d/]+\s*/, '');
         countEl.textContent = `${count < total ? `${count}/${total}` : total} ${unit}`.trimEnd();
       }
     }
@@ -413,6 +438,9 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     color: var(--text-faint);
     font-size: 0.78rem;
     margin-right: 0.1rem;
+  }
+  .label-short {
+    display: none;
   }
   .sort-btn {
     cursor: pointer;
@@ -605,6 +633,15 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
       align-items: stretch;
       gap: 0.7rem;
     }
+    .search-box {
+      flex: none;
+    }
+    .label-full {
+      display: none;
+    }
+    .label-short {
+      display: inline;
+    }
     .sort {
       flex-wrap: wrap;
     }
@@ -615,6 +652,9 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     .category,
     .year-group {
       margin: 2rem 0;
+    }
+    .cat-head.stuck .cat-desc {
+      display: none;
     }
   }
 </style>
