@@ -1,6 +1,32 @@
 {
-  "fetchedAt": "2026-06-13T00:39:46.303Z",
+  "fetchedAt": "2026-06-13T01:56:20.351Z",
   "repos": {
+    "yavadeus": {
+      "description": "Page perso qui rassemble tous mes projets",
+      "subtitle": {
+        "fr": "Page perso qui rassemble tous mes projets",
+        "en": "Personal page which brings together all my projects"
+      },
+      "homepage": null,
+      "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-06-13T01:41:36Z",
+      "createdAt": "2026-06-11T20:04:18Z",
+      "languages": [
+        "TypeScript",
+        "Astro",
+        "CSS"
+      ],
+      "frameworks": [
+        "Astro"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/yavadeus/main/public/favicon.svg",
+      "npm": null,
+      "discord": true
+    },
     "deduplicateur": {
       "description": "Detect and purge duplicate files ",
       "subtitle": {

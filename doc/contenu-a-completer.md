@@ -3,91 +3,53 @@
 Inventaire des données du site et de leur **source**. Pipeline en 3 étapes :
 **fetch** (`make fetch` récupère GitHub/npm dans le cache) → **curate**
 (`make curate` : catégorie, WIP, ignore, prune) → **build** (rend hors-ligne).
-Tout ce qui n'est ni **fetch** ni **curate** est **manuel** : c'est le travail
-restant.
+Tout ce qui n'est ni **fetch** ni **curate** est **manuel**.
 
 ## Référence : qui remplit quoi
 
 | Donnée              | Source | Détail                                                                     |
 | ------------------- | ------ | -------------------------------------------------------------------------- |
 | titre               | fetch  | nom du repo embelli (override `title` possible)                            |
+| sous-titre          | fetch  | description GitHub, **auto-traduite FR/EN** (override `subtitle {fr,en}`)  |
 | lien GitHub         | fetch  | URL du repo                                                                |
 | lien live           | fetch  | `homepage` GitHub, sinon GitHub Pages (override `live`)                    |
-| technos             | fetch  | langages GitHub top 3 (override `tech`)                                    |
+| technos             | fetch  | **frameworks (package.json)** + langages GitHub (override `tech`)          |
 | étoiles             | fetch  | GitHub                                                                     |
-| date de démarrage   | fetch  | 1er commit                                                                 |
-| date de mise à jour | fetch  | dernier push                                                               |
+| dates               | fetch  | 1er commit (démarrage) + dernier push (mise à jour)                        |
 | favicon / icône     | fetch  | favicon du site live, sinon icône applicative du repo (override `favicon`) |
 | lien téléchargement | fetch  | dernière release avec binaires (override `download`)                       |
 | badge IA            | fetch  | présence `AGENTS.md`/`CLAUDE.md`/`.claude` (override `ai`)                 |
+| icône Discord       | fetch  | le README mentionne un « bot Discord »                                     |
 | lien npm            | fetch  | auto si `package.json` publié sur npm & maintenu par toi (override `npm`)  |
-| **catégorie**       | curate | `make curate`                                                              |
+| **catégorie**       | curate | `make curate` (requis pour afficher un repo)                               |
 | **WIP**             | curate | `make curate`                                                              |
 | ignoré              | curate | `make curate` (liste `ignored`)                                            |
-| **sous-titre**      | manuel | repli = description GitHub (monolingue) ; bilingue à écrire                |
-| **vignette**        | manuel | `public/thumbnails/<repo>.png`                                             |
+| vignette            | manuel | `public/thumbnails/<repo>.png`                                             |
+| image de partage    | manuel | `public/og.png` (1200×630, OG/Twitter)                                     |
 | textes du site      | manuel | i18n FR/EN (`src/i18n/ui.ts`)                                              |
-| config / assets     | manuel | `.env` (`GITHUB_USER`, `SITE_URL`), favicon "y", couleurs                  |
+| config / assets     | manuel | `.env` (`GITHUB_USER`, `NPM_USER`, `SITE_URL`), favicon "y", couleurs      |
 
 ---
 
-## A. Manuel pur - aucun filet (à produire)
+## État
 
-- [ ] **Sous-titres bilingues** par projet (surtout l'EN ; le FR repli = desc GitHub). _Le plus gros poste._
-- [ ] **Vignettes** d'aperçu (`public/thumbnails/<repo>.png`) - rien pour l'instant.
-- [ ] **`title`** : override seulement si le nom embelli ne convient pas.
+L'essentiel est **automatique et validé**. Tout le catalogue (35 projets) tourne
+sans aucun override : titres, sous-titres bilingues traduits, technos +
+frameworks, favicons, liens, dates, badges IA, icônes Discord. Audit des données
+auto effectué (liens de prod, favicons, releases, npm, traductions) : RAS notable.
 
-## B. Overrides à auditer projet par projet (on commence par là)
+Fait : favicon "y", palette du thème, textes du site (tagline, intro, rubriques,
+libellés), `SITE_URL` (`yavadeus.vercel.app`), balises OG/Twitter + canonical +
+hreflang, image de partage `public/og.png`, `robots.txt` + `sitemap.xml`.
 
-Champs déjà remplis automatiquement : il s'agit de **vérifier** et corriger au cas
-par cas. Voir la matrice de suivi plus bas.
+## Reste à faire
 
-- [x] Auditer les **liens live** - OK, aucune exception (0 "faux live" sur 40 repos).
-- [x] Auditer les **favicons / icônes** - OK (Vite par défaut sur combien-mieux-que-un et icône web-extension sur fast-emoji confirmés comme les bons).
-- [x] Auditer les **liens de téléchargement** - OK (seul deduplicateur, release v1.3.0).
-- [x] Auditer les **badges IA** - OK (détection `AGENTS.md`/`CLAUDE.md`/`.claude` juste).
-- [ ] **Technos** - corrects en langages bruts ; à enrichir au cas par cas si on veut afficher un framework (React, Astro...). Optionnel.
+- [ ] **Vignettes** d'aperçu (`public/thumbnails/<repo>.png`) - aucune pour
+      l'instant. Seul vrai manque ; optionnel (les cartes sont propres sans).
+- [ ] **Déploiement** sur Vercel.
 
-> Lot B validé pour les 13 projets actuels (juin 2026). À refaire pour les repos ajoutés via la CLI.
-
-## C. Contenu & config au niveau du site
-
-- [ ] **`site.tagline`** et **`site.intro`** (FR/EN)
-- [ ] **Noms + descriptions des 4 rubriques** (`cat.*`, `cat.*.desc`)
-- [ ] **Libellés** : footer, switch langue, recherche, vues, badges, a11y, gate délires
-- [ ] **URL du site** dans `.env` (`SITE_URL`, actuellement `yavadeus.dev` - à confirmer)
-- [x] Favicon "y" (fait)
-- [x] Palette de couleurs du thème (fait)
-
----
-
-## Matrice de suivi par projet
-
-Légende : `auto` = on garde l'enrichissement automatique (à vérifier) · `✏️` =
-override manuel posé · `✓` = fait/validé · `-` = sans objet · `TODO` = à faire.
-
-> Snapshot d'avant le reset (les 13 premiers projets). Depuis, le catalogue a été
-> re-curé (35 projets, aucun override : tout est auto). À refaire si besoin.
-
-| Projet                       | Rubrique | Live | Tech | Favicon            | Téléch. | IA   | Sous-titre     | Vignette |
-| ---------------------------- | -------- | ---- | ---- | ------------------ | ------- | ---- | -------------- | -------- |
-| universal-picross            | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| calendar-solver              | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| ptitjeux                     | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| bingo-builder                | jeux     | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| deduplicateur                | outils   | auto | auto | auto (icône Tauri) | auto    | auto | fr+en          | TODO     |
-| fast-emoji                   | outils   | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     |
-| lorrainjs                    | outils   | auto | auto | auto               | -       | auto | fr+en (npm ✏️) | TODO     |
-| veilleur                     | outils   | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| legoroscope                  | délires  | auto | ✏️   | auto               | -       | auto | fr+en          | TODO     |
-| tripote-visor                | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| combien-mieux-que-un         | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| balkanoche-prison-calculator | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-| are-you-vulcain              | délires  | auto | auto | auto               | -       | auto | fr+en          | TODO     |
-
-## Ordre de travail prévu
-
-1. **B** - audit des données auto-enrichies projet par projet (les plus abouties).
-2. **A** - sous-titres bilingues, puis vignettes.
-3. **C** - textes du site et config finale.
-4. Déploiement (en dernier).
+> Détail : le sous-titre auto-traduit peut rester imparfait quand le moteur ne
+> reconnaît pas un terme (ex. « lorrain » rendu « Lorraine »). On corrige en
+> reformulant la description GitHub (puis `make fetch`), ou via un override
+> `subtitle`. Idem si une description trop courte n'est pas détectée comme
+> française et n'est pas traduite.

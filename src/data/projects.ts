@@ -44,6 +44,7 @@ export interface ProjectOverride {
 
 /** Keyed by repo name. Add a repo here (with a category) to put it on the page. */
 export const projects: Record<string, ProjectOverride> = {
+  yavadeus: { category: 'outils' },
   deduplicateur: { category: 'outils' },
   legoroscope: { category: 'outils' },
   ptitjeux: { category: 'jeux', wip: true },
