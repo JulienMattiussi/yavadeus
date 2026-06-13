@@ -21,6 +21,7 @@ function cached(over: Partial<CachedRepo> = {}): CachedRepo {
     favicon: 'https://cached.dev/favicon.svg',
     npm: null,
     discord: false,
+    thumbnail: null,
     ...over,
   };
 }

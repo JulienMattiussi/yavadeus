@@ -40,6 +40,8 @@ export interface CachedRepo {
   npm: string | null;
   /** Whether the README identifies this repo as a Discord bot. */
   discord: boolean;
+  /** Committed thumbnail path (/thumbnails/<repo>.png), or null. */
+  thumbnail: string | null;
 }
 
 export interface ProjectsCache {

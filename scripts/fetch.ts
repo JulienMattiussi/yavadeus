@@ -9,9 +9,10 @@
  */
 
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { GITHUB_USER, NPM_USER } from '../src/config';
+import { ignored } from '../src/data/projects';
 import { CACHE_PATH, type CachedRepo, type ProjectsCache } from '../src/lib/cache';
 import {
   fetchFavicon,
@@ -25,8 +26,11 @@ import {
   fetchRepoFrameworks,
   fetchRepoIcon,
   fetchSubtitleTranslation,
+  fetchThumbnail,
   fetchUserRepos,
   reusableSubtitle,
+  reusableThumbnail,
+  thumbnailFile,
   type RepoSummary,
 } from '../src/lib/sources';
 
@@ -106,6 +110,10 @@ function readPreviousRepos(): Record<string, CachedRepo> {
 }
 
 let reusedTranslations = 0;
+let reusedThumbnails = 0;
+
+// Repos explicitly set aside never show, so don't spend screenshot quota on them.
+const ignoredSet = new Set(ignored);
 
 async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<CachedRepo> {
   const full = `${GITHUB_USER}/${r.name}`;
@@ -115,6 +123,19 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   // Reuse the cached translation when the description is unchanged (no API call).
   const cachedSubtitle = reusableSubtitle(prev, r.description);
   if (cachedSubtitle) reusedTranslations++;
+
+  // Thumbnail (skipped for ignored repos): reuse the committed image when the
+  // live URL + last push are unchanged, else capture a fresh one.
+  let thumbnail: string | null = null;
+  if (!ignoredSet.has(r.name)) {
+    const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
+    if (reusedThumb && existsSync(thumbnailFile(r.name))) {
+      reusedThumbnails++;
+      thumbnail = reusedThumb;
+    } else {
+      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage);
+    }
+  }
 
   const [languages, frameworks, createdAt, release, ai, npm, discord, translated] =
     await Promise.all([
@@ -150,6 +171,7 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
     favicon,
     npm,
     discord,
+    thumbnail,
   };
 }
 
@@ -163,6 +185,7 @@ const enriched = await mapLimit(
   async (r) => [r.name, await enrich(r, previousRepos[r.name])] as const,
 );
 console.log(`Traductions : ${reusedTranslations} réutilisées (description inchangée).`);
+console.log(`Vignettes : ${reusedThumbnails} réutilisées (live + push inchangés).`);
 const cache: ProjectsCache = {
   fetchedAt: new Date().toISOString(),
   repos: Object.fromEntries(enriched),

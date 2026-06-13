@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-13T01:56:20.351Z",
+  "fetchedAt": "2026-06-13T10:38:14.867Z",
   "repos": {
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
@@ -11,7 +11,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-06-13T01:41:36Z",
+      "pushedAt": "2026-06-13T01:57:18Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -25,7 +25,8 @@
       "ai": true,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/yavadeus/main/public/favicon.svg",
       "npm": null,
-      "discord": true
+      "discord": true,
+      "thumbnail": "/thumbnails/yavadeus.webp"
     },
     "deduplicateur": {
       "description": "Detect and purge duplicate files ",
@@ -55,7 +56,8 @@
       "ai": true,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/deduplicateur/main/src-tauri/icons/icon.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/deduplicateur.webp"
     },
     "legoroscope": {
       "description": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
@@ -81,7 +83,8 @@
       "ai": true,
       "favicon": "https://legoroscope.vercel.app/icon.jpg?icon.0y1eob18vp6c-.jpg",
       "npm": null,
-      "discord": true
+      "discord": true,
+      "thumbnail": "/thumbnails/legoroscope.webp"
     },
     "ptitjeux": {
       "description": "Various online puzzle games",
@@ -107,7 +110,8 @@
       "ai": true,
       "favicon": null,
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/ptitjeux.webp"
     },
     "universal-picross": {
       "description": "A universal player and solver for picross games",
@@ -133,7 +137,8 @@
       "ai": true,
       "favicon": "https://universal-picross.vercel.app/favicon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/universal-picross.webp"
     },
     "marmelab-en-voyage": {
       "description": "Portail des séminaires Marmelab",
@@ -159,7 +164,8 @@
       "ai": true,
       "favicon": "https://marmelab-en-voyage.vercel.app/assets/logo-green.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/marmelab-en-voyage.webp"
     },
     "veilleur": {
       "description": "Un bot Discord de revue automatisée de veille informatique dans le domaine du développement web",
@@ -185,7 +191,8 @@
       "ai": true,
       "favicon": "https://veilleur-tau.vercel.app/logo.jpeg",
       "npm": null,
-      "discord": true
+      "discord": true,
+      "thumbnail": "/thumbnails/veilleur.webp"
     },
     "glaude.ai": {
       "description": "Glaude.ai (parodie décalée de Claude AI)",
@@ -211,7 +218,8 @@
       "ai": true,
       "favicon": "https://glaude-ai.vercel.app/icon?0583c14eb6028497",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/glaude.ai.webp"
     },
     "tripote-visor": {
       "description": "Une plateforme de réservation fictive et improbable",
@@ -237,7 +245,8 @@
       "ai": true,
       "favicon": "https://tripote-visor.vercel.app/favicon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/tripote-visor.webp"
     },
     "horloge-passe-partout": {
       "description": "L'horloge \"Passe-Partout\". Le widget \"must have\"",
@@ -263,7 +272,8 @@
       "ai": false,
       "favicon": "https://horloge-passe-partout.vercel.app/favicon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/horloge-passe-partout.webp"
     },
     "fast-emoji": {
       "description": "Simple shortcuts to get some emojis",
@@ -287,7 +297,8 @@
       "ai": true,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/fast-emoji/main/web-extension/dist/icons/icon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/fast-emoji.webp"
     },
     "calendar-solver": {
       "description": "A puzzle game to match the current date with the correct pieces",
@@ -313,7 +324,8 @@
       "ai": true,
       "favicon": "https://calendar-solver.vercel.app/icon?dcff026ce8cf0b78",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/calendar-solver.webp"
     },
     "bingo-builder": {
       "description": "Website to generate and play custom bingo with friends",
@@ -337,7 +349,8 @@
       "ai": true,
       "favicon": null,
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/bingo-builder.webp"
     },
     "cobol-playground": {
       "description": "Cobol is not dead (maybe)",
@@ -361,7 +374,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/cobol-playground/main/frontend/public/favicon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/cobol-playground.webp"
     },
     "photo-duel": {
       "description": "Juste un défi privé à base de photos random",
@@ -385,7 +399,8 @@
       "ai": false,
       "favicon": "https://photo-duel.vercel.app/photo.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/photo-duel.webp"
     },
     "mai-rmelab-2025": {
       "description": "Séminaire été 2025",
@@ -411,7 +426,8 @@
       "ai": false,
       "favicon": "https://mai-rmelab-2025.vercel.app/favicon.ico",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/mai-rmelab-2025.webp"
     },
     "grammarlai": {
       "description": "Better than Grammarly with AI (at least we tried)",
@@ -437,7 +453,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/grammarlai/main/static/favicon.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/grammarlai.webp"
     },
     "combien-mieux-que-un": {
       "description": "Mathématiques absurdes et sans intérêt",
@@ -463,7 +480,8 @@
       "ai": false,
       "favicon": "https://combien-mieux-que-un.vercel.app/vite.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/combien-mieux-que-un.webp"
     },
     "secret-project": {
       "description": "Clique pour savoir",
@@ -489,7 +507,8 @@
       "ai": false,
       "favicon": "https://secret-project-pied.vercel.app/favicon.ico",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/secret-project.webp"
     },
     "marme-ten": {
       "description": "Bientôt 10 ans",
@@ -515,7 +534,8 @@
       "ai": false,
       "favicon": "https://marme-ten.vercel.app/logo-green.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/marme-ten.webp"
     },
     "juin-rmelab": {
       "description": "Séminaire 2023 en juin",
@@ -541,7 +561,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/juin-rmelab/main/src/assets/logo.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": null
     },
     "mai-rmelab": {
       "description": "Séminaire 2022 en mai",
@@ -567,7 +588,8 @@
       "ai": false,
       "favicon": "https://mai-rmelab.vercel.app/logo-green.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/mai-rmelab.webp"
     },
     "are-you-vulcain": {
       "description": "Check if you are a Vulcan",
@@ -593,7 +615,8 @@
       "ai": false,
       "favicon": "https://are-you-vulcain.vercel.app/spok-icon.jpg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/are-you-vulcain.webp"
     },
     "plokering": {
       "description": "An online poker-planning tool",
@@ -620,7 +643,8 @@
       "ai": false,
       "favicon": "https://plokering.vercel.app/icon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/plokering.webp"
     },
     "lostpass": {
       "description": "Save all your passwords easily (or not)",
@@ -646,7 +670,8 @@
       "ai": false,
       "favicon": "https://lostpass.vercel.app/bouclier.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/lostpass.webp"
     },
     "marmelab-games": {
       "description": "Marmelab integration games online",
@@ -671,7 +696,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/marmelab-games/master/static/favicon.ico",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": null
     },
     "Fred": {
       "description": "Fred meme",
@@ -697,7 +723,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/Fred/master/src/assets/logo.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": null
     },
     "the-game": {
       "description": "Statistical computation to play the board game : The Game ",
@@ -723,7 +750,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/the-game/master/src/logo.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/the-game.webp"
     },
     "retro-admin": {
       "description": "React-Admin goes vintage",
@@ -749,7 +777,8 @@
       "ai": false,
       "favicon": "https://retro-admin.vercel.app/assets/favicon.c42dba36.ico",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/retro-admin.webp"
     },
     "estcequonmetenprodaujourdhui": {
       "description": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
@@ -775,7 +804,8 @@
       "ai": false,
       "favicon": "https://estcequonmetenprodaujourdhui.vercel.app/assets/favicon.d2a8a2d9.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/estcequonmetenprodaujourdhui.webp"
     },
     "balkanoche-prison-calculator": {
       "description": "Calculateur de temps de prison sur l'échelle Balkanoche",
@@ -801,7 +831,8 @@
       "ai": false,
       "favicon": "https://balkanoche-prison-calculator.vercel.app/prisonner.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/balkanoche-prison-calculator.webp"
     },
     "traducteur-lorrain": {
       "description": "Traduit des phrases du français vers le lorrain",
@@ -827,7 +858,8 @@
       "ai": false,
       "favicon": "https://julienmattiussi.github.io/traducteur-lorrain/favicon.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/traducteur-lorrain.webp"
     },
     "lorrainjs": {
       "description": "Translation tool for the people of Lorraine",
@@ -850,7 +882,8 @@
       "ai": false,
       "favicon": null,
       "npm": "https://www.npmjs.com/package/lorrainjs",
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/lorrainjs.webp"
     },
     "jaune-attend": {
       "description": "Générateur de messages personnalisés annoncés par Jonathan",
@@ -876,7 +909,8 @@
       "ai": false,
       "favicon": "https://jaune-attend.vercel.app/favicon.ico",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/jaune-attend.webp"
     },
     "marmenews": {
       "description": null,
@@ -899,7 +933,8 @@
       "ai": false,
       "favicon": "https://marmenews.vercel.app/icon.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": null
     },
     "logo-marmelab": {
       "description": "Du code LOGO pour générer le Logo de Marmelab",
@@ -919,7 +954,8 @@
       "ai": false,
       "favicon": null,
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/logo-marmelab.webp"
     },
     "boardgameslist": {
       "description": "A simple board games list",
@@ -945,7 +981,8 @@
       "ai": false,
       "favicon": "https://boardgameslist.vercel.app/icon.png",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/boardgameslist.webp"
     },
     "Marmemap": {
       "description": "Map for Marmelab at WorkAdventure",
@@ -969,7 +1006,8 @@
       "ai": false,
       "favicon": null,
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/Marmemap.webp"
     },
     "RedMonkDynamic": {
       "description": "Concept of interactive map from Red-Monk stats",
@@ -995,7 +1033,8 @@
       "ai": false,
       "favicon": "https://red-monk-dynamic.vercel.app/assets/favicon.17e50649.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": "/thumbnails/RedMonkDynamic.webp"
     },
     "vitecrats": {
       "description": null,
@@ -1018,7 +1057,8 @@
       "ai": false,
       "favicon": "https://raw.githubusercontent.com/JulienMattiussi/vitecrats/master/src/favicon.svg",
       "npm": null,
-      "discord": false
+      "discord": false,
+      "thumbnail": null
     }
   }
 }

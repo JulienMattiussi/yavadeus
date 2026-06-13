@@ -33,6 +33,7 @@ const projects = defineCollection({
     },
   },
   schema: z.object({
+    id: z.string(),
     title: z.string(),
     subtitle: localized,
     category: z.enum(CATEGORIES),

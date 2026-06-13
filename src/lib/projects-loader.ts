@@ -66,7 +66,7 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
     npm: o.npm ? `https://www.npmjs.com/package/${o.npm}` : (c.npm ?? undefined),
     download,
     favicon: safeHttpUrl(favicon),
-    thumbnail: o.thumbnail,
+    thumbnail: o.thumbnail ?? c.thumbnail ?? undefined,
     tech: o.tech ?? mergeTech(c.frameworks, c.languages),
     ai,
     wip: o.wip ?? false,

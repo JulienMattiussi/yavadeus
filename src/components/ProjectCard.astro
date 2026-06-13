@@ -10,8 +10,13 @@ interface Props {
 
 const { project, lang } = Astro.props;
 const t = useTranslations(lang);
-const { title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
+const { id, title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
 const { createdAt, updatedAt, download, wip, discord } = project;
+
+const siteWindow = title;
+const codeWindow = `${id} (code)`;
+const npmWindow = `${id} (npm)`;
+const downloadWindow = `${id} (download)`;
 
 // Client-side search/sort metadata (used by the toolbar script in HomePage).
 const searchText = [title, subtitle[lang], ...tech].join(' ').toLowerCase();
@@ -28,7 +33,13 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
 >
   {
     thumbnail && (
-      <a href={live ?? github} class="thumb" aria-hidden="true" tabindex="-1">
+      <a
+        href={live ?? github}
+        class="thumb"
+        target={live ? siteWindow : codeWindow}
+        aria-hidden="true"
+        tabindex="-1"
+      >
         <img src={thumbnail} alt="" loading="lazy" />
       </a>
     )
@@ -122,8 +133,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     <a
       href={github}
       class="link"
-      target="_blank"
-      rel="noopener"
+      target={codeWindow}
       aria-label={`${t('link.github')} - ${title} ${t('a11y.newtab')}`}
     >
       <span class="arrow" aria-hidden="true">↗</span>{t('link.github')}
@@ -133,8 +143,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
         <a
           href={live}
           class="link"
-          target="_blank"
-          rel="noopener"
+          target={siteWindow}
           aria-label={`${t('link.live')} - ${title} ${t('a11y.newtab')}`}
         >
           <span class="arrow" aria-hidden="true">
@@ -149,8 +158,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
         <a
           href={npm}
           class="link"
-          target="_blank"
-          rel="noopener"
+          target={npmWindow}
           aria-label={`${t('link.npm')} - ${title} ${t('a11y.newtab')}`}
         >
           <span class="arrow" aria-hidden="true">
@@ -165,8 +173,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
         <a
           href={download.url}
           class="link"
-          target="_blank"
-          rel="noopener"
+          target={downloadWindow}
           aria-label={`${t('link.download')} ${download.tag} - ${title} ${t('a11y.newtab')}`}
         >
           <span class="arrow" aria-hidden="true">

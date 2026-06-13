@@ -38,3 +38,7 @@ export const NPM_USER = env.NPM_USER || 'yavadeus';
 
 /** Production site URL, defined in `.env` (canonical URLs + OG/Twitter tags). */
 export const SITE_URL = env.SITE_URL;
+
+/** Optional footer social links, from `.env` (a footer line shows only if set). */
+export const LINKEDIN_URL = env.LINKEDIN_URL;
+export const BLOG_URL = env.BLOG_URL;

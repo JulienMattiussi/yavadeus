@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import { GITHUB_USER } from '../config';
 import { CATEGORIES, type Category } from '../data/projects';
 import type { Lang, UIKey } from '../i18n/ui';
 import { otherLangPath, useTranslations } from '../i18n/ui';
+import Footer from './Footer.astro';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from './ProjectCard.astro';
 
@@ -13,7 +13,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const githubUrl = `https://github.com/${GITHUB_USER}`;
 
 const all = await getCollection('projects');
 const projects = all
@@ -125,10 +124,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     <p id="search-empty" class="empty mono" hidden>{t('search.empty')}</p>
   </main>
 
-  <footer class="wrap site-footer mono">
-    <span>{t('footer.built')}</span>
-    <a href={githubUrl} target="_blank" rel="noopener">github.com/{GITHUB_USER}</a>
-  </footer>
+  <Footer lang={lang} />
 </Layout>
 
 <script>
@@ -591,25 +587,6 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     color: var(--text-dim);
     margin: 0.35rem 0 0;
     font-size: 0.95rem;
-  }
-
-  .site-footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    justify-content: space-between;
-    color: var(--text-faint);
-    font-size: 0.8rem;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-    margin-top: 2rem;
-    border-top: 1px solid var(--line);
-  }
-  .site-footer a {
-    color: var(--text-dim);
-  }
-  .site-footer a:hover {
-    color: var(--accent);
   }
 
   @media (max-width: 560px) {

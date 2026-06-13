@@ -10,3 +10,4 @@ export * from './frameworks';
 export * from './favicon';
 export * from './discord';
 export * from './translate';
+export * from './thumbnail';

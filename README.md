@@ -8,7 +8,7 @@ GitHub**. Fait aussi office de CV.
 
 ![Astro](https://img.shields.io/badge/Astro-6-FF5D01?logo=astro&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-89%20tests-6E9F18?logo=vitest&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-tested-6E9F18?logo=vitest&logoColor=white)
 ![i18n](https://img.shields.io/badge/i18n-FR%2FEN-00ff9c)
 ![build](https://img.shields.io/badge/build-statique%20%26%20hors--ligne-1f2c33)
 
@@ -20,6 +20,7 @@ GitHub**. Fait aussi office de CV.
 
 - **Catalogue auto-découvert** - une étape `fetch` liste tous les repos non-fork du compte GitHub ; un repo n'apparaît qu'une fois qu'on lui donne une catégorie
 - **Enrichissement automatique** - titre, sous-titre, technos, favicon, étoiles, dates, liens, badges : presque tout est déduit, rien à saisir à la main
+- **Vignettes auto** - capture du site live (microlink), sinon image sociale GitHub ; normalisées en WebP 720×405 (~13 Ko), committées, re-générées seulement quand le projet change
 - **Sous-titres bilingues traduits** - la description GitHub est traduite FR ↔ EN au moment du fetch (l'override manuel reste prioritaire)
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur
@@ -97,6 +98,27 @@ Pour un simple rafraîchissement de données (étoiles, dates, descriptions),
 
 ---
 
+## Services externes
+
+Tous sont appelés **uniquement à l'étape `fetch`** : le résultat est mis en
+cache, donc le site déployé n'en dépend pas. Seule exception, Google Fonts,
+chargé par le navigateur au runtime.
+
+| Service                                                                        | Usage                                                           |
+| ------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| [API REST GitHub](https://docs.github.com/rest)                                | repos, langages, commits, releases, README, marqueur IA         |
+| [registre npm](https://registry.npmjs.org)                                     | détection du paquet npm publié                                  |
+| [microlink](https://microlink.io)                                              | capture d'écran des sites live (vignettes)                      |
+| image sociale GitHub (`opengraph.githubassets.com`)                            | vignette de repli quand le projet n'a pas de site live          |
+| [google-translate-api-x](https://www.npmjs.com/package/google-translate-api-x) | traduction FR/EN des sous-titres (endpoint Google non officiel) |
+| [ImageMagick](https://imagemagick.org) (`convert`)                             | redimensionnement local des vignettes en WebP (outil système)   |
+| [Google Fonts](https://fonts.google.com)                                       | polices Inter + JetBrains Mono (**chargé au runtime**)          |
+
+Authentification GitHub : `gh auth token`, sinon `GITHUB_TOKEN`. Aucun autre
+service ne requiert de clé.
+
+---
+
 ## Ajouter / organiser un projet
 
 Un repo ne s'affiche **qu'une fois qu'il a une catégorie**. Deux façons :
@@ -134,7 +156,7 @@ src/
 ├── scripts/home-view.ts # helpers purs de la vue client (recherche, années)
 ├── i18n/ui.ts           # chaînes FR/EN + helpers de locale
 ├── layouts/Layout.astro # <head>, fonts, balises OG/Twitter
-├── components/          # HomePage.astro, ProjectCard.astro
+├── components/          # HomePage.astro, ProjectCard.astro, Footer.astro
 └── pages/               # FR sur /, EN sur /en/
 scripts/                 # fetch.ts (réseau) + pipeline de curation
 tests/                   # tests unitaires Vitest (logique pure)
