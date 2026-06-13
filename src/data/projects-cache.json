@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-06-12T23:45:44.880Z",
+  "fetchedAt": "2026-06-13T00:39:46.303Z",
   "repos": {
     "deduplicateur": {
-      "description": "Dectect and purge duplicate files ",
+      "description": "Detect and purge duplicate files ",
       "subtitle": {
         "fr": "Détecter et purger les fichiers en double",
-        "en": "Dectect and purge duplicate files"
+        "en": "Detect and purge duplicate files"
       },
       "homepage": null,
       "htmlUrl": "https://github.com/JulienMattiussi/deduplicateur",
@@ -414,9 +414,9 @@
       "discord": false
     },
     "combien-mieux-que-un": {
-      "description": "Mathématiques absurdes et sans intéret",
+      "description": "Mathématiques absurdes et sans intérêt",
       "subtitle": {
-        "fr": "Mathématiques absurdes et sans intéret",
+        "fr": "Mathématiques absurdes et sans intérêt",
         "en": "Absurd and pointless mathematics"
       },
       "homepage": "https://combien-mieux-que-un.vercel.app",
@@ -544,10 +544,10 @@
       "discord": false
     },
     "are-you-vulcain": {
-      "description": "Check if your are a Vulcan",
+      "description": "Check if you are a Vulcan",
       "subtitle": {
         "fr": "Vérifiez si vous êtes un Vulcain",
-        "en": "Check if your are a Vulcan"
+        "en": "Check if you are a Vulcan"
       },
       "homepage": "https://are-you-vulcain.vercel.app",
       "htmlUrl": "https://github.com/JulienMattiussi/are-you-vulcain",
@@ -674,10 +674,10 @@
       "discord": false
     },
     "the-game": {
-      "description": "Statistique computation to play the-game board game",
+      "description": "Statistical computation to play the board game : The Game ",
       "subtitle": {
-        "fr": "Calcul statistique pour jouer au jeu de société The Game",
-        "en": "Statistique computation to play the-game board game"
+        "fr": "Calcul statistique pour jouer au jeu de société : The Game",
+        "en": "Statistical computation to play the board game : The Game"
       },
       "homepage": null,
       "htmlUrl": "https://github.com/JulienMattiussi/the-game",
@@ -726,9 +726,9 @@
       "discord": false
     },
     "estcequonmetenprodaujourdhui": {
-      "description": "Est ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
+      "description": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
       "subtitle": {
-        "fr": "Est ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
+        "fr": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
         "en": "Are we putting it into production today? Reinterpreted version of this concept"
       },
       "homepage": "https://estcequonmetenprodaujourdhui.vercel.app",
@@ -778,10 +778,10 @@
       "discord": false
     },
     "traducteur-lorrain": {
-      "description": "Permet de rendre des phrase en français compréhensible en lorrain",
+      "description": "Traduit des phrases du français vers le lorrain",
       "subtitle": {
-        "fr": "Permet de rendre des phrase en français compréhensible en lorrain",
-        "en": "Allows you to make French sentences understandable in Lorraine"
+        "fr": "Traduit des phrases du français vers le lorrain",
+        "en": "Translates sentences from French into Lorraine"
       },
       "homepage": "https://julienmattiussi.github.io/traducteur-lorrain/",
       "htmlUrl": "https://github.com/JulienMattiussi/traducteur-lorrain",
@@ -804,10 +804,10 @@
       "discord": false
     },
     "lorrainjs": {
-      "description": "Translation tool for Lorraine people",
+      "description": "Translation tool for the people of Lorraine",
       "subtitle": {
         "fr": "Outil de traduction pour les Lorrains",
-        "en": "Translation tool for Lorraine people"
+        "en": "Translation tool for the people of Lorraine"
       },
       "homepage": null,
       "htmlUrl": "https://github.com/JulienMattiussi/lorrainjs",
@@ -827,9 +827,9 @@
       "discord": false
     },
     "jaune-attend": {
-      "description": "Générateur de messages personnalisés annnoncés par Jonathan",
+      "description": "Générateur de messages personnalisés annoncés par Jonathan",
       "subtitle": {
-        "fr": "Générateur de messages personnalisés annnoncés par Jonathan",
+        "fr": "Générateur de messages personnalisés annoncés par Jonathan",
         "en": "Personalized message generator announced by Jonathan"
       },
       "homepage": "https://jaune-attend.vercel.app",
@@ -896,10 +896,10 @@
       "discord": false
     },
     "boardgameslist": {
-      "description": "A simple Boardgames list",
+      "description": "A simple board games list",
       "subtitle": {
         "fr": "Une simple liste de jeux de société",
-        "en": "A simple Boardgames list"
+        "en": "A simple board games list"
       },
       "homepage": "https://boardgameslist.vercel.app",
       "htmlUrl": "https://github.com/JulienMattiussi/boardgameslist",
@@ -946,8 +946,11 @@
       "discord": false
     },
     "RedMonkDynamic": {
-      "description": null,
-      "subtitle": null,
+      "description": "Concept of interactive map from Red-Monk stats",
+      "subtitle": {
+        "fr": "Concept de carte interactive à partir des statistiques Red-Monk",
+        "en": "Concept of interactive map from Red-Monk stats"
+      },
       "homepage": "https://red-monk-dynamic.vercel.app",
       "htmlUrl": "https://github.com/JulienMattiussi/RedMonkDynamic",
       "stars": 0,
