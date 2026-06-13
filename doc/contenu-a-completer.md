@@ -6,11 +6,6 @@ Inventaire des données du site et de leur **source**. Pipeline en 3 étapes :
 Tout ce qui n'est ni **fetch** ni **curate** est **manuel** : c'est le travail
 restant.
 
-> Sauvegarde des données curées d'avant la remise à zéro :
-> [`doc/projects-curated.ts.bak`](projects-curated.ts.bak) (sous-titres bilingues,
-> catégories, overrides des 13 premiers projets). Pour restaurer : copier son
-> contenu dans `src/data/projects.ts`.
-
 ## Référence : qui remplit quoi
 
 | Donnée              | Source | Détail                                                                     |

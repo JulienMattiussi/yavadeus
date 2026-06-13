@@ -9,6 +9,19 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+const title = `${t('site.title')} - ${t('site.tagline')}`;
+const description = t('site.intro');
+
+// Absolute URLs need the configured `site` (SITE_URL); fall back gracefully if
+// it is missing so a dev/preview build never crashes.
+const base = Astro.site;
+const canonical = base ? new URL(Astro.url.pathname, base).href : Astro.url.href;
+const ogImage = base ? new URL('/og.png', base).href : '/og.png';
+const frUrl = base ? new URL('/', base).href : '/';
+const enUrl = base ? new URL('/en/', base).href : '/en/';
+const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
+const altLocale = lang === 'fr' ? 'en_US' : 'fr_FR';
 ---
 
 <!doctype html>
@@ -17,9 +30,30 @@ const t = useTranslations(lang);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{t('site.title')} - {t('site.tagline')}</title>
-    <meta name="description" content={t('site.intro')} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="fr" href={frUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={frUrl} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t('site.title')} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={altLocale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

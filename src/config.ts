@@ -36,5 +36,5 @@ export const GITHUB_USER = env.GITHUB_USER || 'JulienMattiussi';
 /** npm maintainer handle: a package is linked only if maintained by this user. */
 export const NPM_USER = env.NPM_USER || 'yavadeus';
 
-/** Production site URL (canonical URLs, footer link, etc.). */
-export const SITE_URL = env.SITE_URL || 'https://yavadeus.dev';
+/** Production site URL, defined in `.env` (canonical URLs + OG/Twitter tags). */
+export const SITE_URL = env.SITE_URL;
