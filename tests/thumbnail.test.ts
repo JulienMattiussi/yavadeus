@@ -29,6 +29,11 @@ describe('microlinkScreenshotUrl', () => {
     expect(url).toContain('viewport.width=1200');
     expect(url).toContain(encodeURIComponent('https://calendar-solver.vercel.app'));
   });
+  it('adds long-wait params in patient mode (slow pages)', () => {
+    const url = microlinkScreenshotUrl('https://mai-rmelab.vercel.app', true);
+    expect(url).toContain('waitUntil=networkidle2');
+    expect(url).toContain('waitForTimeout=4000');
+  });
 });
 
 describe('reusableThumbnail', () => {

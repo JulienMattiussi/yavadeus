@@ -27,8 +27,12 @@ export function githubSocialImageUrl(owner: string, repo: string): string {
   return `https://opengraph.githubassets.com/1/${owner}/${repo}`;
 }
 
-/** Pure: microlink screenshot API URL for a live site (1200x630 viewport). */
-export function microlinkScreenshotUrl(siteUrl: string): string {
+/**
+ * Pure: microlink screenshot API URL for a live site (1200x630 viewport).
+ * `patient` waits for the network to settle and allows a long navigation, for
+ * slow pages.
+ */
+export function microlinkScreenshotUrl(siteUrl: string, patient = false): string {
   const params = new URLSearchParams({
     url: siteUrl,
     screenshot: 'true',
@@ -36,6 +40,11 @@ export function microlinkScreenshotUrl(siteUrl: string): string {
     'viewport.width': '1200',
     'viewport.height': '630',
   });
+  if (patient) {
+    params.set('waitUntil', 'networkidle2');
+    params.set('timeout', '40000');
+    params.set('waitForTimeout', '4000');
+  }
   return `https://api.microlink.io/?${params}`;
 }
 
@@ -90,14 +99,20 @@ async function saveThumbnail(imageUrl: string, repo: string): Promise<boolean> {
 
 /** Resolve microlink's screenshot image URL for a live site (best-effort). */
 async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
-  try {
-    const res = await fetch(microlinkScreenshotUrl(siteUrl));
-    if (!res.ok) return null;
-    const data = (await res.json()) as { data?: { screenshot?: { url?: string } } };
-    return data.data?.screenshot?.url ?? null;
-  } catch {
-    return null;
+  // Fast attempt first, then a patient retry for slow pages: no slowdown on
+  // quick sites, only failures pay the longer wait.
+  for (const patient of [false, true]) {
+    try {
+      const res = await fetch(microlinkScreenshotUrl(siteUrl, patient));
+      if (res.ok) {
+        const data = (await res.json()) as { data?: { screenshot?: { url?: string } } };
+        if (data.data?.screenshot?.url) return data.data.screenshot.url;
+      }
+    } catch {
+      // fall through to the patient pass, else give up
+    }
   }
+  return null;
 }
 
 /**
