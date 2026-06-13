@@ -214,6 +214,9 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
       transform var(--transition),
       background var(--transition);
   }
+  .card[hidden] {
+    display: none;
+  }
   .card:hover {
     border-color: var(--cat, var(--accent-dim));
     background: var(--bg-card-hover);

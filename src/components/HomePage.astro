@@ -54,7 +54,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
           id="project-search"
           type="search"
           class="mono"
-          placeholder={t('search.placeholder')}
+          placeholder={`${t('search.placeholder')} (${projects.length} ${t('count.existing')})`}
           autocomplete="off"
           aria-label={t('search.placeholder')}
         />
@@ -83,7 +83,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
               <div class="cat-head">
                 <h2 id={`cat-${cat}`} class="cat-title mono">
                   <span class="hash">#</span> {t(`cat.${cat}` as UIKey)}
-                  <span class="cat-count">
+                  <span class="cat-count" data-total={items.length}>
                     {items.length} {t('count.projects')}
                   </span>
                 </h2>
@@ -215,13 +215,19 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
         .forEach((card) => grid.appendChild(card));
     }
     for (const section of categoriesView.querySelectorAll<HTMLElement>('.category')) {
-      const visible = Array.from(section.querySelectorAll<HTMLElement>('.card')).some((c) =>
-        matches(c, query),
-      );
+      let count = 0;
       section.querySelectorAll<HTMLElement>('.card').forEach((c) => {
-        c.hidden = !matches(c, query);
+        const ok = matches(c, query);
+        c.hidden = !ok;
+        if (ok) count++;
       });
-      section.hidden = !visible;
+      section.hidden = count === 0;
+      const countEl = section.querySelector<HTMLElement>('.cat-count');
+      if (countEl) {
+        const total = Number(countEl.dataset.total ?? count);
+        const unit = (countEl.textContent ?? '').replace(/^[\d/]+\s*/, '');
+        countEl.textContent = `${count < total ? `${count}/${total}` : total} ${unit}`.trimEnd();
+      }
     }
     categoriesView.hidden = false;
     if (timelineView) timelineView.hidden = true;
@@ -279,6 +285,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   }
 
   apply();
+  search?.focus({ preventScroll: true });
 </script>
 
 <style>
