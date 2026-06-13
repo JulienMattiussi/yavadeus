@@ -1,7 +1,8 @@
 /*
  * Project thumbnails, generated at fetch time and committed under
  * public/thumbnails/<repo>.png. Screenshot of the live site via microlink, else
- * of the npm package page, else GitHub's social-preview image. Images
+ * the first big README image, else the npm package page, else GitHub's
+ * social-preview image. Images
  * are normalized to a card-sized 720x405 WebP. Reuse skips unchanged projects so
  * we don't burn the screenshot quota on every fetch.
  */
@@ -25,6 +26,41 @@ export function thumbnailFile(repo: string): string {
 /** Pure: GitHub's auto social-preview image for a repo (fallback when no live site). */
 export function githubSocialImageUrl(owner: string, repo: string): string {
   return `https://opengraph.githubassets.com/1/${owner}/${repo}`;
+}
+
+/** Shields-style badge URLs, never a product screenshot. */
+const BADGE =
+  /(shields\.io|badgen\.net|\/badge|badge\.|travis-ci|circleci|codecov|coveralls|app\.netlify|herokucdn|forthebadge|img\.shields|\/workflows\/[^)'"]*badge)/i;
+
+/**
+ * Pure: first "big" image in a README (markdown or <img>), resolved to an
+ * absolute URL - normally the product screenshot. Skips shields badges, SVGs and
+ * icons/logos (small assets) so it lands past the header logo. Null if none.
+ */
+export function firstReadmeImage(
+  markdown: string,
+  owner: string,
+  repo: string,
+  branch: string,
+): string | null {
+  const re = /!\[[^\]]*\]\(\s*<?([^)\s>]+)>?[^)]*\)|<img[^>]+src=["']([^"']+)["']/gi;
+  for (const m of markdown.matchAll(re)) {
+    const url = (m[1] ?? m[2] ?? '').trim();
+    if (!url || url.startsWith('data:') || BADGE.test(url)) continue;
+    const clean = url.split('?')[0];
+    const base = (clean.split('/').pop() ?? '').toLowerCase();
+    if (/\.svg$/i.test(clean)) continue;
+    if (/(^|\/)icons?\//i.test(clean)) continue;
+    if (/\b(icon|logo|favicon|sprite|avatar)\b/i.test(base)) continue;
+    const dim = base.match(/(\d{2,4})x(\d{2,4})/);
+    if (dim && Math.max(Number(dim[1]), Number(dim[2])) < 256) continue;
+    const knownHost = /user-(images|attachments)\.githubusercontent\.com|\/assets\//i.test(url);
+    if (!/\.(png|jpe?g|gif|webp)$/i.test(clean) && !knownHost) continue;
+    if (/^https?:\/\//i.test(url)) return url;
+    if (url.startsWith('//')) return `https:${url}`;
+    return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${url.replace(/^\.?\//, '')}`;
+  }
+  return null;
 }
 
 /**
@@ -116,19 +152,24 @@ async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
 }
 
 /**
- * Capture a repo's thumbnail: screenshot the live site (microlink) when there is
- * one, else the npm package page, else GitHub's social-preview image. Saves it
- * and returns its public path, or null if everything failed.
+ * Capture a repo's thumbnail, in order of preference: screenshot the live site
+ * (microlink), else the first big README image, else the npm package page, else
+ * GitHub's social-preview image. Returns its public path, or null if all failed.
  */
 export async function fetchThumbnail(
   owner: string,
   repo: string,
   homepage: string | null,
+  readmeImage: string | null = null,
   npm: string | null = null,
 ): Promise<string | null> {
-  const liveUrl = homepage ?? npm;
-  if (liveUrl) {
-    const shot = await microlinkScreenshot(liveUrl);
+  if (homepage) {
+    const shot = await microlinkScreenshot(homepage);
+    if (shot && (await saveThumbnail(shot, repo))) return thumbnailPath(repo);
+  }
+  if (readmeImage && (await saveThumbnail(readmeImage, repo))) return thumbnailPath(repo);
+  if (npm) {
+    const shot = await microlinkScreenshot(npm);
     if (shot && (await saveThumbnail(shot, repo))) return thumbnailPath(repo);
   }
   if (await saveThumbnail(githubSocialImageUrl(owner, repo), repo)) return thumbnailPath(repo);

@@ -20,7 +20,7 @@ GitHub**. Fait aussi office de CV.
 
 - **Catalogue auto-découvert** - une étape `fetch` liste tous les repos non-fork du compte GitHub ; un repo n'apparaît qu'une fois qu'on lui donne une catégorie
 - **Enrichissement automatique** - titre, sous-titre, technos, favicon, étoiles, dates, liens, badges : presque tout est déduit, rien à saisir à la main
-- **Vignettes auto** - capture du site live (microlink), sinon de la page npm, sinon image sociale GitHub ; normalisées en WebP 720×405 (~13 Ko), committées, re-générées seulement quand le projet change
+- **Vignettes auto** - capture du site live (microlink), sinon 1ʳᵉ grosse image du README (le screenshot produit), sinon page npm, sinon image sociale GitHub ; normalisées en WebP 720×405 (~13 Ko), committées, re-générées seulement quand le projet change
 - **Sous-titres bilingues traduits** - la description GitHub est traduite FR ↔ EN au moment du fetch (l'override manuel reste prioritaire)
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur

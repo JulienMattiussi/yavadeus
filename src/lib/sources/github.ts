@@ -185,6 +185,23 @@ export async function fetchGitHubRelease(repo: string): Promise<ReleaseInfo | nu
   }
 }
 
+/** Decoded README markdown of a repo (any filename/case), or null. */
+export async function fetchReadme(repo: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/readme`, {
+      headers: ghHeaders(),
+    });
+    if (!res.ok) return null;
+    const d = await res.json();
+    return Buffer.from(d.content ?? '', d.encoding === 'base64' ? 'base64' : 'utf8').toString(
+      'utf8',
+    );
+  } catch (err) {
+    console.warn(`[sources] README ${repo} fetch failed:`, (err as Error).message);
+    return null;
+  }
+}
+
 /** "universal-picross" -> "Universal Picross" (used when no title override). */
 export function prettifyName(name: string): string {
   return name

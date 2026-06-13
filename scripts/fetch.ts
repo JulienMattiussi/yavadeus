@@ -21,13 +21,15 @@ import {
   fetchGitHubPagesUrl,
   fetchGitHubRelease,
   fetchHasAgentMarker,
-  fetchIsDiscordBot,
   fetchNpmLink,
+  fetchReadme,
   fetchRepoFrameworks,
   fetchRepoIcon,
   fetchSubtitleTranslation,
   fetchThumbnail,
   fetchUserRepos,
+  firstReadmeImage,
+  mentionsDiscordBot,
   reusableSubtitle,
   reusableThumbnail,
   thumbnailFile,
@@ -130,7 +132,7 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   const cachedSubtitle = reusableSubtitle(prev, r.description);
   if (cachedSubtitle) reusedTranslations++;
 
-  const [languages, frameworks, createdAt, release, ai, npm, discord, translated] =
+  const [languages, frameworks, createdAt, release, ai, npm, translated, readme] =
     await Promise.all([
       fetchGitHubLanguages(full),
       fetchRepoFrameworks(full, r.defaultBranch),
@@ -139,9 +141,12 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
       fetchHasAgentMarker(full),
       // A repo with a live site is an app, not a published package: skip npm.
       homepage ? Promise.resolve(null) : fetchNpmLink(full, r.defaultBranch, NPM_USER),
-      fetchIsDiscordBot(full),
       cachedSubtitle ?? fetchSubtitleTranslation(r.description ?? ''),
+      fetchReadme(full),
     ]);
+  // README feeds both the Discord-bot check and the thumbnail's screenshot tier.
+  const discord = mentionsDiscordBot(readme ?? '');
+  const readmeImage = firstReadmeImage(readme ?? '', GITHUB_USER, r.name, r.defaultBranch);
 
   // Favicon: prefer the live site's icon, else an app icon committed in the repo.
   let favicon: string | null = null;
@@ -157,7 +162,7 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
       reusedThumbnails++;
       thumbnail = reusedThumb;
     } else {
-      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage, npm);
+      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage, readmeImage, npm);
     }
   }
 
