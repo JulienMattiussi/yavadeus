@@ -101,12 +101,14 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
                     ))}
                   </div>
                   <label class="openmind-switch" for="openmind">
-                    <span class="toggle" aria-hidden="true">
-                      <span class="toggle-knob">
-                        <span class="openmind-emoji">🤪</span>
+                    <span class="openmind-control">
+                      <span class="toggle" aria-hidden="true">
+                        <span class="toggle-knob">
+                          <span class="openmind-emoji">🤪</span>
+                        </span>
                       </span>
+                      <span class="toggle-text mono">{t('delires.gate')}</span>
                     </span>
-                    <span class="toggle-text mono">{t('delires.gate')}</span>
                   </label>
                 </div>
               ) : (
@@ -502,17 +504,22 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     position: absolute;
     inset: 0;
     z-index: 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.1rem;
     padding: 1.5rem;
     cursor: pointer;
     user-select: none;
     text-align: center;
     background: color-mix(in srgb, var(--bg) 55%, transparent);
     transition: opacity 0.35s ease 0.45s;
+  }
+  /* Track the viewport (just under the sticky headers) so the toggle is always
+     reachable, instead of stranded at the vertical center of a tall grid. */
+  .openmind-control {
+    position: sticky;
+    top: calc(var(--topbar-h) + var(--toolbar-h) + 1.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
   }
   .toggle {
     position: relative;
