@@ -107,9 +107,8 @@ vars override them. Forks are never shown; `ignored` repos are skipped. The cach
 **dev, build and deploy run offline** - only `make fetch` needs the token.
 
 To refresh: `make fetch` then `make build` (add `make curate` in between only
-when the set of repos changed). Optional hand-tuning (curated `subtitle` /
-`thumbnail` overrides) is tracked in
-[`doc/contenu-a-completer.md`](doc/contenu-a-completer.md).
+when the set of repos changed). Optional hand-tuning is done with curated
+`subtitle` / `thumbnail` overrides in `src/data/projects.ts`.
 
 ## Coding rules
 
