@@ -40,11 +40,12 @@ src/
 │   ├── projects.ts            # CURATED: category map + overrides + `ignored` (you edit this)
 │   └── projects-cache.json    # COMMITTED data snapshot written by `make fetch`
 ├── lib/
-│   ├── sources.ts             # GitHub/npm fetchers (used only by the fetch step)
+│   ├── sources/               # GitHub/npm fetchers, split by domain (github, npm, frameworks, favicon, discord, translate, http); used only by fetch
 │   ├── cache.ts               # cache type + readCache() (offline source for build/curate)
 │   └── projects-loader.ts     # merges cache + overrides -> ProjectEntry[] (offline)
 ├── content.config.ts          # `projects` collection: loader + Zod schema
 ├── i18n/ui.ts                 # UI strings (FR/EN) + locale helpers
+├── scripts/home-view.ts       # pure helpers for the client view (search + year grouping), unit-tested
 ├── layouts/Layout.astro       # <html>, head, fonts, skip link
 ├── components/
 │   ├── HomePage.astro         # page: sticky topbar/toolbar, views, categories, délires gate
@@ -122,7 +123,7 @@ thumbnails, site copy...) is tracked in
 - **No Tailwind, no UI framework** - Astro components + scoped `<style>` blocks.
 - **No speculative abstractions** - don't add helpers or options not needed by
   the current task.
-- **Enrichment is best-effort** - every network fetch in `src/lib/sources.ts`
+- **Enrichment is best-effort** - every network fetch in `src/lib/sources/`
   must catch errors and return a safe fallback. The build must never fail because
   GitHub or npm is unreachable.
 - **Pure logic is unit-tested** (`tests/`, Vitest). Keep parsing/ranking/merge
@@ -138,6 +139,15 @@ thumbnails, site copy...) is tracked in
 
 - No `Co-Authored-By` trailer.
 - No em dashes anywhere.
+
+## Shell (zsh)
+
+Commands run under **zsh**: an unquoted glob that matches nothing in the cwd
+aborts the whole command (`zsh: no matches found`), unlike bash which passes it
+through. Quote any glob meant for the tool rather than the shell:
+
+- `grep -rn ... --include='*.ts'` (not `--include=*.ts`)
+- `find dist -name '*.js'` (don't pass a path like `dir/*.js` as an argument)
 
 ## Commands
 

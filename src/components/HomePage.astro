@@ -132,6 +132,13 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
 </Layout>
 
 <script>
+  import {
+    normalizeText,
+    textMatches,
+    uniqueYearsDesc,
+    yearFromTimestamp,
+  } from '../scripts/home-view';
+
   // Progressive enhancement: client-side search + view switching.
   // Views: "categories" (server-rendered rubrics, default) and two global
   // timelines grouped by year ("created" / "updated"). Without JS, the
@@ -189,23 +196,14 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   type View = 'categories' | 'created' | 'updated';
   let view: View = 'categories';
 
-  const normalize = (s: string) =>
-    s
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-      .toLowerCase();
-
   const matches = (card: HTMLElement, query: string) =>
-    query === '' || normalize(card.dataset.search ?? '').includes(query);
+    textMatches(card.dataset.search ?? '', query);
 
-  function yearOf(card: HTMLElement, key: View): number {
-    const ts = Number(card.dataset[key] ?? 0);
-    return ts > 0 ? new Date(ts).getFullYear() : 0;
-  }
+  const yearOf = (card: HTMLElement, key: View) =>
+    yearFromTimestamp(Number(card.dataset[key] ?? 0));
 
   function renderCategories(query: string) {
     if (!categoriesView) return;
-    // Send every card back to its rubric grid, in original order.
     for (const card of cards) {
       const grid = categoriesView.querySelector<HTMLElement>(
         `[data-grid="${card.dataset.category}"]`,
@@ -240,9 +238,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     timelineView.hidden = false;
 
     const visibleCards = cards.filter((c) => matches(c, query));
-    const years = Array.from(new Set(visibleCards.map((c) => yearOf(c, key)))).sort(
-      (a, b) => b - a,
-    );
+    const years = uniqueYearsDesc(visibleCards.map((c) => yearOf(c, key)));
 
     for (const year of years) {
       const group = visibleCards
@@ -269,7 +265,7 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   }
 
   function apply() {
-    const query = normalize(search?.value.trim() ?? '');
+    const query = normalizeText(search?.value.trim() ?? '');
     if (view === 'categories') renderCategories(query);
     else renderTimeline(view, query);
     if (empty) empty.hidden = cards.some((card) => matches(card, query));
@@ -533,8 +529,6 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     outline-offset: 3px;
   }
 
-  /* On activation: knob slides right + emoji colorizes, then the switch
-     collapses away (no going back - the cards stay revealed). */
   .openmind-toggle:checked ~ .openmind-switch .toggle {
     background: color-mix(in srgb, var(--cat-delires) 22%, var(--bg));
     border-color: var(--cat-delires);
@@ -618,7 +612,6 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     color: var(--accent);
   }
 
-  /* Mobile: stack the toolbar so search and view controls each get a full row. */
   @media (max-width: 560px) {
     .hero {
       padding-top: 1.75rem;

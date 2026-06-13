@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
+import { ghHeaders } from '../src/lib/sources/http';
 import {
   buildSubtitlePair,
   detectFrameworks,
@@ -16,6 +17,25 @@ import {
   safeHttpUrl,
   topLanguages,
 } from '../src/lib/sources';
+
+describe('ghHeaders', () => {
+  const original = process.env.GITHUB_TOKEN;
+  afterEach(() => {
+    if (original === undefined) delete process.env.GITHUB_TOKEN;
+    else process.env.GITHUB_TOKEN = original;
+  });
+  it('always carries the User-Agent and Accept headers, no auth without a token', () => {
+    delete process.env.GITHUB_TOKEN;
+    const h = ghHeaders();
+    expect(h['User-Agent']).toBe('yavadeus-home-page');
+    expect(h.Accept).toBe('application/vnd.github+json');
+    expect(h.Authorization).toBeUndefined();
+  });
+  it('adds a Bearer Authorization header when GITHUB_TOKEN is set', () => {
+    process.env.GITHUB_TOKEN = 'tok_123';
+    expect(ghHeaders().Authorization).toBe('Bearer tok_123');
+  });
+});
 
 describe('normalizeUrl', () => {
   it('keeps absolute http(s) URLs', () => {

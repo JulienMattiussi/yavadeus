@@ -5,8 +5,9 @@ tools and oddities. Bilingual (FR/EN), dark/dev aesthetic, fully static once
 deployed.
 
 The catalog is **auto-discovered + curated**: a `fetch` step snapshots every
-non-fork repo on the GitHub account (description, live URL, technologies, stars,
-dates, releases, favicon, npm, AI-usage) into a committed cache; you give repos a
+non-fork repo on the GitHub account (bilingual auto-translated description, live
+URL, technologies incl. frameworks, stars, dates, releases, favicon, npm,
+AI-usage, Discord-bot detection) into a committed cache; you give repos a
 category; the site is then built **offline** from that cache.
 
 ## The three steps
@@ -86,7 +87,7 @@ tracked in [`doc/contenu-a-completer.md`](doc/contenu-a-completer.md).
 - `scripts/fetch.ts` - the `fetch` step: enriches all non-fork repos into the cache
 - `src/data/projects-cache.json` - the committed data snapshot (offline source)
 - `src/data/projects.ts` - categories + manual overrides (what you maintain)
-- `src/lib/sources.ts` - GitHub/npm fetchers (used only by `fetch`), best-effort
+- `src/lib/sources/` - GitHub/npm fetchers split by domain (used only by `fetch`), best-effort
 - `src/lib/projects-loader.ts` - merges cache + overrides into the collection (offline)
 - `src/content.config.ts` - the `projects` content collection (loader + schema)
 - `src/config.ts` + `.env` - identity/URL config (`GITHUB_USER`, `SITE_URL`)
