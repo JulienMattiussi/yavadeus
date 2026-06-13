@@ -1,7 +1,7 @@
 /*
  * Project thumbnails, generated at fetch time and committed under
- * public/thumbnails/<repo>.png. A live site is screenshotted via microlink ;
- * repos without a live site fall back to GitHub's social-preview image. Images
+ * public/thumbnails/<repo>.png. Screenshot of the live site via microlink, else
+ * of the npm package page, else GitHub's social-preview image. Images
  * are normalized to a card-sized 720x405 WebP. Reuse skips unchanged projects so
  * we don't burn the screenshot quota on every fetch.
  */
@@ -102,16 +102,18 @@ async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
 
 /**
  * Capture a repo's thumbnail: screenshot the live site (microlink) when there is
- * one, else GitHub's social-preview image. Saves it and returns its public path,
- * or null if everything failed.
+ * one, else the npm package page, else GitHub's social-preview image. Saves it
+ * and returns its public path, or null if everything failed.
  */
 export async function fetchThumbnail(
   owner: string,
   repo: string,
   homepage: string | null,
+  npm: string | null = null,
 ): Promise<string | null> {
-  if (homepage) {
-    const shot = await microlinkScreenshot(homepage);
+  const liveUrl = homepage ?? npm;
+  if (liveUrl) {
+    const shot = await microlinkScreenshot(liveUrl);
     if (shot && (await saveThumbnail(shot, repo))) return thumbnailPath(repo);
   }
   if (await saveThumbnail(githubSocialImageUrl(owner, repo), repo)) return thumbnailPath(repo);

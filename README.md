@@ -20,7 +20,7 @@ GitHub**. Fait aussi office de CV.
 
 - **Catalogue auto-découvert** - une étape `fetch` liste tous les repos non-fork du compte GitHub ; un repo n'apparaît qu'une fois qu'on lui donne une catégorie
 - **Enrichissement automatique** - titre, sous-titre, technos, favicon, étoiles, dates, liens, badges : presque tout est déduit, rien à saisir à la main
-- **Vignettes auto** - capture du site live (microlink), sinon image sociale GitHub ; normalisées en WebP 720×405 (~13 Ko), committées, re-générées seulement quand le projet change
+- **Vignettes auto** - capture du site live (microlink), sinon de la page npm, sinon image sociale GitHub ; normalisées en WebP 720×405 (~13 Ko), committées, re-générées seulement quand le projet change
 - **Sous-titres bilingues traduits** - la description GitHub est traduite FR ↔ EN au moment du fetch (l'override manuel reste prioritaire)
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur
@@ -108,8 +108,8 @@ chargé par le navigateur au runtime.
 | ------------------------------------------------------------------------------ | --------------------------------------------------------------- |
 | [API REST GitHub](https://docs.github.com/rest)                                | repos, langages, commits, releases, README, marqueur IA         |
 | [registre npm](https://registry.npmjs.org)                                     | détection du paquet npm publié                                  |
-| [microlink](https://microlink.io)                                              | capture d'écran des sites live (vignettes)                      |
-| image sociale GitHub (`opengraph.githubassets.com`)                            | vignette de repli quand le projet n'a pas de site live          |
+| [microlink](https://microlink.io)                                              | captures d'écran (sites live, pages npm) pour les vignettes     |
+| image sociale GitHub (`opengraph.githubassets.com`)                            | vignette de repli (ni site live, ni npm)                        |
 | [google-translate-api-x](https://www.npmjs.com/package/google-translate-api-x) | traduction FR/EN des sous-titres (endpoint Google non officiel) |
 | [ImageMagick](https://imagemagick.org) (`convert`)                             | redimensionnement local des vignettes en WebP (outil système)   |
 | [Google Fonts](https://fonts.google.com)                                       | polices Inter + JetBrains Mono (**chargé au runtime**)          |

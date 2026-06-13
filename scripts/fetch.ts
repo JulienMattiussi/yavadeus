@@ -130,19 +130,6 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   const cachedSubtitle = reusableSubtitle(prev, r.description);
   if (cachedSubtitle) reusedTranslations++;
 
-  // Thumbnail (skipped for ignored repos): reuse the committed image when the
-  // live URL + last push are unchanged, else capture a fresh one.
-  let thumbnail: string | null = null;
-  if (!ignoredSet.has(r.name) && !customThumbSet.has(r.name)) {
-    const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
-    if (reusedThumb && existsSync(thumbnailFile(r.name))) {
-      reusedThumbnails++;
-      thumbnail = reusedThumb;
-    } else {
-      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage);
-    }
-  }
-
   const [languages, frameworks, createdAt, release, ai, npm, discord, translated] =
     await Promise.all([
       fetchGitHubLanguages(full),
@@ -160,6 +147,19 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   let favicon: string | null = null;
   if (homepage) favicon = await fetchFavicon(homepage);
   if (!favicon) favicon = await fetchRepoIcon(full, r.defaultBranch);
+
+  // Thumbnail (skipped for ignored / custom-override repos): reuse the committed
+  // image when live URL + last push are unchanged, else capture (live, else npm).
+  let thumbnail: string | null = null;
+  if (!ignoredSet.has(r.name) && !customThumbSet.has(r.name)) {
+    const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
+    if (reusedThumb && existsSync(thumbnailFile(r.name))) {
+      reusedThumbnails++;
+      thumbnail = reusedThumb;
+    } else {
+      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage, npm);
+    }
+  }
 
   return {
     description: r.description,
