@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-13T10:38:14.867Z",
+  "fetchedAt": "2026-06-13T11:00:56.003Z",
   "repos": {
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
@@ -508,7 +508,7 @@
       "favicon": "https://secret-project-pied.vercel.app/favicon.ico",
       "npm": null,
       "discord": false,
-      "thumbnail": "/thumbnails/secret-project.webp"
+      "thumbnail": null
     },
     "marme-ten": {
       "description": "Bientôt 10 ans",

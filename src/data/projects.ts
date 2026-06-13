@@ -62,7 +62,7 @@ export const projects: Record<string, ProjectOverride> = {
   'mai-rmelab-2025': { category: 'marmelab' },
   grammarlai: { category: 'outils', wip: true },
   'combien-mieux-que-un': { category: 'delires' },
-  'secret-project': { category: 'delires' },
+  'secret-project': { category: 'delires', thumbnail: '/thumbnails/secret-project.webp' },
   'marme-ten': { category: 'marmelab' },
   'mai-rmelab': { category: 'marmelab' },
   'are-you-vulcain': { category: 'delires' },

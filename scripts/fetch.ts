@@ -12,7 +12,7 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { GITHUB_USER, NPM_USER } from '../src/config';
-import { ignored } from '../src/data/projects';
+import { ignored, projects } from '../src/data/projects';
 import { CACHE_PATH, type CachedRepo, type ProjectsCache } from '../src/lib/cache';
 import {
   fetchFavicon,
@@ -112,8 +112,14 @@ function readPreviousRepos(): Record<string, CachedRepo> {
 let reusedTranslations = 0;
 let reusedThumbnails = 0;
 
-// Repos explicitly set aside never show, so don't spend screenshot quota on them.
+// No thumbnail capture for ignored repos (never shown) nor for repos with a
+// curated thumbnail override (their custom image must not be overwritten).
 const ignoredSet = new Set(ignored);
+const customThumbSet = new Set(
+  Object.entries(projects)
+    .filter(([, o]) => o.thumbnail)
+    .map(([name]) => name),
+);
 
 async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<CachedRepo> {
   const full = `${GITHUB_USER}/${r.name}`;
@@ -127,7 +133,7 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   // Thumbnail (skipped for ignored repos): reuse the committed image when the
   // live URL + last push are unchanged, else capture a fresh one.
   let thumbnail: string | null = null;
-  if (!ignoredSet.has(r.name)) {
+  if (!ignoredSet.has(r.name) && !customThumbSet.has(r.name)) {
     const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
     if (reusedThumb && existsSync(thumbnailFile(r.name))) {
       reusedThumbnails++;
