@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-13T11:27:39.602Z",
+  "fetchedAt": "2026-06-13T12:54:35.029Z",
   "repos": {
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
@@ -7,11 +7,11 @@
         "fr": "Page perso qui rassemble tous mes projets",
         "en": "Personal page which brings together all my projects"
       },
-      "homepage": null,
+      "homepage": "https://yavadeus.vercel.app",
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-06-13T01:57:18Z",
+      "pushedAt": "2026-06-13T12:14:38Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -23,7 +23,7 @@
       ],
       "release": null,
       "ai": true,
-      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/yavadeus/main/public/favicon.svg",
+      "favicon": "https://yavadeus.vercel.app/favicon.svg",
       "npm": null,
       "discord": true,
       "thumbnail": "/thumbnails/yavadeus.webp"
