@@ -26,33 +26,43 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   <div class="topbar-bar">
     <nav class="topbar wrap" aria-label={t('a11y.nav')}>
       <span class="prompt mono" aria-hidden="true">~/projects</span>
-      <span class="langs mono">
-        {
-          (Object.keys(languages) as Lang[]).map((code, i) => (
-            <Fragment>
-              {i > 0 && (
-                <span class="lang-sep" aria-hidden="true">
-                  /
-                </span>
-              )}
-              {code === lang ? (
-                <span class="lang current" aria-current="page" title={languageNames[code]}>
-                  {languages[code]}
-                </span>
-              ) : (
-                <a
-                  class="lang"
-                  href={localePath[code]}
-                  hreflang={htmlLang(code)}
-                  aria-label={languageNames[code]}
-                  title={languageNames[code]}
-                >
-                  {languages[code]}
-                </a>
-              )}
-            </Fragment>
-          ))
-        }
+      <span class="topbar-end">
+        <a class="follow" href="#me" title={t('nav.follow')} aria-label={t('nav.follow')}>
+          <svg class="follow-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+            ></path>
+          </svg>
+        </a>
+        <span class="langs mono">
+          {
+            (Object.keys(languages) as Lang[]).map((code, i) => (
+              <Fragment>
+                {i > 0 && (
+                  <span class="lang-sep" aria-hidden="true">
+                    /
+                  </span>
+                )}
+                {code === lang ? (
+                  <span class="lang current" aria-current="page" title={languageNames[code]}>
+                    {languages[code]}
+                  </span>
+                ) : (
+                  <a
+                    class="lang"
+                    href={localePath[code]}
+                    hreflang={htmlLang(code)}
+                    aria-label={languageNames[code]}
+                    title={languageNames[code]}
+                  >
+                    {languages[code]}
+                  </a>
+                )}
+              </Fragment>
+            ))
+          }
+        </span>
       </span>
     </nav>
   </div>
@@ -357,6 +367,23 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   .hero {
     padding-top: 2.5rem;
     padding-bottom: 2rem;
+  }
+  .topbar-end {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+  .follow {
+    display: inline-flex;
+    color: var(--text-dim);
+    transition: color var(--transition);
+  }
+  .follow:hover {
+    color: var(--accent);
+  }
+  .follow-icon {
+    width: 17px;
+    height: 17px;
   }
   .langs {
     display: inline-flex;
