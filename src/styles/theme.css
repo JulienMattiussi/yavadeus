@@ -6,10 +6,10 @@
 
 :root {
   /* Background layers (darkest to lightest) */
-  --bg: #0b0f10;
-  --bg-elevated: #11171a;
-  --bg-card: #131b1f;
-  --bg-card-hover: #18232a;
+  --bg: #10171a;
+  --bg-elevated: #161f23;
+  --bg-card: #19242a;
+  --bg-card-hover: #1f2c34;
 
   /* Borders / lines */
   --line: #1f2c33;
