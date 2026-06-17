@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
-import { formatMonthYear, useTranslations } from '../i18n/ui';
+import { formatMonthYear, pickLocalized, useTranslations } from '../i18n/ui';
 
 interface Props {
   project: CollectionEntry<'projects'>['data'];
@@ -19,7 +19,7 @@ const npmWindow = `${id} (npm)`;
 const downloadWindow = `${id} (download)`;
 
 // Client-side search/sort metadata (used by the toolbar script in HomePage).
-const searchText = [title, subtitle[lang], ...tech].join(' ').toLowerCase();
+const searchText = [title, pickLocalized(subtitle, lang), ...tech].join(' ').toLowerCase();
 const createdTs = createdAt ? Date.parse(createdAt) : 0;
 const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
 ---
@@ -94,7 +94,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     }
   </header>
 
-  <p class="subtitle">{subtitle[lang]}</p>
+  <p class="subtitle">{pickLocalized(subtitle, lang)}</p>
 
   {
     tech.length > 0 && (

@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import type { Lang } from '../i18n/ui';
-import { useTranslations } from '../i18n/ui';
+import { htmlLang, useTranslations } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -10,7 +10,10 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-const title = `${t('site.title')} - ${t('site.tagline')}`;
+// The document <title> (browser tab, search results, social cards) stays in
+// plain French for the Lorrain locale, where the gag would just read as garbled.
+const titleT = lang === 'lo' ? useTranslations('fr') : t;
+const title = `${titleT('site.title')} - ${titleT('site.tagline')}`;
 const description = t('site.intro');
 
 // Absolute URLs need the configured `site` (SITE_URL); fall back gracefully if
@@ -20,12 +23,14 @@ const canonical = base ? new URL(Astro.url.pathname, base).href : Astro.url.href
 const ogImage = base ? new URL('/og.png', base).href : '/og.png';
 const frUrl = base ? new URL('/', base).href : '/';
 const enUrl = base ? new URL('/en/', base).href : '/en/';
-const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
-const altLocale = lang === 'fr' ? 'en_US' : 'fr_FR';
+const loUrl = base ? new URL('/lorrain/', base).href : '/lorrain/';
+// Lorrain is French-based, so it shares the fr_FR Open Graph locale.
+const ogLocale = lang === 'en' ? 'en_US' : 'fr_FR';
+const altLocales = ['fr_FR', 'en_US'].filter((l) => l !== ogLocale);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={htmlLang(lang)}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,6 +42,7 @@ const altLocale = lang === 'fr' ? 'en_US' : 'fr_FR';
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={frUrl} />
     <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="fr-x-lorrain" href={loUrl} />
     <link rel="alternate" hreflang="x-default" href={frUrl} />
 
     <meta property="og:type" content="website" />
@@ -48,7 +54,7 @@ const altLocale = lang === 'fr' ? 'en_US' : 'fr_FR';
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={ogLocale} />
-    <meta property="og:locale:alternate" content={altLocale} />
+    {altLocales.map((l) => <meta property="og:locale:alternate" content={l} />)}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

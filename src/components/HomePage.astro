@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { CATEGORIES, type Category } from '../data/projects';
 import type { Lang, UIKey } from '../i18n/ui';
-import { otherLangPath, useTranslations } from '../i18n/ui';
+import { htmlLang, languageNames, languages, localePath, useTranslations } from '../i18n/ui';
 import Footer from './Footer.astro';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from './ProjectCard.astro';
@@ -26,14 +26,34 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
   <div class="topbar-bar">
     <nav class="topbar wrap" aria-label={t('a11y.nav')}>
       <span class="prompt mono" aria-hidden="true">~/projects</span>
-      <a
-        class="lang mono"
-        href={otherLangPath(lang)}
-        hreflang={lang === 'fr' ? 'en' : 'fr'}
-        aria-label={t('lang.switch.aria')}
-      >
-        {t('lang.switch')}
-      </a>
+      <span class="langs mono">
+        {
+          (Object.keys(languages) as Lang[]).map((code, i) => (
+            <Fragment>
+              {i > 0 && (
+                <span class="lang-sep" aria-hidden="true">
+                  /
+                </span>
+              )}
+              {code === lang ? (
+                <span class="lang current" aria-current="page" title={languageNames[code]}>
+                  {languages[code]}
+                </span>
+              ) : (
+                <a
+                  class="lang"
+                  href={localePath[code]}
+                  hreflang={htmlLang(code)}
+                  aria-label={languageNames[code]}
+                  title={languageNames[code]}
+                >
+                  {languages[code]}
+                </a>
+              )}
+            </Fragment>
+          ))
+        }
+      </span>
     </nav>
   </div>
 
@@ -338,18 +358,23 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     padding-top: 2.5rem;
     padding-bottom: 2rem;
   }
+  .langs {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
   .lang {
     color: var(--text-dim);
-    border: 1px solid var(--line-strong);
-    padding: 0.25rem 0.7rem;
-    border-radius: 999px;
-    transition:
-      color var(--transition),
-      border-color var(--transition);
+    transition: color var(--transition);
   }
   .lang:hover {
     color: var(--accent);
-    border-color: var(--accent-dim);
+  }
+  .lang.current {
+    color: var(--accent);
+  }
+  .lang-sep {
+    color: var(--text-faint);
   }
 
   .logo {

@@ -1,13 +1,14 @@
 import type { APIRoute } from 'astro';
 
-// Prerendered to /sitemap.xml: the two locale pages, each carrying hreflang
+// Prerendered to /sitemap.xml: the locale pages, each carrying hreflang
 // alternates (mirrors the <link rel="alternate"> tags in Layout.astro).
 export const GET: APIRoute = ({ site }) => {
   const base = site?.href.replace(/\/$/, '') ?? '';
   const alternates =
     `    <xhtml:link rel="alternate" hreflang="fr" href="${base}/" />\n` +
-    `    <xhtml:link rel="alternate" hreflang="en" href="${base}/en/" />`;
-  const urls = ['/', '/en/']
+    `    <xhtml:link rel="alternate" hreflang="en" href="${base}/en/" />\n` +
+    `    <xhtml:link rel="alternate" hreflang="fr-x-lorrain" href="${base}/lorrain/" />`;
+  const urls = ['/', '/en/', '/lorrain/']
     .map((path) => `  <url>\n    <loc>${base}${path}</loc>\n${alternates}\n  </url>`)
     .join('\n');
   const xml =

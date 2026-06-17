@@ -1,13 +1,48 @@
 /*
  * UI strings and locale helpers. Project subtitles are translated in the data
  * (src/data/projects.ts); this file holds the chrome (labels, nav, footer).
+ *
+ * The `lo` (Lorrain) locale is a gag: it is not authored by hand but derived
+ * from the French strings at load time by running them through lorrainjs (our
+ * own "Lorraine logger" lib). Same trick for project subtitles, see
+ * `pickLocalized`.
  */
 
-export const languages = { fr: 'FR', en: 'EN' } as const;
+import { translate } from 'lorrainjs';
+
+export const languages = { fr: 'FR', en: 'EN', lo: 'LO' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'fr';
 
-export const ui = {
+/** Full language names, each in its own tongue (used for the switcher a11y). */
+export const languageNames: Record<Lang, string> = {
+  fr: 'Français',
+  en: 'English',
+  lo: 'Lorrain',
+};
+
+/** Where each locale is served. FR at "/", EN at "/en/", LO at "/lorrain/". */
+export const localePath: Record<Lang, string> = {
+  fr: '/',
+  en: '/en/',
+  lo: '/lorrain/',
+};
+
+/*
+ * Full lorrain (the lib default): "gros" suffix, "le/la" before names, fruits
+ * to mirabelle, and "a" -> "ô". Tune this single object to dial the joke down.
+ */
+const LORRAIN_OPTIONS = { gros: true, le: true, mirabelle: true, o: true };
+
+/* Lorrain without the "gros" suffix, for short labels where it only clutters. */
+const LORRAIN_OPTIONS_NO_GROS = { ...LORRAIN_OPTIONS, gros: false };
+
+/** Derive a Lorrain string from its French source via lorrainjs. */
+export function toLorrain(fr: string, options = LORRAIN_OPTIONS): string {
+  return translate(fr, options) as string;
+}
+
+const base = {
   fr: {
     'site.title': 'yavadeus',
     'site.tagline': 'Mes projets, en vrac.',
@@ -43,8 +78,6 @@ export const ui = {
     'meta.started': 'Démarré',
     'meta.updated': 'Mis à jour',
     'footer.built': 'Construit avec Astro - auto-généré depuis GitHub & npm.',
-    'lang.switch': 'English',
-    'lang.switch.aria': 'Switch to English',
     'a11y.skip': 'Aller au contenu',
     'a11y.nav': 'Sélecteur de langue',
     'a11y.toolbar': 'Recherche et affichage',
@@ -85,8 +118,6 @@ export const ui = {
     'meta.started': 'Started',
     'meta.updated': 'Updated',
     'footer.built': 'Built with Astro - auto-generated from GitHub & npm.',
-    'lang.switch': 'Français',
-    'lang.switch.aria': 'Passer en français',
     'a11y.skip': 'Skip to content',
     'a11y.nav': 'Language selector',
     'a11y.toolbar': 'Search and view',
@@ -94,7 +125,40 @@ export const ui = {
   },
 } as const;
 
-export type UIKey = keyof (typeof ui)['fr'];
+export type UIKey = keyof (typeof base)['fr'];
+
+/*
+ * Keys translated without the "gros" suffix: short labels (buttons, action
+ * links, the IA badge) where the suffix only clutters, plus the search field.
+ * The placeholder also dodges a lorrainjs quirk where the suffix mangles a
+ * trailing "..." into "gros.. gros.". Tooltips keep the full gag.
+ */
+const NO_GROS_KEYS: ReadonlySet<UIKey> = new Set([
+  'view.categories',
+  'sort.created',
+  'sort.updated',
+  'link.github',
+  'link.live',
+  'link.npm',
+  'link.download',
+  'search.placeholder',
+  'count.existing',
+  'badge.ai',
+]);
+
+/* Keys kept verbatim in Lorrain: the brand name must not be mangled. */
+const KEEP_FRENCH_KEYS: ReadonlySet<UIKey> = new Set(['site.title']);
+
+/* Lorrain is generated from French: no hand-written `lo` dictionary to maintain. */
+const lo = Object.fromEntries(
+  Object.entries(base.fr).map(([key, value]) => {
+    const k = key as UIKey;
+    if (KEEP_FRENCH_KEYS.has(k)) return [key, value];
+    return [key, toLorrain(value, NO_GROS_KEYS.has(k) ? LORRAIN_OPTIONS_NO_GROS : LORRAIN_OPTIONS)];
+  }),
+) as Record<UIKey, string>;
+
+export const ui = { fr: base.fr, en: base.en, lo };
 
 export function useTranslations(lang: Lang) {
   return function t(key: UIKey): string {
@@ -102,13 +166,18 @@ export function useTranslations(lang: Lang) {
   };
 }
 
-/** Path to the same page in the other locale (FR at "/", EN at "/en/"). */
-export function otherLangPath(lang: Lang): string {
-  return lang === 'fr' ? '/en/' : '/';
+/** Pick the right text from a bilingual `{ fr, en }`, deriving `lo` from `fr`. */
+export function pickLocalized(text: { fr: string; en: string }, lang: Lang): string {
+  return lang === 'lo' ? toLorrain(text.fr) : text[lang];
+}
+
+/** Value for the `<html lang>` / `hreflang` attribute (Lorrain is French-based). */
+export function htmlLang(lang: Lang): string {
+  return lang === 'lo' ? 'fr-x-lorrain' : lang;
 }
 
 /** Localized "month year" from an ISO date (e.g. "janv. 2022" / "Jan 2022"). */
 export function formatMonthYear(iso: string, lang: Lang): string {
-  const locale = lang === 'fr' ? 'fr-FR' : 'en-US';
+  const locale = lang === 'en' ? 'en-US' : 'fr-FR';
   return new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(new Date(iso));
 }
