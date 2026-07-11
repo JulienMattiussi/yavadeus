@@ -1,6 +1,114 @@
 {
-  "fetchedAt": "2026-06-13T12:54:35.029Z",
+  "fetchedAt": "2026-07-11T21:19:11.190Z",
   "repos": {
+    "boardgameslist": {
+      "description": "A simple board games list",
+      "subtitle": {
+        "fr": "Une simple liste de jeux de société",
+        "en": "A simple board games list"
+      },
+      "homepage": "https://boardgameslist.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/boardgameslist",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-11T21:11:16Z",
+      "createdAt": "2021-12-17T09:17:00Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "Python"
+      ],
+      "frameworks": [
+        "Next.js"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://boardgameslist.vercel.app/icon.svg?icon.2uqar7bs0y0bu.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/boardgameslist.webp"
+    },
+    "mix-my-names": {
+      "description": "Tool to build a mixed names logo",
+      "subtitle": {
+        "fr": "Outil pour créer un logo de noms mixtes",
+        "en": "Tool to build a mixed names logo"
+      },
+      "homepage": "https://mix-my-names.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/mix-my-names",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-11T17:25:05Z",
+      "createdAt": "2026-07-10T16:14:35Z",
+      "languages": [
+        "TypeScript",
+        "HTML",
+        "Python"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://mix-my-names.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/mix-my-names.webp"
+    },
+    "anagramist": {
+      "description": "Sandbox about anagrams manipulation",
+      "subtitle": {
+        "fr": "Bac à sable sur la manipulation des anagrammes",
+        "en": "Sandbox about anagrams manipulation"
+      },
+      "homepage": "https://anagramist.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/anagramist",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-08T17:39:11Z",
+      "createdAt": "2026-07-08T16:00:48Z",
+      "languages": [
+        "TypeScript",
+        "JavaScript",
+        "Python"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://anagramist.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/anagramist.webp"
+    },
+    "big-bang-clicker": {
+      "description": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
+      "subtitle": {
+        "fr": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
+        "en": "An incremental game: click, the universe begins, and complexity emerges era after era."
+      },
+      "homepage": "https://big-bang-clicker.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/big-bang-clicker",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-02T21:57:28Z",
+      "createdAt": "2026-06-05T22:39:42Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://big-bang-clicker.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/big-bang-clicker.webp"
+    },
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
       "subtitle": {
@@ -11,7 +119,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-06-13T12:14:38Z",
+      "pushedAt": "2026-06-17T18:18:25Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -27,6 +135,33 @@
       "npm": null,
       "discord": true,
       "thumbnail": "/thumbnails/yavadeus.webp"
+    },
+    "calendar-solver": {
+      "description": "A puzzle game to match the current date with the correct pieces",
+      "subtitle": {
+        "fr": "Un jeu de puzzle pour faire correspondre la date actuelle avec les bonnes pièces",
+        "en": "A puzzle game to match the current date with the correct pieces"
+      },
+      "homepage": "https://calendar-solver.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/calendar-solver",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-06-15T23:51:07Z",
+      "createdAt": "2026-03-31T12:45:31Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "Next.js"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://calendar-solver.vercel.app/icon?dcff026ce8cf0b78",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/calendar-solver.webp"
     },
     "deduplicateur": {
       "description": "Detect and purge duplicate files ",
@@ -299,33 +434,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/fast-emoji.webp"
-    },
-    "calendar-solver": {
-      "description": "A puzzle game to match the current date with the correct pieces",
-      "subtitle": {
-        "fr": "Un jeu de puzzle pour faire correspondre la date actuelle avec les bonnes pièces",
-        "en": "A puzzle game to match the current date with the correct pieces"
-      },
-      "homepage": "https://calendar-solver.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/calendar-solver",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-04-01T13:08:43Z",
-      "createdAt": "2026-03-31T12:45:31Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "JavaScript"
-      ],
-      "frameworks": [
-        "Next.js"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://calendar-solver.vercel.app/icon?dcff026ce8cf0b78",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/calendar-solver.webp"
     },
     "bingo-builder": {
       "description": "Website to generate and play custom bingo with friends",
@@ -956,33 +1064,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/logo-marmelab.webp"
-    },
-    "boardgameslist": {
-      "description": "A simple board games list",
-      "subtitle": {
-        "fr": "Une simple liste de jeux de société",
-        "en": "A simple board games list"
-      },
-      "homepage": "https://boardgameslist.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/boardgameslist",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2021-12-22T09:14:35Z",
-      "createdAt": "2021-12-17T09:17:00Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "HTML"
-      ],
-      "frameworks": [
-        "Next.js"
-      ],
-      "release": null,
-      "ai": false,
-      "favicon": "https://boardgameslist.vercel.app/icon.png",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/boardgameslist.webp"
     },
     "Marmemap": {
       "description": "Map for Marmelab at WorkAdventure",

@@ -76,9 +76,12 @@ export const projects: Record<string, ProjectOverride> = {
   lorrainjs: { category: 'marmelab' },
   'jaune-attend': { category: 'delires' },
   'logo-marmelab': { category: 'marmelab' },
-  boardgameslist: { category: 'outils', wip: true },
+  boardgameslist: { category: 'outils' },
   Marmemap: { category: 'marmelab' },
   RedMonkDynamic: { category: 'outils', wip: true },
+  'mix-my-names': { category: 'delires' },
+  anagramist: { category: 'delires' },
+  'big-bang-clicker': { category: 'jeux' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
