@@ -51,7 +51,9 @@ const jsonLd = {
       url: siteRoot,
       name: titleT('site.title'),
       description: titleT('site.intro'),
-      inLanguage: ogLocale.replace('_', '-'),
+      // The site itself is bilingual; one WebSite entity, so list both locales
+      // (Lorrain is a French-based gag, not a real language).
+      inLanguage: ['fr-FR', 'en-US'],
       author: { '@id': `${siteRoot}#person` },
     },
   ],
