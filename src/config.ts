@@ -33,6 +33,9 @@ const env = { ...parseDotEnv('.env'), ...parseDotEnv('.env.local'), ...process.e
 /** GitHub account whose non-fork repos make up the catalog. */
 export const GITHUB_USER = env.GITHUB_USER || 'JulienMattiussi';
 
+/** Real name of the site owner, for the Person JSON-LD (rich results). */
+export const AUTHOR_NAME = env.AUTHOR_NAME || 'Julien Mattiussi';
+
 /** npm maintainer handle: a package is linked only if maintained by this user. */
 export const NPM_USER = env.NPM_USER || 'yavadeus';
 

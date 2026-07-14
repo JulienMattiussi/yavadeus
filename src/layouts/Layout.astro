@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { AUTHOR_NAME, BLOG_URL, GITHUB_USER, LINKEDIN_URL } from '../config';
 import type { Lang } from '../i18n/ui';
 import { htmlLang, useTranslations } from '../i18n/ui';
 
@@ -27,6 +28,34 @@ const loUrl = base ? new URL('/lorrain/', base).href : '/lorrain/';
 // Lorrain is French-based, so it shares the fr_FR Open Graph locale.
 const ogLocale = lang === 'en' ? 'en_US' : 'fr_FR';
 const altLocales = ['fr_FR', 'en_US'].filter((l) => l !== ogLocale);
+
+// Structured data (schema.org): identifies the site owner as a Person and links
+// the official profiles via `sameAs`, plus a WebSite node authored by them. The
+// Lorrain page uses the plain-French title/description (titleT), like <title>.
+const siteRoot = base ? base.href : '/';
+const sameAs = [`https://github.com/${GITHUB_USER}`, LINKEDIN_URL, BLOG_URL].filter(Boolean);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${siteRoot}#person`,
+      name: AUTHOR_NAME,
+      alternateName: titleT('site.title'),
+      url: siteRoot,
+      sameAs,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteRoot}#website`,
+      url: siteRoot,
+      name: titleT('site.title'),
+      description: titleT('site.intro'),
+      inLanguage: ogLocale.replace('_', '-'),
+      author: { '@id': `${siteRoot}#person` },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -60,6 +89,9 @@ const altLocales = ['fr_FR', 'en_US'].filter((l) => l !== ogLocale);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
