@@ -58,6 +58,18 @@ tournent sans réseau ni token**. Seul `make fetch` en a besoin.
 
 ## Démarrage rapide
 
+### Prérequis
+
+- **Node.js** + npm
+- **[GitHub CLI](https://cli.github.com)** (`gh`) connecté, sinon un `GITHUB_TOKEN`
+
+Seul `make fetch` a besoin de `gh` : `dev`, `build` et le déploiement tournent
+hors-ligne depuis le cache. Aucun outil système n'est requis pour les vignettes
+(redimensionnées par [sharp](https://sharp.pixelplumbing.com), installé par
+`make install`).
+
+### Installation
+
 ```bash
 make install   # installe les dépendances
 make fetch     # snapshot des données GitHub/npm dans le cache (via ton login `gh`)
@@ -111,7 +123,7 @@ chargé par le navigateur au runtime.
 | [microlink](https://microlink.io)                                              | captures d'écran (sites live, pages npm) pour les vignettes     |
 | image sociale GitHub (`opengraph.githubassets.com`)                            | vignette de repli (ni site live, ni npm)                        |
 | [google-translate-api-x](https://www.npmjs.com/package/google-translate-api-x) | traduction FR/EN des sous-titres (endpoint Google non officiel) |
-| [ImageMagick](https://imagemagick.org) (`convert`)                             | redimensionnement local des vignettes en WebP (outil système)   |
+| [sharp](https://sharp.pixelplumbing.com)                                       | redimensionnement local des vignettes en WebP (dépendance npm)  |
 | [Google Fonts](https://fonts.google.com)                                       | polices Inter + JetBrains Mono (**chargé au runtime**)          |
 
 Authentification GitHub : `gh auth token`, sinon `GITHUB_TOKEN`. Aucun autre

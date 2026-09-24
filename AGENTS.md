@@ -71,6 +71,8 @@ Three decoupled steps, only the first touches the network:
    (a committed snapshot). Auth: `gh auth token`, else `GITHUB_TOKEN` (it validates
    the token and fails clearly if `gh` is missing or the token is invalid).
    Per-fetch field is best-effort: a failed request just leaves that field empty.
+   Thumbnails are resized to 720x405 WebP with **sharp** (npm devDependency, no
+   system tool needed); an image sharp can't decode is skipped, never saved raw.
 2. **curate** (`scripts/curate.ts`, `make curate`) - reads the cache and edits
    `src/data/projects.ts`: assign a `category` (required to show a repo), mark
    `wip`, `ignore`, or prune entries whose repo is gone. Offline.

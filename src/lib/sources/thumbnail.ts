@@ -1,15 +1,16 @@
 /*
  * Project thumbnails, generated at fetch time and committed under
- * public/thumbnails/<repo>.png. Screenshot of the live site via microlink, else
+ * public/thumbnails/<repo>.webp. Screenshot of the live site via microlink, else
  * the first big README image, else the npm package page, else GitHub's
- * social-preview image. Images
- * are normalized to a card-sized 720x405 WebP. Reuse skips unchanged projects so
- * we don't burn the screenshot quota on every fetch.
+ * social-preview image. Images are normalized (sharp) to a card-sized 720x405
+ * WebP. Reuse skips unchanged projects so we don't burn the screenshot quota on
+ * every fetch.
  */
 
-import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+
+import sharp from 'sharp';
 
 const THUMBNAILS_DIR = join(process.cwd(), 'public', 'thumbnails');
 
@@ -104,31 +105,14 @@ async function saveThumbnail(imageUrl: string, repo: string): Promise<boolean> {
     const buffer = Buffer.from(await res.arrayBuffer());
     if (buffer.length < 1024) return false; // guard against tiny error/placeholder payloads
     mkdirSync(THUMBNAILS_DIR, { recursive: true });
-    const out = thumbnailFile(repo);
-    try {
-      // Card-sized 720x405 WebP, keeping the top of the page (cover crop).
-      execFileSync(
-        'convert',
-        [
-          '-',
-          '-resize',
-          '720x405^',
-          '-gravity',
-          'north',
-          '-extent',
-          '720x405',
-          '-quality',
-          '80',
-          out,
-        ],
-        { input: buffer },
-      );
-    } catch {
-      writeFileSync(out, buffer); // ImageMagick missing: keep the raw image
-    }
+    // Card-sized 720x405 WebP, keeping the top of the page (cover crop).
+    await sharp(buffer)
+      .resize(720, 405, { fit: 'cover', position: 'top' })
+      .webp({ quality: 80 })
+      .toFile(thumbnailFile(repo));
     return true;
   } catch (err) {
-    console.warn(`[sources] thumbnail ${repo} fetch failed:`, (err as Error).message);
+    console.warn(`[sources] thumbnail ${repo} failed:`, (err as Error).message);
     return false;
   }
 }
