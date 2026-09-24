@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-24T20:42:06.331Z",
+  "fetchedAt": "2026-09-24T20:56:42.927Z",
   "repos": {
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
@@ -11,7 +11,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-09-24T20:31:43Z",
+      "pushedAt": "2026-09-24T20:50:48Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -88,7 +88,7 @@
         "fr": "Construire un code à partir de mots clés",
         "en": "Build a code using keys words"
       },
-      "homepage": "https://final-code-opal.vercel.app",
+      "homepage": "https://final-code-grid.vercel.app",
       "htmlUrl": "https://github.com/JulienMattiussi/final-code",
       "stars": 0,
       "defaultBranch": "main",
@@ -104,7 +104,7 @@
       ],
       "release": null,
       "ai": true,
-      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/final-code/main/public/favicon.svg",
+      "favicon": "https://final-code-grid.vercel.app/favicon.svg",
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/final-code.webp"

@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { z } from 'astro:schema';
+import { z } from 'astro/zod';
 import { CATEGORIES } from './data/projects';
 import { CACHE_PATH } from './lib/cache';
 import { loadProjects } from './lib/projects-loader';
@@ -37,10 +37,10 @@ const projects = defineCollection({
     title: z.string(),
     subtitle: localized,
     category: z.enum(CATEGORIES),
-    github: z.string().url(),
-    live: z.string().url().optional(),
-    npm: z.string().url().optional(),
-    download: z.object({ url: z.string().url(), tag: z.string() }).optional(),
+    github: z.url(),
+    live: z.url().optional(),
+    npm: z.url().optional(),
+    download: z.object({ url: z.url(), tag: z.string() }).optional(),
     favicon: z.string().optional(),
     thumbnail: z.string().optional(),
     tech: z.array(z.string()).default([]),
