@@ -1,6 +1,328 @@
 {
-  "fetchedAt": "2026-07-11T21:19:11.190Z",
+  "fetchedAt": "2026-09-24T20:26:23.410Z",
   "repos": {
+    "big-bang-clicker": {
+      "description": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
+      "subtitle": {
+        "fr": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
+        "en": "An incremental game: click, the universe begins, and complexity emerges era after era."
+      },
+      "homepage": "https://big-bang-clicker.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/big-bang-clicker",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-09-24T20:23:30Z",
+      "createdAt": "2026-06-05T22:39:42Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://big-bang-clicker.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/big-bang-clicker.webp"
+    },
+    "legoroscope": {
+      "description": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
+      "subtitle": {
+        "fr": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
+        "en": "Gorafi weekly horoscope, served via a Next.js API, displayed in a Discord bot and a web interface with GitHub OAuth connection"
+      },
+      "homepage": "https://legoroscope.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/legoroscope",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-09-15T13:51:46Z",
+      "createdAt": "2026-04-27T12:17:56Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "Next.js"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://legoroscope.vercel.app/icon.jpg?icon.0y1eob18vp6c-.jpg",
+      "npm": null,
+      "discord": true,
+      "thumbnail": "/thumbnails/legoroscope.webp"
+    },
+    "final-code": {
+      "description": "Build a code using keys words",
+      "subtitle": {
+        "fr": "Construire un code à partir de mots clés",
+        "en": "Build a code using keys words"
+      },
+      "homepage": "https://final-code-opal.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/final-code",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-09-10T21:51:54Z",
+      "createdAt": "2026-09-10T18:06:28Z",
+      "languages": [
+        "TypeScript",
+        "HTML",
+        "CSS"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/final-code/main/public/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/final-code.webp"
+    },
+    "nounounimo": {
+      "description": "Jeu de gardiennage",
+      "subtitle": {
+        "fr": "Jeu de gardiennage",
+        "en": "Guarding game"
+      },
+      "homepage": "https://nounounimo.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/nounounimo",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-09-10T17:10:42Z",
+      "createdAt": "2026-09-10T09:31:50Z",
+      "languages": [
+        "TypeScript",
+        "JavaScript",
+        "CSS"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://nounounimo.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/nounounimo.webp"
+    },
+    "combien-mieux-que-un": {
+      "description": "Mathématiques absurdes et sans intérêt",
+      "subtitle": {
+        "fr": "Mathématiques absurdes et sans intérêt",
+        "en": "Absurd and pointless mathematics"
+      },
+      "homepage": "https://combien-mieux-que-un.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/combien-mieux-que-un",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-08-20T13:53:30Z",
+      "createdAt": "2024-08-09T14:22:38Z",
+      "languages": [
+        "Vue",
+        "CSS",
+        "HTML"
+      ],
+      "frameworks": [
+        "Vue"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://combien-mieux-que-un.vercel.app/vite.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/combien-mieux-que-un.webp"
+    },
+    "secret-project": {
+      "description": "Clique pour savoir",
+      "subtitle": {
+        "fr": "Clique pour savoir",
+        "en": "Click to find out"
+      },
+      "homepage": "https://secret-project-pied.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/secret-project",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-08-20T13:46:33Z",
+      "createdAt": "2024-06-07T15:24:40Z",
+      "languages": [
+        "Vue",
+        "CSS",
+        "HTML"
+      ],
+      "frameworks": [
+        "Vue"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://secret-project-pied.vercel.app/favicon.ico",
+      "npm": null,
+      "discord": false,
+      "thumbnail": null
+    },
+    "traceur-texteur": {
+      "description": "A tool for building text lined pictures from any drawing",
+      "subtitle": {
+        "fr": "Un outil pour créer des images bordées de texte à partir de n'importe quel dessin",
+        "en": "A tool for building text lined pictures from any drawing"
+      },
+      "homepage": "https://traceur-texteur.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/traceur-texteur",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-08-20T11:29:06Z",
+      "createdAt": "2026-08-19T08:49:07Z",
+      "languages": [
+        "TypeScript",
+        "HTML",
+        "CSS"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://traceur-texteur.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/traceur-texteur.webp"
+    },
+    "traceur-compteur": {
+      "description": "A tool for building dot-to-dot games from any drawing",
+      "subtitle": {
+        "fr": "Un outil pour créer des jeux point à point à partir de n'importe quel dessin",
+        "en": "A tool for building dot-to-dot games from any drawing"
+      },
+      "homepage": "https://traceur-compteur.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/traceur-compteur",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-08-15T07:25:47Z",
+      "createdAt": "2026-08-14T19:19:38Z",
+      "languages": [
+        "TypeScript",
+        "HTML",
+        "CSS"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://traceur-compteur.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/traceur-compteur.webp"
+    },
+    "fast-emoji": {
+      "description": "Simple shortcuts to get some emojis",
+      "subtitle": {
+        "fr": "Des raccourcis simples pour obtenir des emojis",
+        "en": "Simple shortcuts to get some emojis"
+      },
+      "homepage": null,
+      "htmlUrl": "https://github.com/JulienMattiussi/fast-emoji",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-08-14T10:49:44Z",
+      "createdAt": "2026-04-16T13:17:14Z",
+      "languages": [
+        "TypeScript",
+        "JavaScript",
+        "Python"
+      ],
+      "frameworks": [],
+      "release": null,
+      "ai": true,
+      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/fast-emoji/main/web-extension/dist/icons/icon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/fast-emoji.webp"
+    },
+    "atre-soundboard": {
+      "description": "Just a specific soundboard for those in the know ",
+      "subtitle": {
+        "fr": "Juste une table d'harmonie spécifique pour les connaisseurs",
+        "en": "Just a specific soundboard for those in the know"
+      },
+      "homepage": "https://atre-soundboard.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/atre-soundboard",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-29T12:19:16Z",
+      "createdAt": "2026-07-29T09:22:47Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "HTML"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://atre-soundboard.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/atre-soundboard.webp"
+    },
+    "yavadeus": {
+      "description": "Page perso qui rassemble tous mes projets",
+      "subtitle": {
+        "fr": "Page perso qui rassemble tous mes projets",
+        "en": "Personal page which brings together all my projects"
+      },
+      "homepage": "https://yavadeus.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-14T13:37:46Z",
+      "createdAt": "2026-06-11T20:04:18Z",
+      "languages": [
+        "TypeScript",
+        "Astro",
+        "CSS"
+      ],
+      "frameworks": [
+        "Astro"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://yavadeus.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": true,
+      "thumbnail": "/thumbnails/yavadeus.webp"
+    },
+    "jeu-anniversaire": {
+      "description": "Une énigme pour un anniversaire",
+      "subtitle": {
+        "fr": "Une énigme pour un anniversaire",
+        "en": "A birthday riddle"
+      },
+      "homepage": "https://jeu-anniversaire.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/jeu-anniversaire",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-07-14T01:11:26Z",
+      "createdAt": "2026-07-13T22:07:17Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "HTML"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://jeu-anniversaire.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/jeu-anniversaire.webp"
+    },
     "boardgameslist": {
       "description": "A simple board games list",
       "subtitle": {
@@ -82,60 +404,6 @@
       "discord": false,
       "thumbnail": "/thumbnails/anagramist.webp"
     },
-    "big-bang-clicker": {
-      "description": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
-      "subtitle": {
-        "fr": "Un jeu incrémental : cliquez, l'univers commence, et la complexité émerge ère après ère.",
-        "en": "An incremental game: click, the universe begins, and complexity emerges era after era."
-      },
-      "homepage": "https://big-bang-clicker.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/big-bang-clicker",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-07-02T21:57:28Z",
-      "createdAt": "2026-06-05T22:39:42Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://big-bang-clicker.vercel.app/favicon.svg",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/big-bang-clicker.webp"
-    },
-    "yavadeus": {
-      "description": "Page perso qui rassemble tous mes projets",
-      "subtitle": {
-        "fr": "Page perso qui rassemble tous mes projets",
-        "en": "Personal page which brings together all my projects"
-      },
-      "homepage": "https://yavadeus.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-06-17T18:18:25Z",
-      "createdAt": "2026-06-11T20:04:18Z",
-      "languages": [
-        "TypeScript",
-        "Astro",
-        "CSS"
-      ],
-      "frameworks": [
-        "Astro"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://yavadeus.vercel.app/favicon.svg",
-      "npm": null,
-      "discord": true,
-      "thumbnail": "/thumbnails/yavadeus.webp"
-    },
     "calendar-solver": {
       "description": "A puzzle game to match the current date with the correct pieces",
       "subtitle": {
@@ -193,33 +461,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/deduplicateur.webp"
-    },
-    "legoroscope": {
-      "description": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
-      "subtitle": {
-        "fr": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
-        "en": "Gorafi weekly horoscope, served via a Next.js API, displayed in a Discord bot and a web interface with GitHub OAuth connection"
-      },
-      "homepage": "https://legoroscope.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/legoroscope",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-05-28T18:25:50Z",
-      "createdAt": "2026-04-27T12:17:56Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "JavaScript"
-      ],
-      "frameworks": [
-        "Next.js"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://legoroscope.vercel.app/icon.jpg?icon.0y1eob18vp6c-.jpg",
-      "npm": null,
-      "discord": true,
-      "thumbnail": "/thumbnails/legoroscope.webp"
     },
     "ptitjeux": {
       "description": "Various online puzzle games",
@@ -410,31 +651,6 @@
       "discord": false,
       "thumbnail": "/thumbnails/horloge-passe-partout.webp"
     },
-    "fast-emoji": {
-      "description": "Simple shortcuts to get some emojis",
-      "subtitle": {
-        "fr": "Des raccourcis simples pour obtenir des emojis",
-        "en": "Simple shortcuts to get some emojis"
-      },
-      "homepage": null,
-      "htmlUrl": "https://github.com/JulienMattiussi/fast-emoji",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-04-17T09:59:10Z",
-      "createdAt": "2026-04-16T13:17:14Z",
-      "languages": [
-        "TypeScript",
-        "JavaScript",
-        "CSS"
-      ],
-      "frameworks": [],
-      "release": null,
-      "ai": true,
-      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/fast-emoji/main/web-extension/dist/icons/icon.svg",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/fast-emoji.webp"
-    },
     "bingo-builder": {
       "description": "Website to generate and play custom bingo with friends",
       "subtitle": {
@@ -563,60 +779,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/grammarlai.webp"
-    },
-    "combien-mieux-que-un": {
-      "description": "Mathématiques absurdes et sans intérêt",
-      "subtitle": {
-        "fr": "Mathématiques absurdes et sans intérêt",
-        "en": "Absurd and pointless mathematics"
-      },
-      "homepage": "https://combien-mieux-que-un.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/combien-mieux-que-un",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2024-08-09T14:25:21Z",
-      "createdAt": "2024-08-09T14:22:38Z",
-      "languages": [
-        "Vue",
-        "CSS",
-        "HTML"
-      ],
-      "frameworks": [
-        "Vue"
-      ],
-      "release": null,
-      "ai": false,
-      "favicon": "https://combien-mieux-que-un.vercel.app/vite.svg",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/combien-mieux-que-un.webp"
-    },
-    "secret-project": {
-      "description": "Clique pour savoir",
-      "subtitle": {
-        "fr": "Clique pour savoir",
-        "en": "Click to find out"
-      },
-      "homepage": "https://secret-project-pied.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/secret-project",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2024-08-01T10:38:55Z",
-      "createdAt": "2024-06-07T15:24:40Z",
-      "languages": [
-        "Vue",
-        "CSS",
-        "HTML"
-      ],
-      "frameworks": [
-        "Vue"
-      ],
-      "release": null,
-      "ai": false,
-      "favicon": "https://secret-project-pied.vercel.app/favicon.ico",
-      "npm": null,
-      "discord": false,
-      "thumbnail": null
     },
     "marme-ten": {
       "description": "Bientôt 10 ans",

@@ -82,6 +82,26 @@ export const projects: Record<string, ProjectOverride> = {
   'mix-my-names': { category: 'delires' },
   anagramist: { category: 'delires' },
   'big-bang-clicker': { category: 'jeux' },
+  'final-code': {
+    category: 'outils',
+    subtitle: { fr: 'Construire un code à partir de mots-clés', en: 'Build a code from keywords' },
+  },
+  'traceur-texteur': { category: 'outils' },
+  'traceur-compteur': {
+    category: 'outils',
+    subtitle: {
+      fr: "Un outil pour créer des jeux de points à relier à partir de n'importe quel dessin",
+      en: 'A tool for building dot-to-dot games from any drawing',
+    },
+  },
+  'atre-soundboard': {
+    category: 'delires',
+    subtitle: {
+      fr: 'Juste une soundboard pour les initiés',
+      en: 'Just a soundboard for those in the know',
+    },
+  },
+  'jeu-anniversaire': { category: 'delires' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
@@ -95,5 +115,6 @@ export const ignored: string[] = [
   'marmenews',
   'vitecrats',
   'juin-rmelab',
+  'nounounimo',
   // CLI_INSERT_IGNORED (do not remove)
 ];
