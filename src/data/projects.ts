@@ -102,6 +102,8 @@ export const projects: Record<string, ProjectOverride> = {
     },
   },
   'jeu-anniversaire': { category: 'delires' },
+  'fantom-text': { category: 'outils' },
+  'hide-words': { category: 'outils' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
@@ -111,7 +113,6 @@ export const projects: Record<string, ProjectOverride> = {
  */
 export const ignored: string[] = [
   'marmelab-games',
-  'Fred',
   'marmenews',
   'vitecrats',
   'juin-rmelab',

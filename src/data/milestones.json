@@ -125,6 +125,15 @@
     "publishedAt": "2026-06-12T22:05:45.000Z",
     "unwipAt": null
   },
+  "fantom-text": {
+    "state": {
+      "published": true,
+      "wip": false
+    },
+    "addedAt": "2026-10-02T23:22:04.730Z",
+    "publishedAt": "2026-10-02T23:22:04.730Z",
+    "unwipAt": null
+  },
   "fast-emoji": {
     "state": {
       "published": false,
@@ -159,6 +168,15 @@
     },
     "addedAt": "2026-06-12T22:05:45.000Z",
     "publishedAt": null,
+    "unwipAt": null
+  },
+  "hide-words": {
+    "state": {
+      "published": true,
+      "wip": false
+    },
+    "addedAt": "2026-10-02T23:22:04.730Z",
+    "publishedAt": "2026-10-02T23:22:04.730Z",
     "unwipAt": null
   },
   "horloge-passe-partout": {
