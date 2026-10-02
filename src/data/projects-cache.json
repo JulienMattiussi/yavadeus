@@ -1,6 +1,33 @@
 {
-  "fetchedAt": "2026-09-24T20:57:22.346Z",
+  "fetchedAt": "2026-10-02T19:38:15.407Z",
   "repos": {
+    "estcequonmetenprodaujourdhui": {
+      "description": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
+      "subtitle": {
+        "fr": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
+        "en": "Are we putting it into production today? Reinterpreted version of this concept"
+      },
+      "homepage": "https://estcequonmetenprod.yavadeus.dev",
+      "htmlUrl": "https://github.com/JulienMattiussi/estcequonmetenprodaujourdhui",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-02T19:37:13Z",
+      "createdAt": "2021-06-04T13:16:23Z",
+      "languages": [
+        "JavaScript",
+        "CSS",
+        "HTML"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": false,
+      "favicon": "https://estcequonmetenprod.yavadeus.dev/assets/favicon-avlyE2bn.png",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/estcequonmetenprodaujourdhui.webp"
+    },
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
       "subtitle": {
@@ -11,7 +38,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-09-24T20:57:03Z",
+      "pushedAt": "2026-10-02T18:04:47Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -1049,33 +1076,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/retro-admin.webp"
-    },
-    "estcequonmetenprodaujourdhui": {
-      "description": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
-      "subtitle": {
-        "fr": "Est-ce qu'on met en prod aujourd'hui ? Version réinterprétée de ce concept",
-        "en": "Are we putting it into production today? Reinterpreted version of this concept"
-      },
-      "homepage": "https://estcequonmetenprodaujourdhui.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/estcequonmetenprodaujourdhui",
-      "stars": 0,
-      "defaultBranch": "master",
-      "pushedAt": "2022-11-10T12:43:06Z",
-      "createdAt": "2021-06-04T13:16:23Z",
-      "languages": [
-        "JavaScript",
-        "CSS",
-        "HTML"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "release": null,
-      "ai": false,
-      "favicon": "https://estcequonmetenprodaujourdhui.vercel.app/assets/favicon.d2a8a2d9.png",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/estcequonmetenprodaujourdhui.webp"
     },
     "balkanoche-prison-calculator": {
       "description": "Calculateur de temps de prison sur l'échelle Balkanoche",
