@@ -75,7 +75,11 @@ const downloadWindow = `${id} (download)`;
   }
   {
     stars > 0 && (
-      <span class="stars" role="img" aria-label={`${stars} ${t('a11y.stars')}`}>
+      <span
+        class="stars"
+        role="img"
+        aria-label={`${stars} ${t(stars === 1 ? 'a11y.star' : 'a11y.stars')}`}
+      >
         <span class="star-icon" aria-hidden="true">
           ★
         </span>

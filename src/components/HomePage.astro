@@ -283,9 +283,24 @@ const latest = pickLatest(projects, readMilestones());
   .latest .hash {
     color: var(--accent);
   }
+  /* Never wraps: one full row (3, then 2 cards) or a single stacked column. */
+  .latest-grid {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 561px) {
+    .latest-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .latest-grid > :global(:nth-child(n + 3)) {
+      display: none;
+    }
+  }
   @media (min-width: 900px) {
     .latest-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+    .latest-grid > :global(:nth-child(n + 3)) {
+      display: flex;
     }
   }
   .cat-head {
