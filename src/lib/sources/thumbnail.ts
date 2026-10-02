@@ -97,7 +97,7 @@ export function reusableThumbnail(
   return prev.homepage === cur.homepage && prev.pushedAt === cur.pushedAt ? prev.thumbnail : null;
 }
 
-/** Download an image, normalize to 1200x630, write it under public/thumbnails. */
+/** Download an image, normalize it, write it under public/thumbnails. */
 async function saveThumbnail(imageUrl: string, repo: string): Promise<boolean> {
   try {
     const res = await fetch(imageUrl);

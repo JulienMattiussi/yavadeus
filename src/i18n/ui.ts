@@ -81,8 +81,8 @@ const base = {
     'nav.follow': 'Me suivre',
     'a11y.skip': 'Aller au contenu',
     'a11y.nav': 'Sélecteur de langue',
-    'a11y.toolbar': 'Recherche et affichage',
     'a11y.newtab': '(nouvel onglet)',
+    'a11y.stars': 'étoiles',
   },
   en: {
     'site.title': 'yavadeus',
@@ -122,8 +122,8 @@ const base = {
     'nav.follow': 'Follow me',
     'a11y.skip': 'Skip to content',
     'a11y.nav': 'Language selector',
-    'a11y.toolbar': 'Search and view',
     'a11y.newtab': '(opens in a new tab)',
+    'a11y.stars': 'stars',
   },
 } as const;
 
@@ -145,6 +145,7 @@ const NO_GROS_KEYS: ReadonlySet<UIKey> = new Set([
   'link.download',
   'search.placeholder',
   'count.existing',
+  'a11y.stars',
   'badge.ai',
 ]);
 

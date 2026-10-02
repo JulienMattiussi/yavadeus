@@ -1,7 +1,4 @@
-/*
- * Low-level HTTP/URL helpers shared by the source fetchers.
- * `ghHeaders` is read at call time so the fetch step can inject a resolved token.
- */
+/* Low-level HTTP/URL helpers shared by the source fetchers. */
 
 /** Auth headers, read at call time so the fetch step can inject a resolved token. */
 export function ghHeaders(): Record<string, string> {

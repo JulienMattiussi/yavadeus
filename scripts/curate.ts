@@ -22,8 +22,6 @@ interface Step {
 const steps: Step[] = [
   { name: 'Catégorisation', run: categorize },
   { name: 'Nettoyage (repos supprimés)', run: prune },
-  // Ajouter ici les futures étapes de curation, ex. :
-  // { name: 'Sous-titres', run: subtitles },
 ];
 
 const cache = readCache();

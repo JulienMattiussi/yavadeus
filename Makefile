@@ -38,7 +38,7 @@ preview: build ## Preview the production build locally
 
 # Data pipeline: fetch (network) -> curate (local) -> build (offline)
 
-fetch: ## Fetch GitHub/npm data into the cache (network; uses `gh auth token`, else GITHUB_TOKEN)
+fetch: ## Fetch GitHub/npm data into the cache (network; uses GITHUB_TOKEN, else `gh auth token`)
 	npm run fetch
 
 curate: ## Run the curation pipeline on the cache (categorize, prune, ...)

@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { formatMonthYear, pickLocalized, useTranslations } from '../i18n/ui';
+import CardLinks from './CardLinks.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>['data'];
@@ -10,13 +11,11 @@ interface Props {
 
 const { project, lang } = Astro.props;
 const t = useTranslations(lang);
-const { id, title, subtitle, github, live, npm, favicon, thumbnail, tech, ai, stars } = project;
-const { createdAt, updatedAt, download, wip, discord } = project;
+const { id, title, subtitle, github, live, favicon, thumbnail, tech, ai } = project;
+const { createdAt, updatedAt, wip, discord } = project;
 
 const siteWindow = title;
 const codeWindow = `${id} (code)`;
-const npmWindow = `${id} (npm)`;
-const downloadWindow = `${id} (download)`;
 
 // Client-side search/sort metadata (used by the toolbar script in HomePage).
 const searchText = [title, pickLocalized(subtitle, lang), ...tech].join(' ').toLowerCase();
@@ -129,74 +128,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
     )
   }
 
-  <footer class="links mono">
-    <a
-      href={github}
-      class="link"
-      target={codeWindow}
-      aria-label={`${t('link.github')} - ${title} ${t('a11y.newtab')}`}
-    >
-      <span class="arrow" aria-hidden="true">↗</span>{t('link.github')}
-    </a>
-    {
-      live && (
-        <a
-          href={live}
-          class="link"
-          target={siteWindow}
-          aria-label={`${t('link.live')} - ${title} ${t('a11y.newtab')}`}
-        >
-          <span class="arrow" aria-hidden="true">
-            ↗
-          </span>
-          {t('link.live')}
-        </a>
-      )
-    }
-    {
-      npm && (
-        <a
-          href={npm}
-          class="link"
-          target={npmWindow}
-          aria-label={`${t('link.npm')} - ${title} ${t('a11y.newtab')}`}
-        >
-          <span class="arrow" aria-hidden="true">
-            ↗
-          </span>
-          {t('link.npm')}
-        </a>
-      )
-    }
-    {
-      download && (
-        <a
-          href={download.url}
-          class="link"
-          target={downloadWindow}
-          aria-label={`${t('link.download')} ${download.tag} - ${title} ${t('a11y.newtab')}`}
-        >
-          <span class="arrow" aria-hidden="true">
-            ⬇
-          </span>
-          {t('link.download')}
-          {download.tag && <span class="tag">{download.tag}</span>}
-        </a>
-      )
-    }
-    {
-      stars > 0 && (
-        <span class="stars" aria-label={`${stars} stars`}>
-          <>
-            <span class="star-icon" aria-hidden="true">
-              ★
-            </span>
-            <span aria-hidden="true">{stars}</span>
-          </>
-        </span>
-      )
-    }
-  </footer>
+  <CardLinks project={project} lang={lang} />
 </article>
 
 <style>
@@ -352,60 +284,6 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   .date dd {
     margin: 0;
     color: var(--text-dim);
-  }
-
-  .links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: auto;
-    padding-top: 0.7rem;
-    font-size: 0.82rem;
-  }
-  .link {
-    color: var(--text);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-sm);
-    padding: 0.25rem 0.6rem;
-    transition:
-      color var(--transition),
-      background var(--transition),
-      border-color var(--transition);
-  }
-  .link:hover {
-    color: var(--bg);
-    background: var(--cat, var(--accent));
-    border-color: var(--cat, var(--accent));
-  }
-  .arrow {
-    color: var(--cat, var(--accent));
-    transition: color var(--transition);
-  }
-  .link:hover .arrow {
-    color: inherit;
-  }
-  .tag {
-    color: var(--text-faint);
-    font-size: 0.72rem;
-    margin-left: 0.1rem;
-  }
-  .link:hover .tag {
-    color: inherit;
-  }
-  .stars {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.25rem;
-    color: var(--text-faint);
-    font-size: 0.78rem;
-  }
-  .star-icon {
-    color: var(--star);
   }
 
   @media (max-width: 560px) {

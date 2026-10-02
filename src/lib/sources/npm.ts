@@ -13,11 +13,7 @@ export function npmUrlIfOwned(registry: unknown, npmUser: string): string | null
     : null;
 }
 
-/**
- * npm link for a repo: read its package.json `name`, and link to npm only if a
- * package by that name exists AND is maintained by `npmUser`. Avoids linking a
- * same-named package owned by someone else.
- */
+/** npm link for a repo, from its package.json `name` (best-effort). */
 export async function fetchNpmLink(
   repo: string,
   branch: string,

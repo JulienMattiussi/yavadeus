@@ -24,7 +24,7 @@ GitHub**. Fait aussi office de CV.
 - **Sous-titres bilingues traduits** - la description GitHub est traduite FR ↔ EN au moment du fetch (l'override manuel reste prioritaire)
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur
-- **Bilingue FR / EN** - routing natif Astro (FR sur `/`, EN sur `/en/`), avec switch
+- **Bilingue FR / EN** - routing natif Astro (FR sur `/`, EN sur `/en/`), avec switch, plus une version « lorraine » gag sur `/lorrain/` générée depuis le français par lorrainjs
 - **3 vues** - par **Rubriques** (jeux / outils / délires / marmelab), par **Création** ou par **Mise à jour**, ces deux dernières en timeline groupée par année
 - **Recherche instantanée** - filtre client sur titre, sous-titre et technos, insensible aux accents
 - **Mode « ouvert d'esprit »** - les délires sont floutés derrière un interrupteur, mémorisé pour la session
@@ -97,7 +97,7 @@ Pour un simple rafraîchissement de données (étoiles, dates, descriptions),
 
 | Couche     | Technologie                                            |
 | ---------- | ------------------------------------------------------ |
-| Framework  | Astro 6 (sortie statique, aucun JS client par défaut)  |
+| Framework  | Astro 7 (sortie statique, aucun JS client par défaut)  |
 | Contenu    | Content Layer (`astro:content`), schéma Zod            |
 | i18n       | routing natif Astro (FR `/`, EN `/en/`)                |
 | Langage    | TypeScript strict                                      |
@@ -126,7 +126,7 @@ chargé par le navigateur au runtime.
 | [sharp](https://sharp.pixelplumbing.com)                                       | redimensionnement local des vignettes en WebP (dépendance npm)  |
 | [Google Fonts](https://fonts.google.com)                                       | polices Inter + JetBrains Mono (**chargé au runtime**)          |
 
-Authentification GitHub : `gh auth token`, sinon `GITHUB_TOKEN`. Aucun autre
+Authentification GitHub : `GITHUB_TOKEN` si défini, sinon `gh auth token`. Aucun autre
 service ne requiert de clé.
 
 ---
@@ -168,8 +168,8 @@ src/
 ├── scripts/home-view.ts # helpers purs de la vue client (recherche, années)
 ├── i18n/ui.ts           # chaînes FR/EN + helpers de locale
 ├── layouts/Layout.astro # <head>, fonts, balises OG/Twitter
-├── components/          # HomePage.astro, ProjectCard.astro, Footer.astro
-└── pages/               # FR sur /, EN sur /en/
+├── components/          # HomePage, TopBar, DeliresGate, ProjectCard, CardLinks, Footer
+└── pages/               # FR sur /, EN sur /en/, LO sur /lorrain/ + robots.txt, sitemap.xml
 scripts/                 # fetch.ts (réseau) + pipeline de curation
 tests/                   # tests unitaires Vitest (logique pure)
 ```
