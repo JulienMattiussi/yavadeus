@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { CATEGORIES, type Category } from '../data/projects';
+import { pickLatest, readMilestones } from '../lib/milestones';
 import type { Lang, UIKey } from '../i18n/ui';
 import { useTranslations } from '../i18n/ui';
 import DeliresGate from './DeliresGate.astro';
@@ -22,6 +23,7 @@ const projects = all
   .sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''));
 
 const byCategory = (cat: Category) => projects.filter((p) => p.category === cat);
+const latest = pickLatest(projects, readMilestones());
 ---
 
 <Layout lang={lang}>
@@ -67,6 +69,23 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
     </div>
 
     <div id="view-categories">
+      {
+        latest.length > 0 && (
+          <section id="latest" class="latest" aria-labelledby="cat-latest">
+            <div class="cat-head">
+              <h2 id="cat-latest" class="cat-title mono">
+                <span class="hash">#</span> {t('latest.title')}
+              </h2>
+              <p class="cat-desc">{t('latest.desc')}</p>
+            </div>
+            <div class="grid latest-grid">
+              {latest.map((project) => (
+                <ProjectCard project={project} lang={lang} featured />
+              ))}
+            </div>
+          </section>
+        )
+      }
       {
         CATEGORIES.map((cat) => {
           const items = byCategory(cat);
@@ -249,6 +268,25 @@ const byCategory = (cat: Category) => projects.filter((p) => p.category === cat)
 
   .category {
     margin: 3rem 0;
+  }
+  .latest {
+    margin: 2rem 0 3rem;
+    padding: 0 1rem 1.25rem;
+    background: var(--latest-bg);
+    border: 1px solid var(--latest-line);
+    border-radius: var(--radius);
+  }
+  .latest .cat-head {
+    padding-left: 0;
+    background: var(--latest-bg);
+  }
+  .latest .hash {
+    color: var(--accent);
+  }
+  @media (min-width: 900px) {
+    .latest-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
   .cat-head {
     position: sticky;

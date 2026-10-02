@@ -25,6 +25,7 @@ GitHub**. Fait aussi office de CV.
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur
 - **Bilingue FR / EN** - routing natif Astro (FR sur `/`, EN sur `/en/`), avec switch, plus une version « lorraine » gag sur `/lorrain/` générée depuis le français par lorrainjs
+- **Derniers ajouts** - un premier groupe met en avant les 3 projets ajoutés, publiés ou sortis de WIP le plus récemment (hors délires et WIP), dates tenues dans `src/data/milestones.json`
 - **3 vues** - par **Rubriques** (jeux / outils / délires / marmelab), par **Création** ou par **Mise à jour**, ces deux dernières en timeline groupée par année
 - **Recherche instantanée** - filtre client sur titre, sous-titre et technos, insensible aux accents
 - **Mode « ouvert d'esprit »** - les délires sont floutés derrière un interrupteur, mémorisé pour la session

@@ -13,9 +13,10 @@
     "typecheck": "astro check",
     "test:unit": "vitest run",
     "test:watch": "vitest",
-    "fetch": "tsx scripts/fetch.ts",
-    "categorize": "tsx scripts/categorize.ts",
-    "curate": "tsx scripts/curate.ts",
+    "fetch": "tsx scripts/fetch.ts && npm run milestones",
+    "categorize": "tsx scripts/categorize.ts && npm run milestones",
+    "curate": "tsx scripts/curate.ts && npm run milestones",
+    "milestones": "tsx scripts/milestones.ts",
     "reset:data": "tsx scripts/reset.ts",
     "format": "prettier --write . --plugin=prettier-plugin-astro",
     "format:check": "prettier --check . --plugin=prettier-plugin-astro"

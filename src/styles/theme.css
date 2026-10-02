@@ -32,6 +32,10 @@
   --cat-delires: #ffb454;
   --cat-marmelab: #b58cff;
 
+  /* "Latest additions" group: a faint accent wash (opaque, for its sticky header) */
+  --latest-bg: color-mix(in srgb, var(--accent) 5%, var(--bg));
+  --latest-line: color-mix(in srgb, var(--accent-dim) 45%, var(--line));
+
   /* Timeline rail + year nodes (thickened + glow so it reads over the grid) */
   --timeline: var(--accent);
   --timeline-glow: var(--accent-glow);

@@ -7,7 +7,7 @@ projects in one place. Static once deployed - only links. Doubles as a CV.
 
 - A single bilingual (FR/EN) page listing personal projects, grouped into four
   categories: **jeux** (games), **outils** (tools), **délires** (oddities),
-  **marmelab**.
+  **marmelab**, preceded by a **latest additions** group (see below).
 - Each project shows a title, a short bilingual subtitle, its main technologies,
   whether an AI agent was used, optional preview thumbnail and site favicon, and
   links to GitHub / the live site / npm / a release download when they exist.
@@ -40,10 +40,12 @@ src/
 ├── config.ts                  # reads .env / .env.local / process.env -> GITHUB_USER, SITE_URL
 ├── data/
 │   ├── projects.ts            # CURATED: category map + overrides + `ignored` (you edit this)
-│   └── projects-cache.json    # COMMITTED data snapshot written by `make fetch`
+│   ├── projects-cache.json    # COMMITTED data snapshot written by `make fetch`
+│   └── milestones.json        # COMMITTED added/published/out-of-WIP dates (scripts/milestones.ts)
 ├── lib/
 │   ├── sources/               # GitHub/npm fetchers, split by domain (github, npm, frameworks, favicon, discord, translate, http); used only by fetch
 │   ├── cache.ts               # cache type + readCache() (offline source for build/curate)
+│   ├── milestones.ts          # milestone stamping + "latest additions" pick (pure, unit-tested)
 │   └── projects-loader.ts     # merges cache + overrides -> ProjectEntry[] (offline)
 ├── content.config.ts          # `projects` collection: loader + Zod schema
 ├── i18n/ui.ts                 # UI strings (FR/EN, LO derived from FR) + locale helpers
@@ -63,6 +65,7 @@ scripts/
 ├── fetch.ts                   # `make fetch` - the network step (writes the cache)
 ├── curate.ts                  # `make curate` - curation pipeline orchestrator
 ├── categorize.ts              # `make categorize` - categorization step only
+├── milestones.ts              # stamps new milestones; chained after fetch / curate / categorize
 ├── reset.ts                   # used by `make clean-data` (empties the curated catalog)
 └── curation/                  # steps: categorize.ts, prune.ts; data-edit.ts (pure source edits)
 tests/                         # Vitest unit tests (pure logic); vitest.config.ts at root
@@ -85,6 +88,16 @@ Three decoupled steps, only the first touches the network:
    `wip`, `ignore`, or prune entries whose repo is gone. Offline.
 3. **build** (`make build`) - `src/lib/projects-loader.ts` merges the cache with
    the curated overrides into the `projects` collection. Offline, no token.
+
+**Latest additions.** A first group shows (in the categories view only, hidden
+while searching) the 3 projects with the most recent milestone: added to the
+page (given a category), first published (live site, release or npm package),
+or taken out of WIP. Délires and WIP projects are not eligible, and the cards
+stay in their own category too. GitHub records none of these dates, so
+`scripts/milestones.ts` (run automatically at the end of `make fetch`,
+`make curate`, `make categorize`) compares the current state with the last one
+saved in `src/data/milestones.json` and stamps each transition. A manual edit
+of `projects.ts` (e.g. removing `wip`) is stamped at the next of those runs.
 
 The cache is read at build/dev startup and **not watched**: after `make fetch`,
 rebuild or restart `make dev`/`make start` to see the new data (a running dev

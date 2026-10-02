@@ -7,9 +7,11 @@ import CardLinks from './CardLinks.astro';
 interface Props {
   project: CollectionEntry<'projects'>['data'];
   lang: Lang;
+  /** A copy shown in the "latest" group (the original stays in its category). */
+  featured?: boolean;
 }
 
-const { project, lang } = Astro.props;
+const { project, lang, featured = false } = Astro.props;
 const t = useTranslations(lang);
 const { id, title, subtitle, github, live, favicon, thumbnail, tech, ai } = project;
 const { createdAt, updatedAt, wip, discord } = project;
@@ -26,6 +28,7 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
 <article
   class="card"
   data-category={project.category}
+  data-featured={featured ? '' : undefined}
   data-search={searchText}
   data-created={createdTs}
   data-updated={updatedTs}

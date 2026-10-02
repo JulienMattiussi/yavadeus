@@ -9,7 +9,9 @@ const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[da
 const categoriesView = document.getElementById('view-categories');
 const timelineView = document.getElementById('view-timeline');
 const empty = document.getElementById('search-empty');
-const cards = Array.from(document.querySelectorAll<HTMLElement>('.card'));
+const latest = document.getElementById('latest');
+// Featured copies in the "latest" group stay put; only the originals are filtered and moved.
+const cards = Array.from(document.querySelectorAll<HTMLElement>('.card:not([data-featured])'));
 const unknownYear = timelineView?.dataset.unknownYear ?? '?';
 
 // Remember each card's original order, to restore it in the categories view.
@@ -66,7 +68,7 @@ function renderCategories(query: string) {
     );
     grid?.appendChild(card);
   }
-  for (const grid of categoriesView.querySelectorAll<HTMLElement>('.grid')) {
+  for (const grid of categoriesView.querySelectorAll<HTMLElement>('[data-grid]')) {
     Array.from(grid.children)
       .sort(
         (a, b) =>
@@ -89,6 +91,8 @@ function renderCategories(query: string) {
       countEl.textContent = `${count < total ? `${count}/${total}` : total} ${unit}`.trimEnd();
     }
   }
+  // Hidden while searching: its cards would show up twice among the results.
+  if (latest) latest.hidden = query !== '';
   categoriesView.hidden = false;
   if (timelineView) timelineView.hidden = true;
 }
