@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { formatMonthYear, pickLocalized, useTranslations } from '../i18n/ui';
 import CardLinks from './CardLinks.astro';
+import OpenMindGate from './OpenMindGate.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>['data'];
@@ -14,7 +15,7 @@ interface Props {
 const { project, lang, featured = false } = Astro.props;
 const t = useTranslations(lang);
 const { id, title, subtitle, github, live, favicon, thumbnail, tech, ai } = project;
-const { createdAt, updatedAt, wip, discord } = project;
+const { createdAt, updatedAt, wip, discord, openMinded } = project;
 
 const siteWindow = title;
 const codeWindow = `${id} (code)`;
@@ -32,7 +33,9 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   data-search={searchText}
   data-created={createdTs}
   data-updated={updatedTs}
+  data-open-minded={openMinded ? '' : undefined}
 >
+  {openMinded && <OpenMindGate id={id} lang={lang} featured={featured} />}
   {
     thumbnail && (
       <a
@@ -151,6 +154,11 @@ const updatedTs = updatedAt ? Date.parse(updatedAt) : 0;
   }
   .card[hidden] {
     display: none;
+  }
+  /* Contains the switch overlay, and the blur that would bleed past the edges. */
+  .card[data-open-minded] {
+    position: relative;
+    overflow: hidden;
   }
   .card:hover {
     border-color: var(--cat, var(--accent-dim));

@@ -21,18 +21,21 @@ export const ignored: string[] = [
 
 describe('appendToSource', () => {
   it('inserts a categorized entry before the projects marker', () => {
-    const out = appendToSource(SRC, 'new-repo', 'outils', false);
+    const out = appendToSource(SRC, 'new-repo', 'outils');
     expect(out).toContain("'new-repo': { category: 'outils' },\n  // CLI_INSERT_PROJECTS");
   });
   it('adds wip: true when flagged', () => {
-    expect(appendToSource(SRC, 'wip-repo', 'delires', true)).toContain(
+    expect(appendToSource(SRC, 'wip-repo', 'delires', { wip: true })).toContain(
       "'wip-repo': { category: 'delires', wip: true },",
     );
   });
-  it('inserts into the ignored list for an ignore choice', () => {
-    expect(appendToSource(SRC, 'junk', 'ignore', false)).toContain(
-      "'junk',\n  // CLI_INSERT_IGNORED",
+  it('adds openMinded: true when flagged', () => {
+    expect(appendToSource(SRC, 'odd', 'delires', { wip: true, openMinded: true })).toContain(
+      "'odd': { category: 'delires', wip: true, openMinded: true },",
     );
+  });
+  it('inserts into the ignored list for an ignore choice', () => {
+    expect(appendToSource(SRC, 'junk', 'ignore')).toContain("'junk',\n  // CLI_INSERT_IGNORED");
   });
 });
 
@@ -74,7 +77,7 @@ describe('clearSource', () => {
 
 describe('append then remove round-trips', () => {
   it('a categorized entry can be cleanly removed', () => {
-    const added = appendToSource(SRC, 'temp-repo', 'jeux', false);
+    const added = appendToSource(SRC, 'temp-repo', 'jeux');
     expect(added).toContain('temp-repo');
     const removed = removeFromSource(added, 'temp-repo', 'projects');
     expect(removed).not.toContain('temp-repo');

@@ -2,7 +2,7 @@
  * Curation step: interactive categorization.
  *
  * Lists non-fork repos that have no category yet (and aren't ignored), prompts
- * for a category (or "ignore" / WIP), and writes the choice into
+ * for a category (or "ignore" / WIP, and the open-minded switch for délires), and writes the choice into
  * src/data/projects.ts. Reusable from both `make categorize` and `make curate`.
  */
 
@@ -64,15 +64,18 @@ export async function categorize({ repos, rl }: CurationContext): Promise<void> 
       continue;
     }
 
-    let wip = false;
-    if (choice !== 'ignore') {
-      const w = (await rl.question('  WIP / en cours ? [o/N] > ')).trim().toLowerCase();
-      wip = w === 'o' || w === 'y' || w === 'oui';
-    }
+    const yes = async (prompt: string) =>
+      ['o', 'y', 'oui'].includes((await rl.question(prompt)).trim().toLowerCase());
 
-    applyAppend(r.name, choice, wip);
+    let wip = false;
+    let openMinded = false;
+    if (choice !== 'ignore') wip = await yes('  WIP / en cours ? [o/N] > ');
+    if (choice === 'delires') openMinded = await yes('  Switch « ouvert d’esprit » ? [o/N] > ');
+
+    applyAppend(r.name, choice, { wip, openMinded });
     done += 1;
-    console.log(`  \x1b[32m-> ${choice}${wip ? ' (WIP)' : ''}\x1b[0m\n`);
+    const tags = [wip && 'WIP', openMinded && 'switch'].filter(Boolean).join(', ');
+    console.log(`  \x1b[32m-> ${choice}${tags ? ` (${tags})` : ''}\x1b[0m\n`);
   }
 
   console.log(`Catégorisation : ${done} repo(s) écrit(s).`);

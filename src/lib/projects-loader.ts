@@ -33,6 +33,7 @@ export interface ProjectEntry {
   tech: string[];
   ai: AiInfo;
   wip: boolean;
+  openMinded: boolean;
   discord: boolean;
   stars: number;
   /** ISO date of project start (first commit), or null if unknown. */
@@ -70,6 +71,7 @@ export function buildEntry(name: string, o: ProjectOverride, c: CachedRepo): Pro
     tech: o.tech ?? mergeTech(c.frameworks, c.languages),
     ai,
     wip: o.wip ?? false,
+    openMinded: o.category === 'delires' && o.openMinded === true,
     discord: c.discord,
     stars: c.stars,
     createdAt: c.createdAt,

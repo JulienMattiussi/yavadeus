@@ -25,10 +25,10 @@ GitHub**. Fait aussi office de CV.
 - **Technos + frameworks** - langages GitHub enrichis du framework réel lu dans le `package.json` (React, Next.js, Vue, Astro, Tauri...)
 - **Détections fines** - usage d'un agent IA (`AGENTS.md` / `CLAUDE.md` / `.claude`), bot Discord (mention dans le README), release téléchargeable, paquet npm publié sous le bon mainteneur
 - **Bilingue FR / EN** - routing natif Astro (FR sur `/`, EN sur `/en/`), avec switch, plus une version « lorraine » gag sur `/lorrain/` générée depuis le français par lorrainjs
-- **Derniers ajouts** - un premier groupe met en avant les 3 projets ajoutés, publiés ou sortis de WIP le plus récemment (hors délires et WIP), dates tenues dans `src/data/milestones.json`
+- **Derniers ajouts** - un premier groupe met en avant les 3 projets ajoutés, publiés ou sortis de WIP le plus récemment (hors WIP), dates tenues dans `src/data/milestones.json`
 - **3 vues** - par **Rubriques** (jeux / outils / délires / marmelab), par **Création** ou par **Mise à jour**, ces deux dernières en timeline groupée par année
 - **Recherche instantanée** - filtre client sur titre, sous-titre et technos, insensible aux accents
-- **Mode « ouvert d'esprit »** - les délires sont floutés derrière un interrupteur, mémorisé pour la session
+- **Mode « ouvert d'esprit »** - les délires marqués `openMinded` sont floutés chacun derrière son propre interrupteur, mémorisé pour la session
 - **En-têtes sticky, responsive mobile, accessibilité soignée** - navigation clavier, focus visible, icônes décoratives masquées aux lecteurs d'écran
 - **Cartes de partage** - balises Open Graph / Twitter, image 1200×630
 - **100 % statique et hors-ligne** - le cache est committé, donc le build (et les déploiements) ne touchent ni au réseau ni à un token
@@ -138,7 +138,7 @@ Un repo ne s'affiche **qu'une fois qu'il a une catégorie**. Deux façons :
 
 - **Interactif** : `make curate` (ou `make categorize`) liste les repos non
   catégorisés et demande catégorie (jeux / outils / délires / marmelab), WIP ou
-  ignore. Écrit dans [`src/data/projects.ts`](src/data/projects.ts).
+  ignore, et pour un délire s'il passe derrière l'interrupteur « ouvert d'esprit ». Écrit dans [`src/data/projects.ts`](src/data/projects.ts).
 - **À la main** : éditer la map `projects`, clé = nom du repo :
 
   ```ts
@@ -169,7 +169,7 @@ src/
 ├── scripts/home-view.ts # helpers purs de la vue client (recherche, années)
 ├── i18n/ui.ts           # chaînes FR/EN + helpers de locale
 ├── layouts/Layout.astro # <head>, fonts, balises OG/Twitter
-├── components/          # HomePage, TopBar, DeliresGate, ProjectCard, CardLinks, Footer
+├── components/          # HomePage, TopBar, ProjectCard, OpenMindGate, CardLinks, Footer
 └── pages/               # FR sur /, EN sur /en/, LO sur /lorrain/ + robots.txt, sitemap.xml
 scripts/                 # fetch.ts (réseau) + pipeline de curation
 tests/                   # tests unitaires Vitest (logique pure)

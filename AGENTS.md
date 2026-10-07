@@ -55,8 +55,8 @@ src/
 ├── components/
 │   ├── HomePage.astro         # page: hero, sticky toolbar, views, categories
 │   ├── TopBar.astro           # sticky top bar: follow link + language switcher
-│   ├── DeliresGate.astro      # blurred délires grid behind the "open-minded" toggle
 │   ├── ProjectCard.astro      # one project card
+│   ├── OpenMindGate.astro     # per-card blur behind the "open-minded" toggle (délires with `openMinded`)
 │   ├── CardLinks.astro        # a card's links row (code / live / npm / download, stars)
 │   └── Footer.astro           # footer: social links (GitHub/LinkedIn/Blog from .env)
 ├── pages/                     # {index,en/index,lorrain/index}.astro + robots.txt.ts, sitemap.xml.ts
@@ -92,8 +92,9 @@ Three decoupled steps, only the first touches the network:
 **Latest additions.** A first group shows (in the categories view only, hidden
 while searching) the 3 projects with the most recent milestone: added to the
 page (given a category), first published (live site, release or npm package),
-or taken out of WIP. Délires and WIP projects are not eligible, and the cards
-stay in their own category too. GitHub records none of these dates, so
+or taken out of WIP. WIP projects are not eligible, and the cards stay in
+their own category too (a card behind the open-minded switch keeps it in both
+places, flipping one flips the other). GitHub records none of these dates, so
 `scripts/milestones.ts` (run automatically at the end of `make fetch`,
 `make curate`, `make categorize`) compares the current state with the last one
 saved in `src/data/milestones.json` and stamps each transition. A manual edit
@@ -108,21 +109,22 @@ by repo name) plus an `ignored: string[]`. A repo shows only if it has a categor
 and is present in the cache. Per field, the **curated override wins; the cache
 fills the gap**:
 
-| Field       | Curated override              | From the cache (filled by `fetch`)                                                              |
-| ----------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| `title`     | `title`                       | prettified repo name                                                                            |
-| `subtitle`  | `subtitle {fr,en}`            | GitHub description, auto-translated FR<->EN at fetch                                            |
-| `live`      | `live`                        | `homepage` field, else GitHub Pages URL                                                         |
-| `npm`       | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER                                        |
-| `download`  | `download` (URL / `false`)    | latest release page when it ships assets                                                        |
-| `favicon`   | URL string (or `false`)       | live-site `<link icon>`, else repo app icon                                                     |
-| `tech`      | `tech: string[]`              | package.json frameworks (React, ...) + top GitHub languages                                     |
-| `ai`        | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo                                                   |
-| `discord`   | -                             | README mentions a "Discord bot" (shows a Discord icon)                                          |
-| `stars`     | -                             | GitHub stargazers                                                                               |
-| dates       | -                             | first-commit date + `pushed_at`                                                                 |
-| `wip`       | `wip: true`                   | - (curated, asked by `make curate`)                                                             |
-| `thumbnail` | `thumbnail`                   | live screenshot (microlink), else 1st big README image, else npm page, else GitHub social image |
+| Field        | Curated override              | From the cache (filled by `fetch`)                                                              |
+| ------------ | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| `title`      | `title`                       | prettified repo name                                                                            |
+| `subtitle`   | `subtitle {fr,en}`            | GitHub description, auto-translated FR<->EN at fetch                                            |
+| `live`       | `live`                        | `homepage` field, else GitHub Pages URL                                                         |
+| `npm`        | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER                                        |
+| `download`   | `download` (URL / `false`)    | latest release page when it ships assets                                                        |
+| `favicon`    | URL string (or `false`)       | live-site `<link icon>`, else repo app icon                                                     |
+| `tech`       | `tech: string[]`              | package.json frameworks (React, ...) + top GitHub languages                                     |
+| `ai`         | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo                                                   |
+| `discord`    | -                             | README mentions a "Discord bot" (shows a Discord icon)                                          |
+| `stars`      | -                             | GitHub stargazers                                                                               |
+| dates        | -                             | first-commit date + `pushed_at`                                                                 |
+| `wip`        | `wip: true`                   | - (curated, asked by `make curate`)                                                             |
+| `openMinded` | `openMinded: true`            | - (délires only, asked by `make curate`): card blurred behind its own "open-minded" switch      |
+| `thumbnail`  | `thumbnail`                   | live screenshot (microlink), else 1st big README image, else npm page, else GitHub social image |
 
 `GITHUB_USER` and `SITE_URL` come from `.env` (via `src/config.ts`); real env
 vars override them. Forks are never shown; `ignored` repos are skipped. The cache is committed, so

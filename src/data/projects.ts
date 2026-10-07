@@ -19,6 +19,7 @@
  *  - ai:        auto-detected from AGENTS.md/CLAUDE.md or a .claude dir; true/false to force
  *  - thumbnail: "/thumbnails/<repo>.png" (put the image in public/thumbnails/) or a URL
  *  - wip:       true to flag the project as work in progress (WIP badge)
+ *  - openMinded: délires only, true to blur the card behind the "open-minded" switch
  */
 
 export const CATEGORIES = ['jeux', 'outils', 'delires', 'marmelab'] as const;
@@ -40,6 +41,8 @@ export interface ProjectOverride {
   thumbnail?: string;
   /** Mark the project as work in progress (shows a WIP badge). */
   wip?: boolean;
+  /** Délires only: blur the card behind its own "open-minded" switch. */
+  openMinded?: boolean;
 }
 
 /** Keyed by repo name. Add a repo here (with a category) to put it on the page. */
@@ -51,36 +54,40 @@ export const projects: Record<string, ProjectOverride> = {
   'universal-picross': { category: 'jeux', wip: true },
   'marmelab-en-voyage': { category: 'marmelab' },
   veilleur: { category: 'outils' },
-  'glaude.ai': { category: 'delires' },
-  'tripote-visor': { category: 'delires' },
-  'horloge-passe-partout': { category: 'delires' },
+  'glaude.ai': { category: 'delires', openMinded: false },
+  'tripote-visor': { category: 'delires', openMinded: true },
+  'horloge-passe-partout': { category: 'delires', openMinded: false },
   'fast-emoji': { category: 'outils' },
   'calendar-solver': { category: 'jeux' },
   'bingo-builder': { category: 'jeux', wip: true },
   'cobol-playground': { category: 'marmelab' },
-  'photo-duel': { category: 'delires' },
+  'photo-duel': { category: 'delires', openMinded: false },
   'mai-rmelab-2025': { category: 'marmelab' },
   grammarlai: { category: 'outils', wip: true },
-  'combien-mieux-que-un': { category: 'delires' },
-  'secret-project': { category: 'delires', thumbnail: '/thumbnails/secret-project.webp' },
+  'combien-mieux-que-un': { category: 'delires', openMinded: false },
+  'secret-project': {
+    category: 'delires',
+    openMinded: false,
+    thumbnail: '/thumbnails/secret-project.webp',
+  },
   'marme-ten': { category: 'marmelab' },
   'mai-rmelab': { category: 'marmelab' },
-  'are-you-vulcain': { category: 'delires' },
+  'are-you-vulcain': { category: 'delires', openMinded: false },
   plokering: { category: 'outils' },
-  lostpass: { category: 'delires' },
+  lostpass: { category: 'delires', openMinded: false },
   'the-game': { category: 'jeux' },
   'retro-admin': { category: 'marmelab' },
-  estcequonmetenprodaujourdhui: { category: 'delires' },
-  'balkanoche-prison-calculator': { category: 'delires' },
+  estcequonmetenprodaujourdhui: { category: 'delires', openMinded: false },
+  'balkanoche-prison-calculator': { category: 'delires', openMinded: false },
   'traducteur-lorrain': { category: 'marmelab' },
   lorrainjs: { category: 'marmelab' },
-  'jaune-attend': { category: 'delires' },
+  'jaune-attend': { category: 'delires', openMinded: false },
   'logo-marmelab': { category: 'marmelab' },
   boardgameslist: { category: 'outils' },
   Marmemap: { category: 'marmelab' },
   RedMonkDynamic: { category: 'outils' },
-  'mix-my-names': { category: 'delires' },
-  anagramist: { category: 'delires' },
+  'mix-my-names': { category: 'delires', openMinded: false },
+  anagramist: { category: 'delires', openMinded: false },
   'big-bang-clicker': { category: 'jeux' },
   'final-code': {
     category: 'outils',
@@ -96,15 +103,16 @@ export const projects: Record<string, ProjectOverride> = {
   },
   'atre-soundboard': {
     category: 'delires',
+    openMinded: false,
     subtitle: {
       fr: 'Juste une soundboard pour les initiés',
       en: 'Just a soundboard for those in the know',
     },
   },
-  'jeu-anniversaire': { category: 'delires' },
+  'jeu-anniversaire': { category: 'delires', openMinded: false },
   'fantom-text': { category: 'outils' },
   'hide-words': { category: 'outils' },
-  'pom-poche': { category: 'delires' },
+  'pom-poche': { category: 'delires', openMinded: true },
   'texte-en-voix': { category: 'outils' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };

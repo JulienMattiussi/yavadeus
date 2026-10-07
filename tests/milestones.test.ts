@@ -72,20 +72,14 @@ describe('pickLatest', () => {
     publishedAt: null,
     unwipAt: null,
   });
-  const project = (id: string, category: 'jeux' | 'delires' = 'jeux', wip = false) => ({
-    id,
-    category,
-    wip,
-    createdAt: null,
-  });
+  const project = (id: string, wip = false) => ({ id, wip, createdAt: null });
 
-  it('keeps the most recent, skipping délires, WIP and unknown projects', () => {
+  it('keeps the most recent, skipping WIP and unknown projects', () => {
     const milestones: Milestones = {
       old: at('2026-01-01T00:00:00.000Z'),
       mid: at('2026-02-01T00:00:00.000Z'),
       new: at('2026-03-01T00:00:00.000Z'),
       newest: at('2026-04-01T00:00:00.000Z'),
-      oddity: at('2026-05-01T00:00:00.000Z'),
       unfinished: at('2026-05-01T00:00:00.000Z'),
     };
     const projects = [
@@ -93,8 +87,7 @@ describe('pickLatest', () => {
       project('mid'),
       project('new'),
       project('newest'),
-      project('oddity', 'delires'),
-      project('unfinished', 'jeux', true),
+      project('unfinished', true),
       project('untracked'),
     ];
     expect(pickLatest(projects, milestones).map((p) => p.id)).toEqual(['newest', 'new', 'mid']);

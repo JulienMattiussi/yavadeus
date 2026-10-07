@@ -1,0 +1,183 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  /** Project id: one remembered state per project, shared by its copies. */
+  id: string;
+  lang: Lang;
+  featured?: boolean;
+}
+
+const { id, lang, featured = false } = Astro.props;
+const t = useTranslations(lang);
+const inputId = `openmind-${id}${featured ? '-featured' : ''}`;
+---
+
+<input type="checkbox" id={inputId} class="openmind-toggle" data-project={id} />
+<label class="openmind-switch" for={inputId}>
+  <span class="toggle" aria-hidden="true">
+    <span class="toggle-knob">
+      <span class="openmind-emoji">🤪</span>
+    </span>
+  </span>
+  <span class="toggle-text mono">{t('delires.gate')}</span>
+</label>
+
+<script>
+  // Remembered per project for the tab session. inert keeps blurred content out of tab + SR.
+  // A project can have two cards (its category + "latest additions"): flipping one flips both.
+  const toggles = Array.from(document.querySelectorAll<HTMLInputElement>('.openmind-toggle'));
+  const blurredOf = (toggle: HTMLInputElement) =>
+    Array.from(toggle.parentElement?.children ?? []).filter(
+      (el): el is HTMLElement =>
+        el instanceof HTMLElement && el !== toggle && !el.classList.contains('openmind-switch'),
+    );
+  const setProject = (project: string | undefined, on: boolean) => {
+    for (const toggle of toggles.filter((t) => t.dataset.project === project)) {
+      toggle.checked = on;
+      for (const el of blurredOf(toggle)) el.inert = !on;
+    }
+  };
+  for (const toggle of toggles) {
+    const project = toggle.dataset.project;
+    const KEY = `yavadeus:openmind:${project}`;
+    let on = false;
+    try {
+      on = sessionStorage.getItem(KEY) === '1';
+    } catch {
+      /* ignore */
+    }
+    // A remembered "on" is restored without the slide/fade, so the switch doesn't flash.
+    if (on) {
+      const card = toggle.parentElement;
+      card?.classList.add('openmind-restoring');
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => card?.classList.remove('openmind-restoring')),
+      );
+    }
+    setProject(project, on);
+    toggle.addEventListener('change', () => {
+      setProject(project, toggle.checked);
+      try {
+        if (toggle.checked) sessionStorage.setItem(KEY, '1');
+        else sessionStorage.removeItem(KEY);
+      } catch {
+        /* sessionStorage unavailable: degrade to per-page state */
+      }
+    });
+  }
+</script>
+
+<style>
+  /*
+   * "Open-minded mode": the rest of the card is blurred until this card's own
+   * toggle switch is flipped. The 🤪 emoji rides the knob, greyscale when off,
+   * colored when on. Pure CSS (sibling selectors) so it works without JS; JS
+   * adds inert + memory. Must be rendered as the card's first children.
+   */
+  .openmind-toggle ~ :global(*) {
+    transition: filter 0.3s ease;
+  }
+  .openmind-toggle:not(:checked) ~ :global(:not(.openmind-switch)) {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+  }
+  :global(.openmind-restoring *) {
+    transition: none !important;
+  }
+  /* visually hidden but focusable */
+  .openmind-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+  .openmind-switch {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: inherit;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    transition: opacity 0.35s ease 0.45s;
+  }
+  .toggle {
+    position: relative;
+    flex: none;
+    width: 5.6rem;
+    height: 2.9rem;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--line-strong);
+    transition:
+      background var(--transition),
+      border-color var(--transition);
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 50%;
+    left: 0.3rem;
+    transform: translateY(-50%);
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.32s cubic-bezier(0.5, 1.7, 0.5, 1);
+  }
+  .openmind-emoji {
+    font-size: 1.45rem;
+    line-height: 1;
+    filter: grayscale(1) opacity(0.5);
+    transition: filter 0.32s ease;
+  }
+  .toggle-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    transition: color var(--transition);
+  }
+  .openmind-switch:hover .toggle {
+    border-color: var(--cat-delires);
+  }
+  .openmind-toggle:focus-visible ~ .openmind-switch .toggle {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .openmind-toggle:checked ~ .openmind-switch .toggle {
+    background: color-mix(in srgb, var(--cat-delires) 22%, var(--bg));
+    border-color: var(--cat-delires);
+  }
+  .openmind-toggle:checked ~ .openmind-switch .toggle-knob {
+    left: calc(100% - 2.5rem);
+  }
+  .openmind-toggle:checked ~ .openmind-switch .openmind-emoji {
+    filter: none;
+  }
+  .openmind-toggle:checked ~ .openmind-switch .toggle-text {
+    color: var(--cat-delires);
+  }
+  /* Once on, the overlay fades away (after the slide plays) and never returns. */
+  .openmind-toggle:checked ~ .openmind-switch {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.35s ease 0.45s,
+      visibility 0s linear 0.8s;
+  }
+</style>

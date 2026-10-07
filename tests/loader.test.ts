@@ -119,6 +119,20 @@ describe('buildEntry - ai resolution', () => {
   });
 });
 
+describe('buildEntry - open-minded switch', () => {
+  it('applies to délires that ask for it', () => {
+    expect(buildEntry('r', { category: 'delires', openMinded: true }, cached()).openMinded).toBe(
+      true,
+    );
+    expect(buildEntry('r', { category: 'delires' }, cached()).openMinded).toBe(false);
+  });
+  it('never applies outside délires', () => {
+    expect(buildEntry('r', { category: 'jeux', openMinded: true }, cached()).openMinded).toBe(
+      false,
+    );
+  });
+});
+
 describe('buildEntry - download resolution', () => {
   const release = { url: 'https://github.com/user/repo/releases/tag/v1', tag: 'v1' };
   it('uses the cached release', () => {

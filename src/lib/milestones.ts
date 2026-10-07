@@ -9,8 +9,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { Category } from '../data/projects';
-
 export interface MilestoneState {
   published: boolean;
   wip: boolean;
@@ -79,14 +77,16 @@ export function latestMilestone(m: Milestone): string {
 }
 
 /**
- * Pure: the `limit` projects with the most recent milestone. Délires and WIP
- * projects are not eligible. Ties go to the most recently started project.
+ * Pure: the `limit` projects with the most recent milestone. WIP projects are
+ * not eligible. Ties go to the most recently started project.
  */
-export function pickLatest<
-  T extends { id: string; category: Category; wip: boolean; createdAt: string | null },
->(projects: T[], milestones: Milestones, limit = 3): T[] {
+export function pickLatest<T extends { id: string; wip: boolean; createdAt: string | null }>(
+  projects: T[],
+  milestones: Milestones,
+  limit = 3,
+): T[] {
   return projects
-    .filter((p) => p.category !== 'delires' && !p.wip && milestones[p.id])
+    .filter((p) => !p.wip && milestones[p.id])
     .map((p) => ({ p, at: latestMilestone(milestones[p.id]) }))
     .sort(
       (a, b) =>

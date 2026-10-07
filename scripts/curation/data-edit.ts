@@ -9,12 +9,25 @@ import { fileURLToPath } from 'node:url';
 
 const DATA_FILE = join(dirname(fileURLToPath(import.meta.url)), '../../src/data/projects.ts');
 
+export interface AppendFlags {
+  wip?: boolean;
+  openMinded?: boolean;
+}
+
 /** Insert a categorization (or an `ignore`) before the matching CLI marker. */
-export function appendToSource(src: string, repo: string, choice: string, wip: boolean): string {
+export function appendToSource(
+  src: string,
+  repo: string,
+  choice: string,
+  { wip = false, openMinded = false }: AppendFlags = {},
+): string {
   if (choice === 'ignore') {
     return src.replace('  // CLI_INSERT_IGNORED', `  '${repo}',\n  // CLI_INSERT_IGNORED`);
   }
-  const body = wip ? `{ category: '${choice}', wip: true }` : `{ category: '${choice}' }`;
+  const fields = [`category: '${choice}'`];
+  if (wip) fields.push('wip: true');
+  if (openMinded) fields.push('openMinded: true');
+  const body = `{ ${fields.join(', ')} }`;
   return src.replace('  // CLI_INSERT_PROJECTS', `  '${repo}': ${body},\n  // CLI_INSERT_PROJECTS`);
 }
 
@@ -49,8 +62,8 @@ export function clearSource(src: string): string {
     .replace(/(const ignored[^=]*=\s*\[)\n[\s\S]*?(\n {2}\/\/ CLI_INSERT_IGNORED)/, '$1$2');
 }
 
-export function applyAppend(repo: string, choice: string, wip: boolean): void {
-  writeFileSync(DATA_FILE, appendToSource(readFileSync(DATA_FILE, 'utf8'), repo, choice, wip));
+export function applyAppend(repo: string, choice: string, flags: AppendFlags = {}): void {
+  writeFileSync(DATA_FILE, appendToSource(readFileSync(DATA_FILE, 'utf8'), repo, choice, flags));
 }
 
 export function applyRemove(name: string, where: 'projects' | 'ignored'): void {

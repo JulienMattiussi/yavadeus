@@ -4,7 +4,6 @@ import { CATEGORIES, type Category } from '../data/projects';
 import { pickLatest, readMilestones } from '../lib/milestones';
 import type { Lang, UIKey } from '../i18n/ui';
 import { useTranslations } from '../i18n/ui';
-import DeliresGate from './DeliresGate.astro';
 import Footer from './Footer.astro';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from './ProjectCard.astro';
@@ -101,19 +100,11 @@ const latest = pickLatest(projects, readMilestones());
                 </h2>
                 <p class="cat-desc">{t(`cat.${cat}.desc` as UIKey)}</p>
               </div>
-              {cat === 'delires' ? (
-                <DeliresGate lang={lang}>
-                  {items.map((project) => (
-                    <ProjectCard project={project} lang={lang} />
-                  ))}
-                </DeliresGate>
-              ) : (
-                <div class="grid" data-grid={cat}>
-                  {items.map((project) => (
-                    <ProjectCard project={project} lang={lang} />
-                  ))}
-                </div>
-              )}
+              <div class="grid" data-grid={cat}>
+                {items.map((project) => (
+                  <ProjectCard project={project} lang={lang} />
+                ))}
+              </div>
             </section>
           );
         })
