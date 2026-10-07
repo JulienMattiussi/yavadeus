@@ -104,6 +104,8 @@ export const projects: Record<string, ProjectOverride> = {
   'jeu-anniversaire': { category: 'delires' },
   'fantom-text': { category: 'outils' },
   'hide-words': { category: 'outils' },
+  'pom-poche': { category: 'delires' },
+  'texte-en-voix': { category: 'outils' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
