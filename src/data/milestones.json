@@ -287,6 +287,15 @@
     "publishedAt": "2026-07-11T21:21:34.000Z",
     "unwipAt": null
   },
+  "murdoku-saver-extention": {
+    "state": {
+      "published": true,
+      "wip": false
+    },
+    "addedAt": "2026-10-17T10:21:31.950Z",
+    "publishedAt": "2026-10-17T10:21:31.950Z",
+    "unwipAt": null
+  },
   "photo-duel": {
     "state": {
       "published": true,

@@ -1,6 +1,34 @@
 {
-  "fetchedAt": "2026-10-07T11:10:49.240Z",
+  "fetchedAt": "2026-10-17T10:21:17.986Z",
   "repos": {
+    "murdoku-saver-extention": {
+      "description": "A browser extension that lets you bookmark your Murdoku grid",
+      "subtitle": {
+        "fr": "Une extension de navigateur qui vous permet d'ajouter votre grille Murdoku à vos favoris",
+        "en": "A browser extension that lets you bookmark your Murdoku grid"
+      },
+      "homepage": null,
+      "htmlUrl": "https://github.com/JulienMattiussi/murdoku-saver-extention",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-16T15:56:18Z",
+      "createdAt": "2026-10-16T11:43:33Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [],
+      "release": {
+        "url": "https://github.com/JulienMattiussi/murdoku-saver-extention/releases/tag/v0.4.1",
+        "tag": "v0.4.1"
+      },
+      "ai": true,
+      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/murdoku-saver-extention/main/icons/icon-128.png",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/murdoku-saver-extention.webp"
+    },
     "ptitjeux": {
       "description": "Various online puzzle games",
       "subtitle": {
@@ -11,7 +39,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/ptitjeux",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-10-07T09:33:59Z",
+      "pushedAt": "2026-10-14T12:37:26Z",
       "createdAt": "2026-05-07T13:39:02Z",
       "languages": [
         "TypeScript",
@@ -28,33 +56,6 @@
       "discord": false,
       "thumbnail": "/thumbnails/ptitjeux.webp"
     },
-    "pom-poche": {
-      "description": "Parodie de la célèbre compote",
-      "subtitle": {
-        "fr": "Parodie de la célèbre compote",
-        "en": "Parody of the famous compote"
-      },
-      "homepage": "https://pom-poche.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/pom-poche",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-10-07T02:05:13Z",
-      "createdAt": "2026-10-06T23:37:50Z",
-      "languages": [
-        "Vue",
-        "TypeScript",
-        "CSS"
-      ],
-      "frameworks": [
-        "Vue"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://pom-poche.vercel.app/favicon.png",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/pom-poche.webp"
-    },
     "texte-en-voix": {
       "description": "La synthèse vocale sans IA ni synthétiseur : chaque mot est lu par un véritable être humain.",
       "subtitle": {
@@ -65,7 +66,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/texte-en-voix",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-10-07T01:18:33Z",
+      "pushedAt": "2026-10-12T12:55:22Z",
       "createdAt": "2026-10-06T16:11:37Z",
       "languages": [
         "TypeScript",
@@ -82,6 +83,33 @@
       "discord": false,
       "thumbnail": "/thumbnails/texte-en-voix.webp"
     },
+    "pom-poche": {
+      "description": "Parodie de la célèbre compote",
+      "subtitle": {
+        "fr": "Parodie de la célèbre compote",
+        "en": "Parody of the famous compote"
+      },
+      "homepage": "https://pom-poche.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/pom-poche",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-08T22:44:14Z",
+      "createdAt": "2026-10-06T23:37:50Z",
+      "languages": [
+        "Vue",
+        "TypeScript",
+        "CSS"
+      ],
+      "frameworks": [
+        "Vue"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://pom-poche.vercel.app/favicon.png",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/pom-poche.webp"
+    },
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
       "subtitle": {
@@ -92,7 +120,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-10-06T10:38:54Z",
+      "pushedAt": "2026-10-07T12:26:26Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",

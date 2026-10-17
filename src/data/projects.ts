@@ -114,6 +114,7 @@ export const projects: Record<string, ProjectOverride> = {
   'hide-words': { category: 'outils' },
   'pom-poche': { category: 'delires', openMinded: true },
   'texte-en-voix': { category: 'outils' },
+  'murdoku-saver-extention': { category: 'outils' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
