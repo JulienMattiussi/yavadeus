@@ -115,6 +115,7 @@ export const projects: Record<string, ProjectOverride> = {
   'pom-poche': { category: 'delires', openMinded: true },
   'texte-en-voix': { category: 'outils' },
   'murdoku-saver-extention': { category: 'outils' },
+  rubiksolver: { category: 'outils' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 

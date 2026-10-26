@@ -1,6 +1,119 @@
 {
-  "fetchedAt": "2026-10-17T10:27:14.864Z",
+  "fetchedAt": "2026-10-26T19:40:15.982Z",
   "repos": {
+    "rubiksolver": {
+      "description": "Online tool to solve and learn to solve various rubiks cube models",
+      "subtitle": {
+        "fr": "Outil en ligne pour résoudre et apprendre à résoudre différents modèles de rubiks cube",
+        "en": "Online tool to solve and learn to solve various rubiks cube models"
+      },
+      "homepage": "https://rubiksolver-iota.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/rubiksolver",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-26T19:08:44Z",
+      "createdAt": "2026-07-24T11:46:25Z",
+      "languages": [
+        "TypeScript",
+        "Python",
+        "HTML"
+      ],
+      "frameworks": [
+        "React",
+        "Three.js"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://rubiksolver-iota.vercel.app/favicon.svg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/rubiksolver.webp"
+    },
+    "ptitjeux": {
+      "description": "Various online puzzle games",
+      "subtitle": {
+        "fr": "Divers jeux de réflexion en ligne",
+        "en": "Various online puzzle games"
+      },
+      "homepage": "https://ptitjeux.yavadeus.dev",
+      "htmlUrl": "https://github.com/JulienMattiussi/ptitjeux",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-21T07:46:46Z",
+      "createdAt": "2026-05-07T13:39:02Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://ptitjeux.yavadeus.dev/cerveau.jpeg",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/ptitjeux.webp"
+    },
+    "legoroscope": {
+      "description": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
+      "subtitle": {
+        "fr": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
+        "en": "Gorafi weekly horoscope, served via a Next.js API, displayed in a Discord bot and a web interface with GitHub OAuth connection"
+      },
+      "homepage": "https://legoroscope.vercel.app",
+      "htmlUrl": "https://github.com/JulienMattiussi/legoroscope",
+      "stars": 0,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-20T09:33:32Z",
+      "createdAt": "2026-04-27T12:17:56Z",
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "JavaScript"
+      ],
+      "frameworks": [
+        "Next.js"
+      ],
+      "release": null,
+      "ai": true,
+      "favicon": "https://legoroscope.vercel.app/icon.jpg?icon.22uiaqjxnfq40.jpg",
+      "npm": null,
+      "discord": true,
+      "thumbnail": "/thumbnails/legoroscope.webp"
+    },
+    "deduplicateur": {
+      "description": "Detect and purge duplicate files ",
+      "subtitle": {
+        "fr": "Détecter et purger les fichiers en double",
+        "en": "Detect and purge duplicate files"
+      },
+      "homepage": null,
+      "htmlUrl": "https://github.com/JulienMattiussi/deduplicateur",
+      "stars": 1,
+      "defaultBranch": "main",
+      "pushedAt": "2026-10-17T16:01:45Z",
+      "createdAt": "2026-04-29T17:10:09Z",
+      "languages": [
+        "TypeScript",
+        "Rust",
+        "CSS"
+      ],
+      "frameworks": [
+        "React",
+        "Tauri"
+      ],
+      "release": {
+        "url": "https://github.com/JulienMattiussi/deduplicateur/releases/tag/v1.4.0",
+        "tag": "v1.4.0"
+      },
+      "ai": true,
+      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/deduplicateur/main/src-tauri/icons/icon.png",
+      "npm": null,
+      "discord": false,
+      "thumbnail": "/thumbnails/deduplicateur.webp"
+    },
     "yavadeus": {
       "description": "Page perso qui rassemble tous mes projets",
       "subtitle": {
@@ -11,7 +124,7 @@
       "htmlUrl": "https://github.com/JulienMattiussi/yavadeus",
       "stars": 0,
       "defaultBranch": "main",
-      "pushedAt": "2026-10-17T10:25:29Z",
+      "pushedAt": "2026-10-17T10:27:36Z",
       "createdAt": "2026-06-11T20:04:18Z",
       "languages": [
         "TypeScript",
@@ -55,33 +168,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/murdoku-saver-extention.webp"
-    },
-    "ptitjeux": {
-      "description": "Various online puzzle games",
-      "subtitle": {
-        "fr": "Divers jeux de réflexion en ligne",
-        "en": "Various online puzzle games"
-      },
-      "homepage": "https://ptitjeux.yavadeus.dev",
-      "htmlUrl": "https://github.com/JulienMattiussi/ptitjeux",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-10-14T12:37:26Z",
-      "createdAt": "2026-05-07T13:39:02Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "JavaScript"
-      ],
-      "frameworks": [
-        "React"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://ptitjeux.yavadeus.dev/cerveau.jpeg",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/ptitjeux.webp"
     },
     "texte-en-voix": {
       "description": "La synthèse vocale sans IA ni synthétiseur : chaque mot est lu par un véritable être humain.",
@@ -325,33 +411,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/big-bang-clicker.webp"
-    },
-    "legoroscope": {
-      "description": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
-      "subtitle": {
-        "fr": "Horoscope hebdomadaire du Gorafi, servi via une API Next.js, affiché dans un bot Discord et une interface web avec connexion GitHub OAuth",
-        "en": "Gorafi weekly horoscope, served via a Next.js API, displayed in a Discord bot and a web interface with GitHub OAuth connection"
-      },
-      "homepage": "https://legoroscope.vercel.app",
-      "htmlUrl": "https://github.com/JulienMattiussi/legoroscope",
-      "stars": 0,
-      "defaultBranch": "main",
-      "pushedAt": "2026-09-15T13:51:46Z",
-      "createdAt": "2026-04-27T12:17:56Z",
-      "languages": [
-        "TypeScript",
-        "CSS",
-        "JavaScript"
-      ],
-      "frameworks": [
-        "Next.js"
-      ],
-      "release": null,
-      "ai": true,
-      "favicon": "https://legoroscope.vercel.app/icon.jpg?icon.0y1eob18vp6c-.jpg",
-      "npm": null,
-      "discord": true,
-      "thumbnail": "/thumbnails/legoroscope.webp"
     },
     "final-code": {
       "description": "Build a code using keys words",
@@ -647,37 +706,6 @@
       "npm": null,
       "discord": false,
       "thumbnail": "/thumbnails/calendar-solver.webp"
-    },
-    "deduplicateur": {
-      "description": "Detect and purge duplicate files ",
-      "subtitle": {
-        "fr": "Détecter et purger les fichiers en double",
-        "en": "Detect and purge duplicate files"
-      },
-      "homepage": null,
-      "htmlUrl": "https://github.com/JulienMattiussi/deduplicateur",
-      "stars": 1,
-      "defaultBranch": "main",
-      "pushedAt": "2026-06-02T16:03:30Z",
-      "createdAt": "2026-04-29T17:10:09Z",
-      "languages": [
-        "TypeScript",
-        "Rust",
-        "CSS"
-      ],
-      "frameworks": [
-        "React",
-        "Tauri"
-      ],
-      "release": {
-        "url": "https://github.com/JulienMattiussi/deduplicateur/releases/tag/v1.3.0",
-        "tag": "v1.3.0"
-      },
-      "ai": true,
-      "favicon": "https://raw.githubusercontent.com/JulienMattiussi/deduplicateur/main/src-tauri/icons/icon.png",
-      "npm": null,
-      "discord": false,
-      "thumbnail": "/thumbnails/deduplicateur.webp"
     },
     "universal-picross": {
       "description": "A universal player and solver for picross games",

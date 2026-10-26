@@ -341,6 +341,15 @@
     "publishedAt": "2026-06-12T22:05:45.000Z",
     "unwipAt": null
   },
+  "rubiksolver": {
+    "state": {
+      "published": true,
+      "wip": false
+    },
+    "addedAt": "2026-10-26T19:40:29.019Z",
+    "publishedAt": "2026-10-26T19:40:29.019Z",
+    "unwipAt": null
+  },
   "secret-project": {
     "state": {
       "published": true,
