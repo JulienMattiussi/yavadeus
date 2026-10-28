@@ -116,6 +116,7 @@ export const projects: Record<string, ProjectOverride> = {
   'texte-en-voix': { category: 'outils' },
   'murdoku-saver-extention': { category: 'outils' },
   rubiksolver: { category: 'outils' },
+  fridgetothefuture: { category: 'delires' },
   // CLI_INSERT_PROJECTS (do not remove) -- `make curate` appends entries here
 };
 
