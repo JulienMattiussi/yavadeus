@@ -42,6 +42,20 @@ export const NPM_USER = env.NPM_USER || 'yavadeus';
 /** Production site URL, defined in `.env` (canonical URLs + OG/Twitter tags). */
 export const SITE_URL = env.SITE_URL;
 
-/** Optional footer social links, from `.env` (a footer line shows only if set). */
-export const LINKEDIN_URL = env.LINKEDIN_URL;
-export const BLOG_URL = env.BLOG_URL;
+export type ProfileId = 'github' | 'npm' | 'linkedin' | 'blog';
+export interface Profile {
+  id: ProfileId;
+  label: string;
+  url: string;
+}
+
+/**
+ * Public profiles, single source for the footer links and the Person JSON-LD
+ * `sameAs`. LinkedIn and Blog come from `.env` and are dropped when unset.
+ */
+export const PROFILES: Profile[] = [
+  { id: 'github', label: 'GitHub', url: `https://github.com/${GITHUB_USER}` },
+  { id: 'npm', label: 'npm', url: `https://www.npmjs.com/~${NPM_USER}` },
+  { id: 'linkedin', label: 'LinkedIn', url: env.LINKEDIN_URL },
+  { id: 'blog', label: 'Blog', url: env.BLOG_URL },
+].filter((p): p is Profile => Boolean(p.url));

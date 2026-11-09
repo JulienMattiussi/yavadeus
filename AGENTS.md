@@ -58,7 +58,7 @@ src/
 │   ├── ProjectCard.astro      # one project card
 │   ├── OpenMindGate.astro     # per-card blur behind the "open-minded" toggle (délires with `openMinded`)
 │   ├── CardLinks.astro        # a card's links row (code / live / npm / download, stars)
-│   └── Footer.astro           # footer: social links (GitHub/LinkedIn/Blog from .env)
+│   └── Footer.astro           # footer: profile links (config PROFILES: GitHub/npm + LinkedIn/Blog from .env)
 ├── pages/                     # {index,en/index,lorrain/index}.astro + robots.txt.ts, sitemap.xml.ts
 └── styles/{theme,global}.css  # theme.css = ALL color/type tokens; global.css = base + shared
 scripts/
