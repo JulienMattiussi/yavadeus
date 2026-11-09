@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { AUTHOR_NAME, BLOG_URL, GITHUB_USER, LINKEDIN_URL } from '../config';
+import { AUTHOR_NAME, BLOG_URL, GITHUB_USER, LINKEDIN_URL, NPM_USER } from '../config';
 import type { Lang } from '../i18n/ui';
 import { htmlLang, useTranslations } from '../i18n/ui';
 
@@ -33,7 +33,12 @@ const altLocales = ['fr_FR', 'en_US'].filter((l) => l !== ogLocale);
 // the official profiles via `sameAs`, plus a WebSite node authored by them. The
 // Lorrain page uses the plain-French title/description (titleT), like <title>.
 const siteRoot = base ? base.href : '/';
-const sameAs = [`https://github.com/${GITHUB_USER}`, LINKEDIN_URL, BLOG_URL].filter(Boolean);
+const sameAs = [
+  `https://github.com/${GITHUB_USER}`,
+  `https://www.npmjs.com/~${NPM_USER}`,
+  LINKEDIN_URL,
+  BLOG_URL,
+].filter(Boolean);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
