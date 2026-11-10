@@ -181,6 +181,7 @@ make install      # npm install
 make fetch        # NETWORK: snapshot GitHub/npm data into the cache (uses GITHUB_TOKEN, else `gh`)
 make curate       # curation pipeline on the cache (categorize, prune, ...)
 make categorize   # only the categorization step
+make update-website # one shot: fetch -> curate -> format -> build (the full refresh)
 make dev          # Astro dev server, foreground (http://localhost:2107) - offline
 make start        # Astro dev server, background (.dev.log + .pid)
 make stop         # stop the background dev server
