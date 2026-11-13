@@ -98,6 +98,39 @@ describe('reusableThumbnail', () => {
       }),
     ).toBeNull();
   });
+  it('retries a generic fallback that stands in for a live site', () => {
+    for (const source of ['npm', 'github'] as const) {
+      expect(
+        reusableThumbnail(
+          { ...prev, thumbnailSource: source },
+          { homepage: 'https://x.vercel.app', pushedAt: '2026-05-01T00:00:00Z' },
+        ),
+      ).toBeNull();
+    }
+  });
+  it('reuses a live-site screenshot or a README image', () => {
+    for (const source of ['screenshot', 'readme'] as const) {
+      expect(
+        reusableThumbnail(
+          { ...prev, thumbnailSource: source },
+          { homepage: 'https://x.vercel.app', pushedAt: '2026-05-01T00:00:00Z' },
+        ),
+      ).toBe('/thumbnails/x.webp');
+    }
+  });
+  it('reuses a fallback when there is no live site to screenshot', () => {
+    expect(
+      reusableThumbnail(
+        {
+          homepage: null,
+          pushedAt: '2026-05-01T00:00:00Z',
+          thumbnail: '/thumbnails/x.webp',
+          thumbnailSource: 'npm',
+        },
+        { homepage: null, pushedAt: '2026-05-01T00:00:00Z' },
+      ),
+    ).toBe('/thumbnails/x.webp');
+  });
   it('returns null with no previous thumbnail', () => {
     expect(
       reusableThumbnail(

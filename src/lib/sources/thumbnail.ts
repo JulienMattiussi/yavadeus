@@ -1,10 +1,11 @@
 /*
  * Project thumbnails, generated at fetch time and committed under
- * public/thumbnails/<repo>.webp. Screenshot of the live site via microlink, else
- * the first big README image, else the npm package page, else GitHub's
- * social-preview image. Images are normalized (sharp) to a card-sized 720x405
+ * public/thumbnails/<repo>.webp. A large README image first (usually made for
+ * the project's OG card, so nicer than a capture), else a screenshot of the live
+ * site via microlink, else any README image, else the npm package page, else
+ * GitHub's social-preview image. Images are normalized (sharp) to a card-sized 720x405
  * WebP. Reuse skips unchanged projects so we don't burn the screenshot quota on
- * every fetch.
+ * every fetch (microlink's free plan allows only a handful of calls per day).
  */
 
 import { mkdirSync } from 'node:fs';
@@ -13,6 +14,9 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 const THUMBNAILS_DIR = join(process.cwd(), 'public', 'thumbnails');
+
+/** Where a thumbnail came from. */
+export type ThumbnailSource = 'screenshot' | 'readme' | 'npm' | 'github';
 
 /** Public path served for a repo's thumbnail. */
 export function thumbnailPath(repo: string): string {
@@ -88,22 +92,44 @@ export function microlinkScreenshotUrl(siteUrl: string, patient = false): string
 /**
  * Pure: the previous thumbnail to reuse when the live URL and the last push are
  * both unchanged (a redeploy always follows a push). Returns null otherwise.
+ * A generic fallback (npm page, GitHub card) standing in for a live site (the
+ * screenshot failed, e.g. quota exhausted) is never reused, so the next fetch
+ * retries the screenshot. An entry without a recorded source predates the field
+ * and is reused as before.
  */
 export function reusableThumbnail(
-  prev: { homepage: string | null; pushedAt: string | null; thumbnail: string | null } | undefined,
+  prev:
+    | {
+        homepage: string | null;
+        pushedAt: string | null;
+        thumbnail: string | null;
+        thumbnailSource?: ThumbnailSource | null;
+      }
+    | undefined,
   cur: { homepage: string | null; pushedAt: string | null },
 ): string | null {
   if (!prev?.thumbnail) return null;
-  return prev.homepage === cur.homepage && prev.pushedAt === cur.pushedAt ? prev.thumbnail : null;
+  if (prev.homepage !== cur.homepage || prev.pushedAt !== cur.pushedAt) return null;
+  if (cur.homepage && (prev.thumbnailSource === 'npm' || prev.thumbnailSource === 'github')) {
+    return null;
+  }
+  return prev.thumbnail;
 }
 
-/** Download an image, normalize it, write it under public/thumbnails. */
-async function saveThumbnail(imageUrl: string, repo: string): Promise<boolean> {
+/** Width from which a README image is preferred over a live-site screenshot. */
+const LARGE_README_IMAGE_WIDTH = 1000;
+
+/**
+ * Download an image, normalize it, write it under public/thumbnails. Images
+ * narrower than `minWidth` are rejected.
+ */
+async function saveThumbnail(imageUrl: string, repo: string, minWidth = 0): Promise<boolean> {
   try {
     const res = await fetch(imageUrl);
     if (!res.ok) return false;
     const buffer = Buffer.from(await res.arrayBuffer());
     if (buffer.length < 1024) return false; // guard against tiny error/placeholder payloads
+    if (minWidth && ((await sharp(buffer).metadata()).width ?? 0) < minWidth) return false;
     mkdirSync(THUMBNAILS_DIR, { recursive: true });
     // Card-sized 720x405 WebP, keeping the top of the page (cover crop).
     await sharp(buffer)
@@ -117,13 +143,22 @@ async function saveThumbnail(imageUrl: string, repo: string): Promise<boolean> {
   }
 }
 
+/** Set once microlink answers 429: no more calls for the rest of this fetch. */
+let quotaExhausted = false;
+
 /** Resolve microlink's screenshot image URL for a live site (best-effort). */
 async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
   // Fast attempt first, then a patient retry for slow pages: no slowdown on
   // quick sites, only failures pay the longer wait.
   for (const patient of [false, true]) {
+    if (quotaExhausted) return null;
     try {
       const res = await fetch(microlinkScreenshotUrl(siteUrl, patient));
+      if (res.status === 429) {
+        quotaExhausted = true;
+        console.warn('[sources] microlink quota exhausted: fallback images until the next fetch');
+        return null;
+      }
       if (res.ok) {
         const data = (await res.json()) as { data?: { screenshot?: { url?: string } } };
         if (data.data?.screenshot?.url) return data.data.screenshot.url;
@@ -136,9 +171,10 @@ async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
 }
 
 /**
- * Capture a repo's thumbnail, in order of preference: screenshot the live site
- * (microlink), else the first big README image, else the npm package page, else
- * GitHub's social-preview image. Returns its public path, or null if all failed.
+ * Capture a repo's thumbnail, in order of preference: a large README image, else
+ * a screenshot of the live site (microlink), else the README image at any size,
+ * else the npm package page, else GitHub's social-preview image. Returns its public path and source, or null if
+ * all failed.
  */
 export async function fetchThumbnail(
   owner: string,
@@ -146,16 +182,20 @@ export async function fetchThumbnail(
   homepage: string | null,
   readmeImage: string | null = null,
   npm: string | null = null,
-): Promise<string | null> {
+): Promise<{ path: string; source: ThumbnailSource } | null> {
+  const saved = (source: ThumbnailSource) => ({ path: thumbnailPath(repo), source });
+  if (readmeImage && (await saveThumbnail(readmeImage, repo, LARGE_README_IMAGE_WIDTH))) {
+    return saved('readme');
+  }
   if (homepage) {
     const shot = await microlinkScreenshot(homepage);
-    if (shot && (await saveThumbnail(shot, repo))) return thumbnailPath(repo);
+    if (shot && (await saveThumbnail(shot, repo))) return saved('screenshot');
   }
-  if (readmeImage && (await saveThumbnail(readmeImage, repo))) return thumbnailPath(repo);
+  if (readmeImage && (await saveThumbnail(readmeImage, repo))) return saved('readme');
   if (npm) {
     const shot = await microlinkScreenshot(npm);
-    if (shot && (await saveThumbnail(shot, repo))) return thumbnailPath(repo);
+    if (shot && (await saveThumbnail(shot, repo))) return saved('npm');
   }
-  if (await saveThumbnail(githubSocialImageUrl(owner, repo), repo)) return thumbnailPath(repo);
+  if (await saveThumbnail(githubSocialImageUrl(owner, repo), repo)) return saved('github');
   return null;
 }

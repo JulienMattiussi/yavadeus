@@ -34,6 +34,7 @@ import {
   reusableThumbnail,
   thumbnailFile,
   type RepoSummary,
+  type ThumbnailSource,
 } from '../src/lib/sources';
 
 function fail(message: string): never {
@@ -156,13 +157,17 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   // Thumbnail (skipped for ignored / custom-override repos): reuse the committed
   // image when live URL + last push are unchanged, else capture (live, else npm).
   let thumbnail: string | null = null;
+  let thumbnailSource: ThumbnailSource | null = null;
   if (!ignoredSet.has(r.name) && !customThumbSet.has(r.name)) {
     const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
     if (reusedThumb && existsSync(thumbnailFile(r.name))) {
       reusedThumbnails++;
       thumbnail = reusedThumb;
+      thumbnailSource = prev?.thumbnailSource ?? null;
     } else {
-      thumbnail = await fetchThumbnail(GITHUB_USER, r.name, homepage, readmeImage, npm);
+      const fetched = await fetchThumbnail(GITHUB_USER, r.name, homepage, readmeImage, npm);
+      thumbnail = fetched?.path ?? null;
+      thumbnailSource = fetched?.source ?? null;
     }
   }
 
@@ -183,6 +188,7 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
     npm,
     discord,
     thumbnail,
+    thumbnailSource,
   };
 }
 

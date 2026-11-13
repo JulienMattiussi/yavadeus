@@ -11,6 +11,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import type { ThumbnailSource } from './sources/thumbnail';
+
 import type { ReleaseInfo } from './sources';
 
 /** Repo-intrinsic data, independent of the curated overrides. */
@@ -42,6 +44,8 @@ export interface CachedRepo {
   discord: boolean;
   /** Committed thumbnail path (/thumbnails/<repo>.webp), or null. */
   thumbnail: string | null;
+  /** Where that thumbnail came from (absent in entries fetched before this field). */
+  thumbnailSource?: ThumbnailSource | null;
 }
 
 export interface ProjectsCache {
