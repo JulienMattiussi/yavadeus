@@ -27,6 +27,10 @@ import {
   fetchRepoIcon,
   fetchSubtitleTranslation,
   fetchThumbnail,
+  fetchPageHtml,
+  largeImageCandidates,
+  largeImageThumbnail,
+  pickOgImage,
   fetchUserRepos,
   firstReadmeImage,
   mentionsDiscordBot,
@@ -149,18 +153,36 @@ async function enrich(r: RepoSummary, prev: CachedRepo | undefined): Promise<Cac
   const discord = mentionsDiscordBot(readme ?? '');
   const readmeImage = firstReadmeImage(readme ?? '', GITHUB_USER, r.name, r.defaultBranch);
 
+  // The live site's page feeds both the favicon and the og:image thumbnail.
+  const homepageHtml = homepage ? await fetchPageHtml(homepage) : null;
+  const ogImage = homepage && homepageHtml ? pickOgImage(homepageHtml, homepage) : null;
+
   // Favicon: prefer the live site's icon, else an app icon committed in the repo.
   let favicon: string | null = null;
-  if (homepage) favicon = await fetchFavicon(homepage);
+  if (homepage) favicon = await fetchFavicon(homepage, homepageHtml);
   if (!favicon) favicon = await fetchRepoIcon(full, r.defaultBranch);
 
-  // Thumbnail (skipped for ignored / custom-override repos): reuse the committed
-  // image when live URL + last push are unchanged, else capture (live, else npm).
+  // Thumbnail (skipped for ignored / custom-override repos): a large og:image or
+  // README image first, else reuse the committed image when live URL + last push are
+  // unchanged, else capture (live, else fallbacks).
   let thumbnail: string | null = null;
   let thumbnailSource: ThumbnailSource | null = null;
   if (!ignoredSet.has(r.name) && !customThumbSet.has(r.name)) {
-    const reusedThumb = reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt });
-    if (reusedThumb && existsSync(thumbnailFile(r.name))) {
+    const reusedThumb = existsSync(thumbnailFile(r.name))
+      ? reusableThumbnail(prev, { homepage, pushedAt: r.pushedAt })
+      : null;
+    const large = await largeImageThumbnail(
+      r.name,
+      largeImageCandidates(
+        ogImage,
+        readmeImage,
+        reusedThumb ? (prev?.thumbnailSource ?? null) : null,
+      ),
+    );
+    if (large) {
+      thumbnail = large.path;
+      thumbnailSource = large.source;
+    } else if (reusedThumb) {
       reusedThumbnails++;
       thumbnail = reusedThumb;
       thumbnailSource = prev?.thumbnailSource ?? null;

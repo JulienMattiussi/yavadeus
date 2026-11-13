@@ -3,7 +3,7 @@
  * keep using `from '../lib/sources'`. `ghHeaders` stays internal to the folder.
  */
 
-export { normalizeUrl, safeHttpUrl } from './http';
+export { fetchPageHtml, normalizeUrl, safeHttpUrl } from './http';
 export * from './github';
 export * from './npm';
 export * from './frameworks';

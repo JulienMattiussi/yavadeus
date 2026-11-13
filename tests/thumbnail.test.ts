@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   firstReadmeImage,
   githubSocialImageUrl,
+  largeImageCandidates,
   microlinkScreenshotUrl,
+  pickOgImage,
   reusableThumbnail,
   thumbnailPath,
 } from '../src/lib/sources/thumbnail';
@@ -65,6 +67,46 @@ describe('firstReadmeImage', () => {
   it('returns null when there is only badges/icons', () => {
     const md = '![CI](https://shields.io/x.svg)\n![logo](logo.svg)';
     expect(firstReadmeImage(md, O, 'r', 'main')).toBeNull();
+  });
+});
+
+describe('pickOgImage', () => {
+  const base = 'https://site.dev/app/';
+  it('reads og:image whatever the attribute order', () => {
+    expect(pickOgImage('<meta content="https://cdn.dev/og.png" property="og:image" />', base)).toBe(
+      'https://cdn.dev/og.png',
+    );
+  });
+  it('resolves a relative og:image against the page URL', () => {
+    expect(pickOgImage('<meta property="og:image" content="/og.png">', base)).toBe(
+      'https://site.dev/og.png',
+    );
+  });
+  it('ignores og:image:alt and returns null without og:image', () => {
+    expect(
+      pickOgImage('<meta property="og:image:alt" content="x"><meta name="description">', base),
+    ).toBeNull();
+  });
+});
+
+describe('largeImageCandidates', () => {
+  it('tries og:image before the README image', () => {
+    expect(largeImageCandidates('og.png', 'readme.png', null).map((c) => c.source)).toEqual([
+      'og',
+      'readme',
+    ]);
+  });
+  it('skips missing images', () => {
+    expect(largeImageCandidates(null, 'readme.png', null)).toEqual([
+      { url: 'readme.png', source: 'readme' },
+    ]);
+  });
+  it('only tries better sources than a reusable thumbnail', () => {
+    expect(largeImageCandidates('og.png', 'readme.png', 'og')).toEqual([]);
+    expect(largeImageCandidates('og.png', 'readme.png', 'readme')).toEqual([
+      { url: 'og.png', source: 'og' },
+    ]);
+    expect(largeImageCandidates('og.png', null, 'screenshot')).toHaveLength(1);
   });
 });
 

@@ -1,9 +1,9 @@
 /*
  * Project thumbnails, generated at fetch time and committed under
- * public/thumbnails/<repo>.webp. A large README image first (usually made for
- * the project's OG card, so nicer than a capture), else a screenshot of the live
- * site via microlink, else any README image, else the npm package page, else
- * GitHub's social-preview image. Images are normalized (sharp) to a card-sized 720x405
+ * public/thumbnails/<repo>.webp. A large image made for sharing first (the live
+ * site's og:image, else a big README image), nicer than a capture and free of
+ * screenshot quota; else a screenshot of the live site via microlink, else any
+ * README image, else the npm package page, else GitHub's social-preview image. Images are normalized (sharp) to a card-sized 720x405
  * WebP. Reuse skips unchanged projects so we don't burn the screenshot quota on
  * every fetch (microlink's free plan allows only a handful of calls per day).
  */
@@ -16,7 +16,7 @@ import sharp from 'sharp';
 const THUMBNAILS_DIR = join(process.cwd(), 'public', 'thumbnails');
 
 /** Where a thumbnail came from. */
-export type ThumbnailSource = 'screenshot' | 'readme' | 'npm' | 'github';
+export type ThumbnailSource = 'og' | 'screenshot' | 'readme' | 'npm' | 'github';
 
 /** Public path served for a repo's thumbnail. */
 export function thumbnailPath(repo: string): string {
@@ -68,6 +68,42 @@ export function firstReadmeImage(
   return null;
 }
 
+/** Pure: a page's og:image URL, resolved against baseUrl. Null if none. */
+export function pickOgImage(html: string, baseUrl: string): string | null {
+  for (const tag of html.match(/<meta\b[^>]*>/gi) ?? []) {
+    if (!/(property|name)=["']og:image["']/i.test(tag)) continue;
+    const content = tag.match(/content=["']([^"']+)["']/i)?.[1];
+    if (!content) continue;
+    try {
+      return new URL(content.trim(), baseUrl).href;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+/**
+ * Pure: the large-image candidates worth trying, best first (og:image, then the
+ * README image). When the previous thumbnail can be reused, only those ranked
+ * above its source are tried, so a reused og/README image is not downloaded
+ * again while a newly added og:image still replaces a README image.
+ */
+export function largeImageCandidates(
+  ogImage: string | null,
+  readmeImage: string | null,
+  reusedSource: ThumbnailSource | null,
+): { url: string; source: ThumbnailSource }[] {
+  const ranked = [
+    { url: ogImage, source: 'og' as const },
+    { url: readmeImage, source: 'readme' as const },
+  ];
+  const stop = ranked.findIndex((c) => c.source === reusedSource);
+  return (stop === -1 ? ranked : ranked.slice(0, stop)).filter(
+    (c): c is { url: string; source: 'og' | 'readme' } => c.url !== null,
+  );
+}
+
 /**
  * Pure: microlink screenshot API URL for a live site (1200x630 viewport).
  * `patient` waits for the network to settle and allows a long navigation, for
@@ -116,8 +152,8 @@ export function reusableThumbnail(
   return prev.thumbnail;
 }
 
-/** Width from which a README image is preferred over a live-site screenshot. */
-const LARGE_README_IMAGE_WIDTH = 1000;
+/** Width from which an og:image or README image is preferred over a screenshot. */
+const LARGE_IMAGE_WIDTH = 1000;
 
 /**
  * Download an image, normalize it, write it under public/thumbnails. Images
@@ -171,10 +207,26 @@ async function microlinkScreenshot(siteUrl: string): Promise<string | null> {
 }
 
 /**
- * Capture a repo's thumbnail, in order of preference: a large README image, else
- * a screenshot of the live site (microlink), else the README image at any size,
- * else the npm package page, else GitHub's social-preview image. Returns its public path and source, or null if
- * all failed.
+ * Save the first large (>= 1000px wide) candidate as the thumbnail. Null if none
+ * qualifies (absent, too small, or download failed).
+ */
+export async function largeImageThumbnail(
+  repo: string,
+  candidates: { url: string; source: ThumbnailSource }[],
+): Promise<{ path: string; source: ThumbnailSource } | null> {
+  for (const { url, source } of candidates) {
+    if (await saveThumbnail(url, repo, LARGE_IMAGE_WIDTH)) {
+      return { path: thumbnailPath(repo), source };
+    }
+  }
+  return null;
+}
+
+/**
+ * Capture a repo's thumbnail once largeImageThumbnail() found nothing, in order
+ * of preference: a screenshot of the live site (microlink), else the README image
+ * at any size, else the npm package page, else GitHub's social-preview image.
+ * Returns its public path and source, or null if all failed.
  */
 export async function fetchThumbnail(
   owner: string,
@@ -184,9 +236,6 @@ export async function fetchThumbnail(
   npm: string | null = null,
 ): Promise<{ path: string; source: ThumbnailSource } | null> {
   const saved = (source: ThumbnailSource) => ({ path: thumbnailPath(repo), source });
-  if (readmeImage && (await saveThumbnail(readmeImage, repo, LARGE_README_IMAGE_WIDTH))) {
-    return saved('readme');
-  }
   if (homepage) {
     const shot = await microlinkScreenshot(homepage);
     if (shot && (await saveThumbnail(shot, repo))) return saved('screenshot');

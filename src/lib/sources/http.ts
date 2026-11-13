@@ -10,6 +10,17 @@ export function ghHeaders(): Record<string, string> {
   return headers;
 }
 
+/** A page's HTML (best-effort): null on any network or HTTP error. */
+export async function fetchPageHtml(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'yavadeus-home-page' } });
+    return res.ok ? await res.text() : null;
+  } catch (err) {
+    console.warn(`[sources] page ${url} fetch failed:`, (err as Error).message);
+    return null;
+  }
+}
+
 /** Add a scheme to bare hostnames returned by the GitHub homepage field. */
 export function normalizeUrl(url: string): string {
   return /^https?:\/\//.test(url) ? url : `https://${url}`;

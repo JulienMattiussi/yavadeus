@@ -36,15 +36,15 @@ export function pickFaviconHref(html: string, baseUrl: string): string | null {
 }
 
 /**
- * Resolve a site's real favicon by reading its <link rel="icon">. Falls back to
- * /favicon.ico only if it actually exists. Returns null otherwise, so the UI
- * shows no icon rather than a broken one.
+ * Resolve a site's real favicon from its <link rel="icon"> (`html` is the page,
+ * null if it could not be fetched). Falls back to /favicon.ico only if it
+ * actually exists. Returns null otherwise, so the UI shows no icon rather than a
+ * broken one.
  */
-export async function fetchFavicon(siteUrl: string): Promise<string | null> {
+export async function fetchFavicon(siteUrl: string, html: string | null): Promise<string | null> {
+  if (html === null) return null;
   try {
-    const res = await fetch(siteUrl, { headers: { 'User-Agent': 'yavadeus-home-page' } });
-    if (!res.ok) return null;
-    const picked = pickFaviconHref(await res.text(), siteUrl);
+    const picked = pickFaviconHref(html, siteUrl);
     if (picked) return picked;
 
     const ico = new URL('/favicon.ico', siteUrl).href;

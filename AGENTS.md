@@ -87,8 +87,9 @@ Three decoupled steps, only the first touches the network:
    once it answers 429 the fetch stops calling it and falls back. The cache
    records each thumbnail's source (`thumbnailSource`), and a generic fallback
    (npm page, GitHub card) standing in for a live site is retried at the next
-   fetch instead of being reused. A large README image wins over the screenshot:
-   it is usually the image made for the project's OG card.
+   fetch instead of being reused. A large image made for sharing (the live
+   site's `og:image`, else a big README image) wins over the screenshot, even a
+   reusable one, and spares the microlink quota.
 2. **curate** (`scripts/curate.ts`, `make curate`) - reads the cache and edits
    `src/data/projects.ts`: assign a `category` (required to show a repo), mark
    `wip`, `ignore`, or prune entries whose repo is gone. Offline.
@@ -115,22 +116,22 @@ by repo name) plus an `ignored: string[]`. A repo shows only if it has a categor
 and is present in the cache. Per field, the **curated override wins; the cache
 fills the gap**:
 
-| Field        | Curated override              | From the cache (filled by `fetch`)                                                                                            |
-| ------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `title`      | `title`                       | prettified repo name                                                                                                          |
-| `subtitle`   | `subtitle {fr,en}`            | GitHub description, auto-translated FR<->EN at fetch                                                                          |
-| `live`       | `live`                        | `homepage` field, else GitHub Pages URL                                                                                       |
-| `npm`        | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER                                                                      |
-| `download`   | `download` (URL / `false`)    | latest release page when it ships assets                                                                                      |
-| `favicon`    | URL string (or `false`)       | live-site `<link icon>`, else repo app icon                                                                                   |
-| `tech`       | `tech: string[]`              | package.json frameworks (React, ...) + top GitHub languages                                                                   |
-| `ai`         | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo                                                                                 |
-| `discord`    | -                             | README mentions a "Discord bot" (shows a Discord icon)                                                                        |
-| `stars`      | -                             | GitHub stargazers                                                                                                             |
-| dates        | -                             | first-commit date + `pushed_at`                                                                                               |
-| `wip`        | `wip: true`                   | - (curated, asked by `make curate`)                                                                                           |
-| `openMinded` | `openMinded: true`            | - (délires only, asked by `make curate`): card blurred behind its own "open-minded" switch                                    |
-| `thumbnail`  | `thumbnail`                   | README image >= 1000px wide, else live screenshot (microlink), else any README image, else npm page, else GitHub social image |
+| Field        | Curated override              | From the cache (filled by `fetch`)                                                                                                                            |
+| ------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`      | `title`                       | prettified repo name                                                                                                                                          |
+| `subtitle`   | `subtitle {fr,en}`            | GitHub description, auto-translated FR<->EN at fetch                                                                                                          |
+| `live`       | `live`                        | `homepage` field, else GitHub Pages URL                                                                                                                       |
+| `npm`        | `npm` (pkg name)              | package.json name, if published & maintained by NPM_USER                                                                                                      |
+| `download`   | `download` (URL / `false`)    | latest release page when it ships assets                                                                                                                      |
+| `favicon`    | URL string (or `false`)       | live-site `<link icon>`, else repo app icon                                                                                                                   |
+| `tech`       | `tech: string[]`              | package.json frameworks (React, ...) + top GitHub languages                                                                                                   |
+| `ai`         | agent name / `true` / `false` | `AGENTS.md`/`CLAUDE.md` or `.claude/` in repo                                                                                                                 |
+| `discord`    | -                             | README mentions a "Discord bot" (shows a Discord icon)                                                                                                        |
+| `stars`      | -                             | GitHub stargazers                                                                                                                                             |
+| dates        | -                             | first-commit date + `pushed_at`                                                                                                                               |
+| `wip`        | `wip: true`                   | - (curated, asked by `make curate`)                                                                                                                           |
+| `openMinded` | `openMinded: true`            | - (délires only, asked by `make curate`): card blurred behind its own "open-minded" switch                                                                    |
+| `thumbnail`  | `thumbnail`                   | live-site og:image, else README image (each >= 1000px wide), else live screenshot (microlink), else any README image, else npm page, else GitHub social image |
 
 `GITHUB_USER` and `SITE_URL` come from `.env` (via `src/config.ts`); real env
 vars override them. Forks are never shown; `ignored` repos are skipped. The cache is committed, so
